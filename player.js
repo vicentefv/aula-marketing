@@ -30,6 +30,7 @@ async function boot(){
 function joinForm(){
  setMain('<div class="rise"><p class="sub">Sala <b style="color:var(--amber);letter-spacing:.14em">'+esc(C)+'</b></p><h2 style="margin-top:6px">Como se chama a tua equipa?</h2><div class="join"><input id="nm" maxlength="22" placeholder="Nome da equipa ou o teu" autocomplete="off"><div class="err" id="er"></div><button class="btn" id="go" style="font-size:1.1rem">Entrar</button></div></div>');
  const go=async()=>{const v=$('#nm').value.trim();if(v.length<2){$('#er').textContent='Escreve pelo menos 2 letras.';return}
+  if(isBad(v)){$('#er').textContent='Esse nome não é permitido. Escolhe outro.';return}
   $('#go').disabled=true;pid=uid();const cores=CONTENT.cores;const color=cores[Math.floor(Math.random()*cores.length)];
   await STORE.set(P+'/players/'+pid,{name:v,color,at:STORE.TS});LS(PK,pid);vib(20);start()};
  $('#go').onclick=go;$('#nm').addEventListener('keydown',e=>{if(e.key==='Enter')go()});
@@ -56,7 +57,7 @@ const VIEWS={
 lobby:{render(){setMain('<div class="center rise"><div class="bigdot" style="background:'+(me?me.color:'var(--violet)')+'"></div><h2>Estás dentro'+(me?', '+esc(me.name):'')+'</h2><p class="sub">Olha para o ecrã. A próxima atividade aparece aqui sozinha.</p></div>')}},
 
 palavras:{render(){setMain('<h2>'+esc(PALAVRAS_Q)+'</h2><div class="join" style="margin-top:0"><input id="w" maxlength="24" placeholder="Uma palavra"><button class="btn" id="sw">Enviar palavra</button></div><div class="chips" id="mine"></div><p class="sub" id="lim"></p>');
-  const send=()=>{const v=$('#w').value.trim();if(!v)return;const mine=(ans[pid]&&ans[pid].w)?Object.keys(ans[pid].w).length:0;if(mine>=3)return;STORE.set(P+'/ans/'+curKey+'/'+pid+'/w/'+uid(),v.slice(0,24));$('#w').value='';vib()};
+  const send=()=>{const v=$('#w').value.trim();if(!v)return;if(isBad(v)){$('#lim').textContent='Essa palavra não é permitida.';$('#w').value='';vib(40);return}const mine=(ans[pid]&&ans[pid].w)?Object.keys(ans[pid].w).length:0;if(mine>=3)return;STORE.set(P+'/ans/'+curKey+'/'+pid+'/w/'+uid(),v.slice(0,24));$('#w').value='';vib()};
   $('#sw').onclick=send;$('#w').addEventListener('keydown',e=>{if(e.key==='Enter')send()})},
  update(){const w=(ans[pid]&&ans[pid].w)||{};const a=Object.values(w);const m=$('#mine');if(!m)return;m.innerHTML=a.map(x=>'<span class="chip ok pop">'+esc(x)+'</span>').join('');const l=$('#lim');if(l)l.textContent=a.length>=3?'Limite de 3 palavras atingido.':'Podes enviar até 3 palavras ('+a.length+'/3).';const s=$('#sw');if(s)s.disabled=a.length>=3}},
 
@@ -93,7 +94,7 @@ smart:{render(){
   setMain('<h2>Escreve o objetivo SMART</h2>'+(me&&me.brief?'<details class="card"><summary style="cursor:pointer;font-weight:700">O vosso desafio</summary><div style="margin-top:12px">'+briefHTML(true)+'</div></details>':'')+'<textarea class="ta" id="tx" placeholder="Ex.: Aumentar as encomendas online em 20% até ao fim de março."></textarea><div class="chips" id="ck"></div><button class="btn" id="sd">Enviar objetivo</button><p class="sub" id="ms"></p>');
   $('#tx').value=local.t||(ans[pid]&&ans[pid].t)||'';
   $('#tx').oninput=()=>{local.t=$('#tx').value;chips()};chips();
-  $('#sd').onclick=()=>{const t=$('#tx').value.trim();if(!t)return;STORE.set(P+'/ans/'+curKey+'/'+pid,{t:t.slice(0,300)});vib(20)};
+  $('#sd').onclick=()=>{const t=$('#tx').value.trim();if(!t)return;if(isBad(t)){$('#ms').textContent='Há palavras não permitidas. Reformula o texto.';vib(40);return}STORE.set(P+'/ans/'+curKey+'/'+pid,{t:t.slice(0,300)});vib(20)};
   function chips(){const ch=smartCheck($('#tx').value);$('#ck').innerHTML=ch.map(x=>'<span class="chip '+(x[1]?'ok':'no')+'">'+(x[1]?'✓ ':'')+x[0]+'</span>').join('')}},
  update(){const m=$('#ms');if(m&&act.phase==='in')m.textContent=ans[pid]?'Enviado. Podes melhorar e reenviar até fechar.':''}},
 
@@ -103,7 +104,7 @@ gancho:{render(){
    $('#tx').value=local.t||(ans[pid]&&ans[pid].t)||'';
    const chips=()=>{$('#ck').innerHTML=hookCheck($('#tx').value).map(x=>'<span class="chip '+(x[1]?'ok':'no')+'">'+(x[1]?'✓ ':'')+x[0]+'</span>').join('')};
    $('#tx').oninput=()=>{local.t=$('#tx').value;chips()};chips();
-   $('#sd').onclick=()=>{const t=$('#tx').value.trim();if(!t)return;STORE.set(P+'/ans/'+curKey+'/'+pid,{t:t.slice(0,200)});vib(20)};
+   $('#sd').onclick=()=>{const t=$('#tx').value.trim();if(!t)return;if(isBad(t)){$('#ms').textContent='Há palavras não permitidas. Reformula o texto.';vib(40);return}STORE.set(P+'/ans/'+curKey+'/'+pid,{t:t.slice(0,200)});vib(20)};
   }else if(act.phase==='vote'){
    setMain('<h2>Vota no melhor gancho</h2><p class="sub">Não podes votar no teu.</p><div id="vl" style="display:flex;flex-direction:column;gap:10px"></div>');
    $('#vl').onclick=e=>{const b=e.target.closest('.vote');if(!b)return;STORE.set(P+'/vt/'+curKey+'/'+pid,b.dataset.p);vib(20)};
@@ -112,7 +113,7 @@ gancho:{render(){
    setMain('<div class="verdict ok pop"><b>+'+p+' pontos</b><div style="margin-top:6px" class="sub">Vê o vencedor no ecrã.</div></div>')}},
  update(){
   if(act.phase==='in'){const m=$('#ms');if(m)m.textContent=ans[pid]?'Enviado. Podes melhorar e reenviar até fechar.':''}
-  if(act.phase==='vote'){const vl=$('#vl');if(!vl)return;const s=Object.keys(ans).filter(k=>k!==pid&&ans[k]&&ans[k].t&&players[k]);
+  if(act.phase==='vote'){const vl=$('#vl');if(!vl)return;const s=Object.keys(ans).filter(k=>k!==pid&&ans[k]&&ans[k].t&&!isBad(ans[k].t)&&players[k]);
    const h=s.map(k=>'<button class="vote'+(myVote===k?' sel':'')+'" data-p="'+k+'">'+esc(ans[k].t)+'</button>').join('')||'<p class="sub">Ainda não há ganchos para votar.</p>';
    if(vl.dataset.h!==h){vl.dataset.h=h;vl.innerHTML=h}}}},
 

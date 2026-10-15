@@ -13,6 +13,9 @@ const oo=a=>a&&a.o?a.o.split(',').map(Number):[];
 const shuf=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const dot=c=>'<i style="display:inline-block;width:1.6vh;height:1.6vh;border-radius:50%;background:'+c+'"></i>';
 
+/* defesa extra: nada ofensivo chega ao ecrã, mesmo que alguém contorne o telemóvel */
+function cleanP(v){const o={};let n=0;for(const k in v){n++;const p=Object.assign({},v[k]);if(isBad(p.name))p.name='Equipa '+n;o[k]=p}return o}
+function cleanA(v){const o={};for(const k in v){const a=Object.assign({},v[k]);if(a.t&&isBad(a.t))continue;if(a.w){const w={};for(const x in a.w)if(!isBad(a.w[x]))w[x]=a.w[x];a.w=w}o[k]=a}return o}
 /* ---------- sala ---------- */
 async function init(){
  C=(new URLSearchParams(location.search).get('c')||LS('aula-room')||'').toUpperCase();
@@ -20,12 +23,12 @@ async function init(){
  if(!C)await createRoom();
  P='rooms/'+C;LS('aula-room',C);
  $('#pcode').textContent=C;$('#purl').textContent=base.replace(/^https?:\/\//,'').replace(/\/$/,'');
- STORE.on(P+'/players',v=>{players=v||{};update()});
+ STORE.on(P+'/players',v=>{players=cleanP(v||{});update()});
  STORE.on(P+'/act',v=>{act=v||{id:'lobby',key:'lobby',phase:'in'};subs();render()});
  setInterval(tick,150);
 }
 async function createRoom(){let c,t=0;do{c=newCode();t++}while(t<8&&await STORE.get('rooms/'+c+'/created'));C=c;await STORE.set('rooms/'+c,{created:STORE.TS,act:{id:'lobby',key:'lobby',phase:'in'}})}
-function subs(){if(act.key===curKey)return;curKey=act.key;ans={};vt={};if(unA)unA();if(unV)unV();unA=STORE.on(P+'/ans/'+curKey,v=>{ans=v||{};update()});unV=STORE.on(P+'/vt/'+curKey,v=>{vt=v||{};update()})}
+function subs(){if(act.key===curKey)return;curKey=act.key;ans={};vt={};if(unA)unA();if(unV)unV();unA=STORE.on(P+'/ans/'+curKey,v=>{ans=cleanA(v||{});update()});unV=STORE.on(P+'/vt/'+curKey,v=>{vt=v||{};update()})}
 const setAct=o=>STORE.set(P+'/act',o);
 const now=()=>STORE.now();
 

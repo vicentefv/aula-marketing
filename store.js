@@ -57,3 +57,14 @@ window.hookCheck=t=>{t=(t||'').trim();const w=t.split(/\s+/).filter(Boolean).len
  ['Curto (até 15 palavras)',w>0&&w<=15],
  ['Cria curiosidade',/\?|…|\.\.\.|porque|segredo|ninguém|nunca|erro|e se/i.test(t)],
  ['Concreto',/\d|«|"|eu |me |nós /i.test(t)]]};
+/* filtro de linguagem ofensiva (PT + EN): ignora acentos, maiúsculas, números por letras e letras repetidas */
+(()=>{
+ const col=s=>s.replace(/(.)\1+/g,'$1');
+ const norm=t=>String(t==null?'':t).normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/0/g,'o').replace(/1/g,'i').replace(/3/g,'e').replace(/4/g,'a').replace(/5/g,'s').replace(/7/g,'t').replace(/@/g,'a').replace(/\$/g,'s');
+ const PRE=['caralh','merd','foder','fodid','fodam','fuck','bitch','cunt','nigg','slut','bastard','retard','nazi','piroca','bucet','paneleir','imbecil','estupid','idiot','crlh','badalhoc','prostitut','vadi','arrombad','escroto','otari'].map(col);
+ const EXA=['puta','putas','putaria','putinha','putao','putedo','foda','fodas','fodase','fode','porra','porras','cona','conas','cu','cus','viado','viados','cabrao','cabroes','shit','shits','shitty','shite','bullshit','whore','asshole','pila','penis','vagina','tetas','mongol','mongoloide','pqp','fdp','vsf','crl','tnc','hitler','heil','vaca','cabra','gordo','gorda','feio','feia','lixo'].filter(w=>!['vaca','cabra','gordo','gorda','feio','feia','lixo'].includes(w)).map(col);
+ const JOIN=['caralho','foder','fodase','filhodaputa','paneleiro','fuck','vaitefoder'].map(col);
+ window.isBad=t=>{const n=norm(t);let toks=n.replace(/[^a-z]+/g,' ').trim().split(' ').filter(Boolean);const m=[];toks.forEach(w=>{if(w.length===1&&m.length&&m[m.length-1].s)m[m.length-1].w+=w;else m.push({w,s:w.length===1})});toks=m.map(x=>col(x.w));
+  if(toks.some(w=>EXA.includes(w)||PRE.some(p=>w.startsWith(p))))return true;
+  const j=col(n.replace(/[^a-z]/g,''));return JOIN.some(p=>j.includes(p))};
+})();

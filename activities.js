@@ -10,31 +10,31 @@ window.ACTS=[
  {id:'spine',t:'Story Spine',d:'Ordenar a história por arrastar'}
 ];
 window.QUIZ=[
- {q:'O que significa CTA num anúncio ou publicação?',o:['Custo total de aquisição','Call to action (apelo à ação)','Conteúdo temático anual','Clique na análise'],a:1,why:'É o convite concreto: «Compra», «Inscreve-te», «Guarda este post».'},
+ {q:'O que significa CTA num anúncio ou publicação?',o:['Custo total de aquisição','Call to action (apelo à ação)','Conteúdo temático anual','Clique na análise'],a:1,why:'É o convite concreto: «Compra», «Inscreve-te», «Guarda este vídeo».'},
  {q:'Que métrica mede a percentagem de pessoas que clicam num anúncio?',o:['CTR','ROI','CPM','SEO'],a:0,why:'CTR = cliques ÷ impressões.'},
  {q:'Na Story Spine, que frase vem logo a seguir a «Todos os dias…»?',o:['Por causa disso…','E desde então…','Até que um dia…','Até que finalmente…'],a:2,why:'A rotina quebra-se com «Até que um dia…».'},
- {q:'Qual destes é um canal «ganho» (earned media)?',o:['Anúncio no Instagram','Newsletter da marca','Cliente que partilha a marca nas suas stories','Site da marca'],a:2,why:'Ganho é o que os outros dizem de nós sem pagarmos.'},
+ {q:'Qual destes é um canal «ganho» (earned media)?',o:['Anúncio nos Reels','Newsletter da marca','Fã que partilha a marca nos seus stories','Site da marca'],a:2,why:'Ganho é o que os outros dizem de nós sem pagarmos.'},
  {q:'O que é uma persona em marketing?',o:['Um influenciador contratado','Um perfil semi-fictício do cliente ideal','O logótipo da marca','Um tipo de anúncio'],a:1,why:'Baseia-se em dados e entrevistas reais, não em achismos.'},
- {q:'O que quer dizer o «S» de SMART?',o:['Simples','Social','Specific (específico)','Sustentável'],a:2,why:'Specific, Measurable, Achievable, Relevant, Time-bound.'},
- {q:'No funil, em que fase a pessoa já conhece o problema e compara soluções?',o:['Consideração','Notoriedade','Fidelização','Recomendação'],a:0,why:'Notoriedade → Consideração → Decisão → Fidelização.'},
+ {q:'Qual destes é um objetivo SMART?',o:['Ter mais seguidores','Chegar aos 5 000 seguidores no TikTok até 30 de junho','Ficar famoso','Postar muito'],a:1,why:'Tem número e prazo: dá para medir.'},
+ {q:'Viste um TikTok de uma marca, ficaste curioso/a e agora estás a comparar com outras no YouTube. Em que fase da jornada estás?',o:['Consideração','Notoriedade','Fidelização','Recomendação'],a:0,why:'Descoberta → Consideração → Decisão → Fidelização → Recomendação.'},
  {q:'Para que serve o SEO?',o:['Comprar anúncios no Google','Aparecer melhor nos resultados orgânicos dos motores de busca','Enviar emails em massa','Medir seguidores'],a:1,why:'Search Engine Optimization: ser encontrado sem pagar por clique.'},
- {q:'Qual destes é mais uma «métrica de vaidade»?',o:['Taxa de conversão','Custo por cliente','Número total de seguidores','Retenção de clientes'],a:2,why:'Impressiona, mas não diz se o negócio está a crescer.'},
- {q:'Qual é o papel do gancho (hook) nos primeiros segundos de um vídeo?',o:['Mostrar o preço','Prender a atenção para a pessoa continuar a ver','Apresentar o logótipo','Pedir uma avaliação'],a:1,why:'Sem gancho, o resto da história nem chega a ser visto.'}
+ {q:'Um vídeo teve 2 milhões de views e só 3 vendas. O que isto mostra?',o:['Que as views são sempre o melhor KPI','Que muitas views não garantem resultados','Que o vídeo falhou o gancho','Que o preço está errado'],a:1,why:'Views são alcance, não resultado: o objetivo decide o que medir.'},
+ {q:'Qual é o papel do gancho (hook) nos primeiros segundos de um TikTok ou Reel?',o:['Mostrar o preço','Prender a atenção para a pessoa continuar a ver','Apresentar o logótipo','Pedir uma avaliação'],a:1,why:'Sem gancho, fazem scroll e o resto da história nem chega a ser visto.'}
 ];
 window.CANAIS=[
- {t:'Newsletter da marca',b:'own'},{t:'Site e blog',b:'own'},{t:'Conta de Instagram da marca',b:'own'},
- {t:'Anúncio no Meta Ads',b:'paid'},{t:'Campanha no Google Ads',b:'paid'},{t:'Patrocínio a um criador',b:'paid'},
- {t:'Artigo de jornal sobre a marca',b:'earned'},{t:'Cliente que recomenda nas stories',b:'earned'},{t:'Avaliação de 5 estrelas no Google',b:'earned'},{t:'Post impulsionado',b:'paid'}
+ {t:'Newsletter da marca',b:'own'},{t:'Site e blog',b:'own'},{t:'Perfil do TikTok da marca',b:'own'},
+ {t:'Anúncio nos Reels (Meta Ads)',b:'paid'},{t:'Campanha no Google Ads',b:'paid'},{t:'Creator pago a mostrar o produto',b:'paid'},{t:'Post impulsionado',b:'paid'},
+ {t:'Meme de fãs que se torna viral',b:'earned'},{t:'Cliente que recomenda nos stories',b:'earned'},{t:'Avaliação de 5 estrelas no Google',b:'earned'}
 ];
 window.BUCKETS=[{k:'own',t:'Próprio',c:'#5ED3A1'},{k:'paid',t:'Pago',c:'#FFB02E'},{k:'earned',t:'Ganho',c:'#A596FF'}];
 window.SPINE=[
- 'Era uma vez uma padaria de bairro que ninguém conhecia fora da rua.',
- 'Todos os dias a Ana abria às 6h e o balcão ficava meio vazio.',
- 'Até que um dia filmou, sem pensar muito, o pão a sair do forno.',
- 'Por causa disso, o vídeo foi partilhado por vizinhos e criadores locais.',
- 'Por causa disso, começaram a aparecer filas à porta ao fim de semana.',
- 'Por causa disso, passou a vender também online com encomendas semanais.',
- 'Até que finalmente a padaria ganhou uma comunidade fiel.',
- 'E desde então, cada fornada tem uma história para contar.'
+ 'Era uma vez uma estudante de Braga que fazia vídeos de cozinha económica para ninguém ver.',
+ 'Todos os dias publicava às 19h e recebia, no máximo, três gostos.',
+ 'Até que um dia mostrou, sem filtros, o jantar de 2 € que fez quando o dinheiro acabou.',
+ 'Por causa disso, o vídeo foi partilhado por colegas de casa e por outros estudantes.',
+ 'Por causa disso, começaram a pedir receitas para o fim do mês e a enviar as suas próprias.',
+ 'Por causa disso, uma marca de supermercado quis patrocinar a série.',
+ 'Até que finalmente a série chegou aos 100 mil seguidores sem perder a honestidade.',
+ 'E desde então, cada receita começa com a mesma frase: «Hoje o orçamento é de 2 €.»'
 ];
-window.PALAVRAS_Q='Escreve 1 a 3 palavras: o que torna uma marca memorável?';
+window.PALAVRAS_Q='Escreve 1 a 3 palavras: o que te faz parar o scroll numa marca?';

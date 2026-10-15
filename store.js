@@ -37,11 +37,11 @@ window.uid=()=>Math.random().toString(36).slice(2,8)+Date.now().toString(36).sli
 window.esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 /* conteúdos partilhados entre ecrã e telemóvel */
 window.CONTENT={
- marcas:['Café de bairro','Ginásio low-cost','Livraria independente','App de transportes','Loja online de plantas','Marca de ténis sustentáveis','Clínica veterinária','Escola de línguas','Azeite artesanal','Padaria de bairro'],
- personas:['Estudante universitária','Reformado ativo','Pai solteiro','Freelancer','Turista perdido','Criadora iniciante','Enfermeira de turnos','Gestor sem tempo'],
- conflitos:['Falta de tempo','Medo de falhar','Desconfiança','Dinheiro apertado','Solidão','Excesso de opções','Vergonha de pedir ajuda','Rotina aborrecida'],
- canais:['Reel / TikTok','Carrossel','Newsletter','Post no LinkedIn','Podcast curto','Anúncio em vídeo','Stories com sondagem','Parceria com criador'],
- kpis:['Alcance (pessoas novas)','Retenção do vídeo','Guardados','Partilhas','Cliques para o site','Inscrições','Encomendas / vendas','Avaliações'],
+ marcas:['Loja de roupa em segunda mão','Festival de música','App de entregas de comida','Ginásio low-cost','Marca de ténis sustentáveis','Café perto da faculdade','Estúdio de pilates','App de transportes','Livraria independente','Loja online de plantas'],
+ personas:['Caloiro na cidade nova','Estudante Erasmus','Estudante-trabalhador','Criadora de conteúdo iniciante','Recém-licenciada à procura de emprego','Gamer de fim de semana','Estagiário no primeiro emprego','Reformado ativo'],
+ conflitos:['Falta de tempo','Medo de ficar de fora (FOMO)','Desconfiança','Dinheiro apertado','Solidão na cidade nova','Excesso de opções','Vergonha de pedir ajuda','Rotina aborrecida'],
+ canais:['TikTok','Reel no Instagram','Carrossel','Newsletter','Post no LinkedIn','Podcast curto','Stories com sondagem','Parceria com creator'],
+ kpis:['Alcance (pessoas novas)','Retenção do vídeo','Guardados','Partilhas','Cliques para o site','Inscrições','Compras / vendas','Avaliações'],
  spine:['Era uma vez…','Todos os dias…','Até que um dia…','Por causa disso…','Por causa disso…','Por causa disso…','Até que finalmente…','E desde então…'],
  cores:['#FF6B4A','#A596FF','#FFB02E','#5ED3A1','#FF8FC7','#6EC1FF','#F6F1E9','#C9A0FF','#FF9E7A','#9BE15D','#FFD166','#7B63F0']
 };
@@ -50,7 +50,7 @@ window.smartCheck=t=>{t=(t||'').toLowerCase();return [
  ['Específico',/\b(aumentar|reduzir|conseguir|vender|chegar|gerar|ganhar|atingir|duplicar|crescer|captar|converter|obter|levar)\b/.test(t)&&t.split(/\s+/).length>=6],
  ['Mensurável',/\d/.test(t)],
  ['Atingível',t.length>0&&!/\b(milh(ão|ões)|1000%|todos os|toda a gente)\b/.test(t)],
- ['Relevante',/\b(clientes?|vendas?|encomendas?|inscri|visitas?|reservas?|seguidores|leads?|newsletter|loja|site|marca)\b/.test(t)],
+ ['Relevante',/\b(clientes?|vendas?|encomendas?|inscri|visitas?|reservas?|seguidores|leads?|newsletter|loja|site|marca|estudantes?|views?|tiktok|instagram|drop|comunidade)\b/.test(t)],
  ['Temporal',/\b(até|em \d+ (dias|semanas|meses)|por (semana|mês)|mensal|semanal|janeiro|fevereiro|março|abril|maio|junho|julho|agosto|setembro|outubro|novembro|dezembro|trimestre|ano|natal|verão)\b/.test(t)]]};
 /* verificação do gancho */
 window.hookCheck=t=>{t=(t||'').trim();const w=t.split(/\s+/).filter(Boolean).length;return [

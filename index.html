@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="pt-PT"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Aula · Comunicação Digital e Marketing</title>
+<meta name="theme-color" content="#0E0D14">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
+</head><body>
+<div class="glow"></div>
+<div class="land">
+ <div class="rise"><p class="sub" style="text-transform:uppercase;letter-spacing:.16em;font-weight:700;font-size:.8rem;color:var(--coral)">Comunicação Digital e Marketing</p>
+ <h1 style="margin-top:10px">Entra na <em>aula</em></h1></div>
+ <p class="rise" style="animation-delay:.1s">Escreve o código que está no ecrã.</p>
+ <form class="codein rise" style="animation-delay:.2s" id="f"><input id="c" maxlength="4" placeholder="ABCD" autocomplete="off" autocapitalize="characters" inputmode="text"><button class="btn" type="submit">Entrar</button></form>
+ <div class="err" id="er"></div>
+ <a class="t" href="ecra.html">Sou o professor</a>
+</div>
+<script>
+const f=document.getElementById('f'),c=document.getElementById('c');
+f.onsubmit=e=>{e.preventDefault();const v=c.value.toUpperCase().replace(/[^A-Z0-9]/g,'');if(v.length<4){document.getElementById('er').textContent='O código tem 4 letras.';return}location.href='jogar.html?c='+v};
+</script>
+</body></html>

@@ -24,5 +24,22 @@
 <script src="config.js"></script>
 <script src="store.js"></script>
 <script src="activities.js"></script>
-<script src="host.js"></script>
+<div class="land" id="lock" style="display:none">
+ <div class="rise"><p class="sub" style="text-transform:uppercase;letter-spacing:.16em;font-weight:700;font-size:.8rem;color:var(--coral)">Área do professor</p>
+ <h1 style="margin-top:10px">Código de <em>acesso</em></h1></div>
+ <form class="codein rise" style="animation-delay:.1s" id="lf"><input id="lp" type="password" inputmode="numeric" maxlength="12" placeholder="••••••" autocomplete="off"><button class="btn" type="submit">Entrar</button></form>
+ <div class="err" id="le"></div>
+</div>
+<script>
+(()=>{const H="dc96f99a712bf005067bf0985b36f2b1ef789f60060257bf0c8ec4c229637f20",K='aula-prof-ok';
+const sha=async t=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t)))].map(b=>b.toString(16).padStart(2,'0')).join('');
+const st=document.querySelector('.stage'),lk=document.getElementById('lock');st.style.display='none';
+let loaded=false;const go=()=>{if(loaded)return;loaded=true;lk.style.display='none';st.style.display='';const s=document.createElement('script');s.src='host.js';document.body.appendChild(s)};
+const ok=()=>{try{return localStorage.getItem(K)===H}catch(e){return false}};
+if(ok())go();else{lk.style.display='';
+ let fails=0;document.getElementById('lf').onsubmit=async e=>{e.preventDefault();const er=document.getElementById('le'),v=document.getElementById('lp').value.trim();
+  if(await sha('aula-prof:'+v)===H){try{localStorage.setItem(K,H)}catch(x){}go()}
+  else{fails++;er.textContent='Código errado.';document.getElementById('lp').value='';const b=document.querySelector('#lf button');b.disabled=true;setTimeout(()=>{b.disabled=false},Math.min(fails*1500,8000))}}}
+})();
+</script>
 </body></html>

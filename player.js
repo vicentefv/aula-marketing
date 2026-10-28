@@ -13,6 +13,7 @@ const vib=n=>{try{navigator.vibrate&&navigator.vibrate(n||12)}catch(e){}};
 const hash=s=>{let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0};
 const shuf=(n,seed)=>{const a=[...Array(n).keys()];let s=seed||1;const r=()=>{s=Math.imul(s^s>>>15,1|s);s^=s+Math.imul(s^s>>>7,61|s);return((s^s>>>14)>>>0)/4294967296};for(let i=n-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const setMain=h=>{main.innerHTML=h};
+const SET=()=>act.id==='slop'?SLOP:QUIZ;
 
 /* ---------- topo ---------- */
 function top(){const b=$('#top');if(!me){b.innerHTML='<div class="who"><span class="n">Sala '+esc(C)+'</span></div><span class="conn" id="cn"></span>';return}
@@ -56,21 +57,31 @@ const elapsed=()=>(STORE.now()-act.t0)/1000;
 const VIEWS={
 lobby:{render(){setMain('<div class="center rise"><div class="bigdot" style="background:'+(me?me.color:'var(--violet)')+'"></div><h2>Estás dentro'+(me?', '+esc(me.name):'')+'</h2><p class="sub">Olha para o ecrã. A próxima atividade aparece aqui sozinha.</p></div>')}},
 
-palavras:{render(){setMain('<h2>'+esc(PALAVRAS_Q)+'</h2><div class="join" style="margin-top:0"><input id="w" maxlength="24" placeholder="Uma palavra"><button class="btn" id="sw">Enviar palavra</button></div><div class="chips" id="mine"></div><p class="sub" id="lim"></p>');
-  const send=()=>{const v=$('#w').value.trim();if(!v)return;if(isBad(v)){$('#lim').textContent='Essa palavra não é permitida.';$('#w').value='';vib(40);return}const mine=(ans[pid]&&ans[pid].w)?Object.keys(ans[pid].w).length:0;if(mine>=3)return;STORE.set(P+'/ans/'+curKey+'/'+pid+'/w/'+uid(),v.slice(0,24));$('#w').value='';vib()};
+palavras:{render(){setMain('<h2>'+esc(act.q||PALAVRAS_Q)+'</h2><div class="join" style="margin-top:0"><input id="w" maxlength="24" placeholder="Uma marca"><button class="btn" id="sw">Enviar</button></div><div class="chips" id="mine"></div><p class="sub" id="lim"></p>');
+  const send=()=>{const v=$('#w').value.trim();if(!v)return;if(isBad(v)){$('#lim').textContent='Isso não é permitido.';$('#w').value='';vib(40);return}const mine=(ans[pid]&&ans[pid].w)?Object.keys(ans[pid].w).length:0;if(mine>=3)return;STORE.set(P+'/ans/'+curKey+'/'+pid+'/w/'+uid(),v.slice(0,24));$('#w').value='';vib()};
   $('#sw').onclick=send;$('#w').addEventListener('keydown',e=>{if(e.key==='Enter')send()})},
- update(){const w=(ans[pid]&&ans[pid].w)||{};const a=Object.values(w);const m=$('#mine');if(!m)return;m.innerHTML=a.map(x=>'<span class="chip ok pop">'+esc(x)+'</span>').join('');const l=$('#lim');if(l)l.textContent=a.length>=3?'Limite de 3 palavras atingido.':'Podes enviar até 3 palavras ('+a.length+'/3).';const s=$('#sw');if(s)s.disabled=a.length>=3}},
+ update(){const w=(ans[pid]&&ans[pid].w)||{};const a=Object.values(w);const m=$('#mine');if(!m)return;m.innerHTML=a.map(x=>'<span class="chip ok pop">'+esc(x)+'</span>').join('');const l=$('#lim');if(l)l.textContent=a.length>=3?'Limite de 3 atingido.':'Podes enviar até 3 ('+a.length+'/3).';const s=$('#sw');if(s)s.disabled=a.length>=3}},
+
+inquerito:{render(){const mine=(ans[pid]&&ans[pid].a)||{};
+  setMain('<h2>Inquérito rápido</h2><p class="sub">Responde às 3 perguntas. Podes mudar até o professor fechar.</p>'+INQ.map((Q,qi)=>'<div class="card" style="margin-top:14px"><div style="font-weight:700;margin-bottom:10px">'+(qi+1)+'. '+esc(Q.q)+'</div><div class="opts inq" data-q="'+qi+'">'+Q.o.map((o,i)=>'<button class="opt c'+(i%4)+(mine[qi]===i?' sel':'')+'" data-i="'+i+'">'+esc(o)+'</button>').join('')+'</div></div>').join('')+'<p class="sub" id="st" style="margin-top:12px"></p>');
+  main.onclick=e=>{const b=e.target.closest('.inq .opt');if(!b||act.phase!=='in')return;const qi=+b.parentElement.dataset.q,i=+b.dataset.i;vib();STORE.set(P+'/ans/'+curKey+'/'+pid+'/a/'+qi,i)}},
+ update(){const mine=(ans[pid]&&ans[pid].a)||{};document.querySelectorAll('.inq').forEach(g=>{const qi=+g.dataset.q;g.querySelectorAll('.opt').forEach(b=>{const s=mine[qi]===+b.dataset.i;b.classList.toggle('sel',s);b.classList.toggle('dim',mine[qi]!=null&&!s)})});const st=$('#st');if(st){const n=Object.keys(mine).length;st.textContent=act.phase!=='in'?'Inquérito fechado. Vê os resultados no ecrã.':n>=INQ.length?'Respondeste a tudo. Obrigado!':n+' de '+INQ.length+' respondidas.'}}},
+
+sorteio:{render(){const G=act.groups||[];
+  if(!G.length){setMain('<div class="center"><div class="bigdot" style="background:var(--amber)"></div><h2>Sorteio dos grupos</h2><p class="sub">Olha para o ecrã. O sorteio aparece aqui a seguir.</p></div>');return}
+  setMain('<h2>O desafio de cada grupo</h2><p class="sub">Procura o número do teu grupo.</p>'+G.map((b,i)=>'<div class="brief" style="margin-top:14px"><div class="row" style="--c:var(--coral)"><small>Grupo '+(i+1)+'</small><span>'+esc(b.m)+'</span></div><div class="row" style="--c:var(--violet)"><small>Persona</small><span>'+esc(b.p)+'</span></div><div class="row" style="--c:var(--amber)"><small>Conflito</small><span>'+esc(b.c)+'</span></div><div class="row" style="--c:var(--mint)"><small>Canal</small><span>'+esc(b.k)+'</span></div></div>').join(''))},
+ update(){const h=JSON.stringify(act.groups||[]);if(local.gh!==h){local.gh=h;this.render()}}},
 
 quiz:{render(){
-  const Q=QUIZ[act.idx];
+  const QS=SET(),Q=QS[act.idx];
   if(act.phase==='q'){
-   setMain('<p class="sub">Pergunta '+(act.idx+1)+' de '+QUIZ.length+'</p><div class="tbar"><i id="tb"></i></div><h2 style="font-size:clamp(22px,6vw,30px)">'+esc(Q.q)+'</h2><div class="opts" id="ops">'+Q.o.map((o,i)=>'<button class="opt c'+i+'" data-i="'+i+'">'+esc(o)+'</button>').join('')+'</div><p class="sub" id="st"></p>');
+   setMain('<p class="sub">'+(act.id==='slop'?'Frase ':'Pergunta ')+(act.idx+1)+' de '+QS.length+'</p><div class="tbar"><i id="tb"></i></div><h2 style="font-size:clamp(22px,6vw,30px)">'+esc(Q.q)+'</h2><div class="opts" id="ops">'+Q.o.map((o,i)=>'<button class="opt c'+i+'" data-i="'+i+'">'+esc(o)+'</button>').join('')+'</div><p class="sub" id="st"></p>');
    startTimer('#tb',act.lim);
    $('#ops').onclick=e=>{const b=e.target.closest('.opt');if(!b||ans[pid]||elapsed()>act.lim+.5)return;const i=+b.dataset.i;vib();STORE.set(P+'/ans/'+curKey+'/'+pid,{c:i,t:Math.round(STORE.now()-act.t0)})};
   }else if(act.phase==='rev'){
    const a=ans[pid],ok=a&&a.c===Q.a,p=(me&&me.pts&&me.pts[curKey])||0;
    setMain('<div class="verdict '+(ok?'ok':'no')+' pop"><b>'+(ok?'Certo!':a?'Errado':'Sem resposta')+'</b><div style="margin-top:6px;font-size:1.2rem">+'+p+' pontos</div></div><div class="card"><small style="color:var(--mut)">Resposta certa</small><div style="font-weight:700;margin-top:4px">'+esc(Q.o[Q.a])+'</div><p class="sub" style="margin-top:8px">'+esc(Q.why)+'</p></div><p class="prog">Aguarda a próxima pergunta…</p>');
-  }else{setMain('<div class="center"><h2>Fim do quiz</h2><p class="sub">Vê o ranking no ecrã.</p></div>')}},
+  }else{setMain('<div class="center"><h2>'+(act.id==='slop'?'Fim do detetor de slop':'Fim do quiz')+'</h2><p class="sub">Vê o ranking no ecrã.</p></div>')}},
  update(){if(act.phase!=='q')return;const a=ans[pid];document.querySelectorAll('.opt').forEach(b=>{const s=a&&+b.dataset.i===a.c;b.classList.toggle('sel',!!s);b.classList.toggle('dim',!!a&&!s)});const s=$('#st');if(s)s.textContent=a?'Resposta enviada. Espera pelos outros…':'';}},
 
 canais:{render(){
@@ -91,7 +102,7 @@ desafio:{render(){setMain('<h2>O vosso desafio</h2>'+(me&&me.brief?'<div class="
 smart:{render(){
   if(act.phase==='rev'){const t=(ans[pid]&&ans[pid].t)||'';const ch=smartCheck(t);const p=(me&&me.pts&&me.pts[curKey])||0;
    setMain('<div class="verdict ok pop"><b>'+ch.filter(x=>x[1]).length+' / 5</b><div style="margin-top:6px">+'+p+' pontos</div></div><div class="card">'+esc(t||'Sem resposta')+'</div><div class="chips">'+ch.map(x=>'<span class="chip '+(x[1]?'ok':'no')+'">'+(x[1]?'✓ ':'')+x[0]+'</span>').join('')+'</div>');return}
-  setMain('<h2>Escreve o objetivo SMART</h2>'+(me&&me.brief?'<details class="card"><summary style="cursor:pointer;font-weight:700">O vosso desafio</summary><div style="margin-top:12px">'+briefHTML(true)+'</div></details>':'')+'<textarea class="ta" id="tx" placeholder="Ex.: Aumentar as encomendas online em 20% até ao fim de março."></textarea><div class="chips" id="ck"></div><button class="btn" id="sd">Enviar objetivo</button><p class="sub" id="ms"></p>');
+  setMain('<h2>Escreve o objetivo SMART</h2>'+'<textarea class="ta" id="tx" placeholder="Ex.: Aumentar as encomendas online em 20% até ao fim de março."></textarea><div class="chips" id="ck"></div><button class="btn" id="sd">Enviar objetivo</button><p class="sub" id="ms"></p>');
   $('#tx').value=local.t||(ans[pid]&&ans[pid].t)||'';
   $('#tx').oninput=()=>{local.t=$('#tx').value;chips()};chips();
   $('#sd').onclick=()=>{const t=$('#tx').value.trim();if(!t)return;if(isBad(t)){$('#ms').textContent='Há palavras não permitidas. Reformula o texto.';vib(40);return}STORE.set(P+'/ans/'+curKey+'/'+pid,{t:t.slice(0,300)});vib(20)};
@@ -100,7 +111,7 @@ smart:{render(){
 
 gancho:{render(){
   if(act.phase==='in'){
-   setMain('<h2>Escreve o gancho</h2><p class="sub">A frase que abre o vosso vídeo ou post.</p>'+(me&&me.brief?'<details class="card"><summary style="cursor:pointer;font-weight:700">O vosso desafio</summary><div style="margin-top:12px">'+briefHTML(true)+'</div></details>':'')+'<textarea class="ta" id="tx" style="min-height:100px" placeholder="Ex.: Ninguém te conta isto sobre o pão de ontem…"></textarea><div class="chips" id="ck"></div><button class="btn" id="sd">Enviar gancho</button><p class="sub" id="ms"></p>');
+   setMain('<h2>Escreve o gancho</h2><p class="sub">A frase que abre o vosso vídeo ou post.</p>'+'<textarea class="ta" id="tx" style="min-height:100px" placeholder="Ex.: Ninguém te conta isto sobre o pão de ontem…"></textarea><div class="chips" id="ck"></div><button class="btn" id="sd">Enviar gancho</button><p class="sub" id="ms"></p>');
    $('#tx').value=local.t||(ans[pid]&&ans[pid].t)||'';
    const chips=()=>{$('#ck').innerHTML=hookCheck($('#tx').value).map(x=>'<span class="chip '+(x[1]?'ok':'no')+'">'+(x[1]?'✓ ':'')+x[0]+'</span>').join('')};
    $('#tx').oninput=()=>{local.t=$('#tx').value;chips()};chips();
@@ -128,6 +139,7 @@ spine:{render(){
  update(){const m=$('#ms');if(m&&act.phase==='in')m.textContent=ans[pid]?'Enviado. Podes reordenar e reenviar até acabar o tempo.':''}}
 };
 
+VIEWS.marcas=VIEWS.palavras;VIEWS.slop=VIEWS.quiz;
 /* ---------- arrastar ---------- */
 function place(i,k){if(local.cur==null)return;local.cur=null;vib(15);STORE.set(P+'/ans/'+curKey+'/'+pid+'/m/'+i,k);const m=((ans[pid]||{}).m)||{};m[i]=k;ans[pid]=Object.assign({},ans[pid],{m});update()}
 function dragCard(el){

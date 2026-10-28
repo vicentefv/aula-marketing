@@ -11,6 +11,7 @@ const base=new URL('.',location.href).href;
 const joinURL=()=>base+'jogar.html?c='+C;
 const oo=a=>a&&a.o?a.o.split(',').map(Number):[];
 const shuf=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const SET=()=>act.id==='slop'?SLOP:QUIZ;
 const dot=c=>'<i style="display:inline-block;width:1.6vh;height:1.6vh;border-radius:50%;background:'+c+'"></i>';
 
 /* defesa extra: nada ofensivo chega ao ecrã, mesmo que alguém contorne o telemóvel */
@@ -35,8 +36,9 @@ const now=()=>STORE.now();
 /* ---------- navegação entre atividades ---------- */
 function go(id){const run=uid().slice(0,4);local={};rolling=false;showRank=false;
  const A={id,run,phase:'in',t0:now()};
- if(id==='quiz'){A.idx=0;A.phase='q';A.lim=20;A.key='quiz'+run+'_0'}
- else{A.key=id+run;if(id==='canais')A.lim=75;if(id==='smart')A.lim=150;if(id==='gancho')A.lim=120;if(id==='spine')A.lim=100}
+ if(id==='quiz'||id==='slop'){A.idx=0;A.phase='q';A.lim=id==='slop'?15:20;A.key=id+run+'_0'}
+ else if(id==='marcas'){A.key=id+run;A.q=PALAVRAS_Q}
+ if(id!=='quiz'&&id!=='slop'&&id!=='marcas'){A.key=id+run;if(id==='canais')A.lim=75;if(id==='smart')A.lim=150;if(id==='gancho')A.lim=120;if(id==='spine')A.lim=100}
  if(id==='lobby')A.key='lobby';
  setAct(A)}
 const nextId=()=>{const i=ACTS.findIndex(a=>a.id===act.id);return ACTS[Math.min(ACTS.length-1,i+1)].id};
@@ -44,21 +46,22 @@ const nextId=()=>{const i=ACTS.findIndex(a=>a.id===act.id);return ACTS[Math.min(
 /* ---------- pontuação ---------- */
 function award(map){const u={};for(const pid in map)u[pid+'/pts/'+act.key]=map[pid];return STORE.update(P+'/players',u)}
 const submitted=()=>Object.keys(ans).filter(k=>players[k]);
-function revealQuiz(){if(local.rv===act.key)return;local.rv=act.key;const Q=QUIZ[act.idx],m={};plist().forEach(p=>{const a=ans[p.id];m[p.id]=a&&a.c===Q.a?Math.round(1000*(1-Math.min(1,a.t/(act.lim*1000))*.5)):0});award(m).then(()=>setAct(Object.assign({},act,{phase:'rev'})))}
+function revealQuiz(){if(local.rv===act.key)return;local.rv=act.key;const Q=SET()[act.idx],m={};plist().forEach(p=>{const a=ans[p.id];m[p.id]=a&&a.c===Q.a?Math.round(1000*(1-Math.min(1,a.t/(act.lim*1000))*.5)):0});award(m).then(()=>setAct(Object.assign({},act,{phase:'rev'})))}
 function revealCanais(){const m={};plist().forEach(p=>{const a=(ans[p.id]||{}).m||{};m[p.id]=CANAIS.reduce((s,c,i)=>s+(a[i]===c.b?30:0),0)});award(m).then(()=>setAct(Object.assign({},act,{phase:'rev'})))}
 function revealSmart(){const m={};plist().forEach(p=>{const a=ans[p.id];m[p.id]=a?smartCheck(a.t).filter(x=>x[1]).length*20:0});award(m).then(()=>setAct(Object.assign({},act,{phase:'rev'})))}
 function revealGancho(){const c={};Object.values(vt).forEach(t=>{c[t]=(c[t]||0)+1});const m={};plist().forEach(p=>m[p.id]=(c[p.id]||0)*100);award(m).then(()=>setAct(Object.assign({},act,{phase:'rev'})))}
 function revealSpine(){const m={};plist().forEach(p=>{const o=oo(ans[p.id]);m[p.id]=SPINE.reduce((s,_,i)=>s+(o[i]===i?40:0),0)});award(m).then(()=>setAct(Object.assign({},act,{phase:'rev'})))}
-function roll(){if(rolling)return;rolling=true;render();setTimeout(()=>{const ps=plist(),m=shuf(CONTENT.marcas),pe=shuf(CONTENT.personas),co=shuf(CONTENT.conflitos),ca=shuf(CONTENT.canais),u={};
-  ps.forEach((p,i)=>{u[p.id+'/brief']={m:m[i%m.length],p:pe[i%pe.length],c:co[i%co.length],k:ca[i%ca.length]}});
-  STORE.update(P+'/players',u).then(()=>{rolling=false;setAct(Object.assign({},act,{phase:'rev'}));render()})},1300)}
+function roll(){if(rolling)return;rolling=true;render();setTimeout(()=>{const n=local.ng||act.ng||4,m=shuf(CONTENT.marcas),pe=shuf(CONTENT.personas),co=shuf(CONTENT.conflitos),ca=shuf(CONTENT.canais);
+  const groups=Array.from({length:n},(_,i)=>({m:m[i%m.length],p:pe[i%pe.length],c:co[i%co.length],k:ca[i%ca.length]}));
+  rolling=false;setAct(Object.assign({},act,{phase:'rev',ng:n,groups}))},1300)}
 
 /* ---------- barra de ação ---------- */
 function action(){const id=act.id,ph=act.phase,nx={label:'Seguinte atividade',fn:()=>go(nextId())};
- if(id==='lobby')return{label:'Começar',fn:()=>go('palavras')};
- if(id==='quiz'){if(ph==='q')return{label:'Revelar',fn:revealQuiz};if(ph==='rev')return act.idx<QUIZ.length-1?{label:'Pergunta seguinte',fn:()=>{const i=act.idx+1;setAct(Object.assign({},act,{idx:i,phase:'q',t0:now(),key:'quiz'+act.run+'_'+i}))}}:{label:'Ver resultado final',fn:()=>setAct(Object.assign({},act,{phase:'end'}))};return nx}
+ if(id==='lobby')return{label:'Começar',fn:()=>go('marcas')};
+ if(id==='quiz'||id==='slop'){if(ph==='q')return{label:'Revelar',fn:revealQuiz};if(ph==='rev')return act.idx<SET().length-1?{label:'Pergunta seguinte',fn:()=>{const i=act.idx+1;setAct(Object.assign({},act,{idx:i,phase:'q',t0:now(),key:act.id+act.run+'_'+i}))}}:{label:'Ver resultado final',fn:()=>setAct(Object.assign({},act,{phase:'end'}))};return nx}
  if(id==='canais')return ph==='in'?{label:'Revelar',fn:revealCanais}:nx;
- if(id==='desafio')return ph==='in'?{label:'Sortear',fn:roll}:Object.assign({sec:{label:'Sortear outra vez',fn:roll}},nx);
+ if(id==='sorteio')return ph==='in'?{label:'Sortear',fn:roll}:Object.assign({sec:{label:'Sortear outra vez',fn:roll}},nx);
+ if(id==='inquerito')return ph==='in'?{label:'Fechar inquérito',fn:()=>setAct(Object.assign({},act,{phase:'rev'}))}:nx;
  if(id==='smart')return ph==='in'?{label:'Revelar e pontuar',fn:revealSmart}:nx;
  if(id==='gancho')return ph==='in'?{label:'Abrir votação',fn:()=>setAct(Object.assign({},act,{phase:'vote'}))}:ph==='vote'?{label:'Revelar vencedor',fn:revealGancho}:nx;
  if(id==='spine')return ph==='in'?{label:'Revelar',fn:revealSpine}:nx;
@@ -79,15 +82,15 @@ lobby:{render(){const url=joinURL();let svg='';try{const qr=qrcode(0,'M');qr.add
   setBody('<div class="lobby"><div class="qr rise">'+svg+'</div><div class="rise" style="animation-delay:.12s;display:flex;flex-direction:column;gap:2.6vh">'+eb('Aula ao vivo')+'<h1 style="font-size:6.6vh">Entra com o telemóvel</h1><div style="font-size:2.6vh;color:var(--mut)">Lê o QR ou escreve o código em <b style="color:var(--ink)">'+esc(base.replace(/^https?:\/\//,'').replace(/\/$/,''))+'</b></div><div class="codebig">'+C+'</div><div><div class="eyebrow" style="color:var(--mut);margin-bottom:1.4vh"><span id="np">0</span> na sala</div><div class="plist" id="pl"></div></div></div></div>')},
  update(){const l=$('#pl');if(!l)return;const ps=plist();$('#np').textContent=ps.length;const have=new Set([...l.children].map(n=>n.dataset.i));ps.forEach(p=>{if(!have.has(p.id)){const d=document.createElement('span');d.className='pl pop';d.dataset.i=p.id;d.innerHTML='<i style="background:'+p.color+'"></i>'+esc(p.name);l.appendChild(d)}});[...l.children].forEach(n=>{if(!players[n.dataset.i])n.remove()})}},
 
-palavras:{render(){local.cl={};setBody(eb('Palavras')+'<h2 style="margin:1.4vh 0 0;max-width:70vw">'+esc(PALAVRAS_Q)+'</h2>'+cntH('Participantes')+'<div class="cloud" id="cloud"></div>')},
+palavras:{render(){local.cl={};setBody(eb('Marcas')+'<h2 style="margin:1.4vh 0 0;max-width:70vw">'+esc(act.q||PALAVRAS_Q)+'</h2>'+cntH('Participantes')+'<div class="cloud" id="cloud"></div>')},
  update(){const cl=$('#cloud');if(!cl)return;const c={};let who=0;Object.keys(ans).forEach(k=>{if(!players[k])return;who++;Object.values((ans[k]||{}).w||{}).forEach(w=>{const x=String(w).trim().toLowerCase();if(x)c[x]=(c[x]||0)+1})});$('#cn').textContent=who;
   const cols=CONTENT.cores;let i=0;Object.keys(c).forEach(w=>{let s=local.cl[w];if(!s){s=document.createElement('span');s.textContent=w;s.style.color=cols[(i+3)%cols.length];local.cl[w]=s;cl.appendChild(s)}s.style.fontSize=Math.min(16,4.5+c[w]*2.6)+'vh';i++})}},
 
-quiz:{render(){const Q=QUIZ[act.idx];
-  if(act.phase==='end'){setBody(eb('Quiz · resultado final')+'<h2 style="margin:1.4vh 0 3vh">Quem sabe mais?</h2>'+ranking(8));grow();return}
+quiz:{render(){const QS=SET(),Q=QS[act.idx];const nm=act.id==='slop'?'Slop ou não?':'Quiz';
+  if(act.phase==='end'){setBody(eb(nm+' · resultado final')+'<h2 style="margin:1.4vh 0 3vh">Quem sabe mais?</h2>'+ranking(8));grow();return}
   const rv=act.phase==='rev';
-  setBody(eb('Quiz · pergunta '+(act.idx+1)+' de '+QUIZ.length)+cntH('Respostas')+'<div style="height:2vh"></div>'+(rv?'<div class="tl"><i style="width:0"></i></div>':timerH())+'<div class="qbig">'+esc(Q.q)+'</div><div class="qgrid">'+Q.o.map((o,i)=>'<div class="qo c'+i+(rv?(i===Q.a?' right':' dim'):'')+'"><span>'+esc(o)+'</span><span class="cnt" id="q'+i+'"></span></div>').join('')+'</div>'+(rv?'<div class="why rise">'+esc(Q.why)+'</div>':''))},
- update(){if(act.phase==='end')return;const Q=QUIZ[act.idx];const n=submitted().length;const c=$('#cn');if(c)c.textContent=n+' / '+plist().length;
+  setBody(eb(nm+' · '+(act.idx+1)+' de '+QS.length)+cntH('Respostas')+'<div style="height:2vh"></div>'+(rv?'<div class="tl"><i style="width:0"></i></div>':timerH())+'<div class="qbig">'+esc(Q.q)+'</div><div class="qgrid">'+Q.o.map((o,i)=>'<div class="qo c'+i+(rv?(i===Q.a?' right':' dim'):'')+'"><span>'+esc(o)+'</span><span class="cnt" id="q'+i+'"></span></div>').join('')+'</div>'+(rv?'<div class="why rise">'+esc(Q.why)+'</div>':''))},
+ update(){if(act.phase==='end')return;const Q=SET()[act.idx];const n=submitted().length;const c=$('#cn');if(c)c.textContent=n+' / '+plist().length;
   if(act.phase==='rev'){const k=[0,0,0,0];Object.keys(ans).forEach(p=>{if(players[p]&&ans[p].c!=null)k[ans[p].c]++});k.forEach((v,i)=>{const e=$('#q'+i);if(e)e.textContent=v})}
   else if(n&&n>=plist().length)revealQuiz()}},
 
@@ -98,11 +101,17 @@ canais:{render(){
   if(act.phase==='rev'){const it=$('#it');if(!it)return;const ps=plist();it.innerHTML=CANAIS.map((c,i)=>{const ok=ps.filter(p=>((ans[p.id]||{}).m||{})[i]===c.b).length;const b=BUCKETS.find(x=>x.k===c.b);return '<div class="it3"><span>'+esc(c.t)+'</span><span style="display:flex;gap:1vw;align-items:center"><span style="color:var(--mut)">'+ok+'/'+ps.length+'</span><span class="tag" style="background:'+b.c+'">'+b.t+'</span></span></div>'}).join('');return}
   const pg=$('#pg');if(!pg)return;let d=0;pg.innerHTML=plist().map(p=>{const m=Object.keys((ans[p.id]||{}).m||{}).length;if(m>=n)d++;return '<span class="pg'+(m>=n?' done':'')+'">'+dot(p.color)+esc(p.name)+' · '+m+'/'+n+'</span>'}).join('');$('#cn').textContent=d+' / '+plist().length}},
 
-desafio:{render(){
-  if(act.phase==='rev'&&!rolling){setBody(eb('Sorteio de desafio')+'<h2 style="margin:1.4vh 0 2vh">Cada equipa tem o seu desafio</h2><div class="briefs" id="br"></div>');return}
-  setBody(eb('Sorteio de desafio')+'<h1 style="margin:1.4vh 0 3vh">'+(rolling?'A sortear…':'Marca · persona · conflito · canal')+'</h1><div class="cloud" id="cloud" style="font-size:7vh"></div>');
+sorteio:{render(){
+  if(act.phase==='rev'&&!rolling){setBody(eb('Sorteio dos grupos')+'<h2 style="margin:1.4vh 0 2vh">Cada grupo tem o seu desafio</h2><div class="briefs" id="br"></div>');return}
+  const n=local.ng||act.ng||4;
+  setBody(eb('Sorteio dos grupos')+'<h1 style="margin:1.4vh 0 2vh">'+(rolling?'A sortear…':'Marca · persona · conflito · canal')+'</h1>'+(rolling?'':'<div style="display:flex;gap:1vw;align-items:center;font-size:2.4vh;margin-bottom:2vh"><span>Quantos grupos?</span>'+[2,3,4,5,6,7,8].map(k=>'<button class="nv'+(k===n?' on':'')+'" data-ng="'+k+'">'+k+'</button>').join('')+'</div>')+'<div class="cloud" id="cloud" style="font-size:7vh"></div>');
+  body.querySelectorAll('[data-ng]').forEach(b=>b.onclick=()=>{local.ng=+b.dataset.ng;render()});
   if(rolling){const all=[].concat(CONTENT.marcas,CONTENT.personas,CONTENT.conflitos,CONTENT.canais);const cl=$('#cloud');clearInterval(local.fl);local.fl=setInterval(()=>{if(!rolling||!$('#cloud')){clearInterval(local.fl);return}cl.innerHTML=shuf(all).slice(0,5).map((w,i)=>'<span style="color:'+CONTENT.cores[i*2]+';font-size:6vh">'+esc(w)+'</span>').join('')},90)}},
- update(){const b=$('#br');if(!b)return;b.innerHTML=plist().filter(p=>p.brief).map(p=>'<div class="bcard pop"><div class="nm">'+dot(p.color)+esc(p.name)+'</div><div class="m">'+esc(p.brief.m)+'</div><div class="l"><small>Persona</small> '+esc(p.brief.p)+'</div><div class="l"><small>Conflito</small> '+esc(p.brief.c)+'</div><div class="l"><small>Canal</small> '+esc(p.brief.k)+'</div></div>').join('')}},
+ update(){const b=$('#br');if(!b)return;b.innerHTML=(act.groups||[]).map((g,i)=>'<div class="bcard pop"><div class="nm">Grupo '+(i+1)+'</div><div class="m">'+esc(g.m)+'</div><div class="l"><small>Persona</small> '+esc(g.p)+'</div><div class="l"><small>Conflito</small> '+esc(g.c)+'</div><div class="l"><small>Canal</small> '+esc(g.k)+'</div></div>').join('')}},
+
+inquerito:{render(){setBody(eb('Inquérito ao vivo · dados primários')+'<h2 style="margin:1.4vh 0 2vh">'+(act.phase==='rev'?'Os resultados da turma':'Respondam no telemóvel')+'</h2>'+cntH('Responderam')+'<div class="inqg" id="iq" style="display:grid;grid-template-columns:repeat(3,1fr);gap:2vw"></div>')},
+ update(){const g=$('#iq');if(!g)return;let who=0;const C=INQ.map(Q=>Q.o.map(()=>0));Object.keys(ans).forEach(k=>{if(!players[k])return;const a=(ans[k]||{}).a||{};if(Object.keys(a).length)who++;for(const qi in a){const i=a[qi];if(C[qi]&&C[qi][i]!=null)C[qi][i]++}});$('#cn').textContent=who+' / '+plist().length;
+  g.innerHTML=INQ.map((Q,qi)=>{const tot=C[qi].reduce((x,y)=>x+y,0)||1;const mx=Math.max(...C[qi]);return '<div><div style="font-weight:700;font-size:2.4vh;margin-bottom:1.4vh">'+esc(Q.q)+'</div>'+Q.o.map((o,i)=>'<div style="margin-bottom:1.2vh"><div style="display:flex;justify-content:space-between;font-size:2vh"><span>'+esc(o)+'</span><b>'+Math.round(C[qi][i]/tot*100)+'%</b></div><div class="vb"><i style="width:'+Math.round(C[qi][i]/tot*100)+'%;'+(C[qi][i]===mx&&mx>0?'background:var(--amber)':'')+'"></i></div></div>').join('')+'</div>'}).join('')}},
 
 smart:{render(){const rv=act.phase==='rev';setBody(eb('Objetivo SMART')+'<h2 style="margin:1.4vh 0 2vh;max-width:70vw">'+(rv?'Resultados':'Escrevam um objetivo SMART para o vosso desafio')+'</h2>'+cntH('Enviados')+(rv?'':timerH())+'<div class="tiles" id="tl2"></div>')},
  update(){const t=$('#tl2');if(!t)return;const rv=act.phase==='rev';let a=submitted().map(k=>({p:players[k],id:k,t:ans[k].t||'',ch:smartCheck(ans[k].t)}));$('#cn').textContent=a.length+' / '+plist().length;
@@ -122,6 +131,7 @@ spine:{render(){if(act.phase==='rev'){setBody(eb('Story Spine')+'<h2 style="marg
   const pg=$('#pg');if(!pg)return;let d=0;pg.innerHTML=plist().map(p=>{const s=!!(ans[p.id]&&ans[p.id].o);if(s)d++;return '<span class="pg'+(s?' done':'')+'">'+dot(p.color)+esc(p.name)+(s?' · enviou':'')+'</span>'}).join('');$('#cn').textContent=d+' / '+plist().length}}
 };
 
+V.marcas=V.palavras;V.slop=V.quiz;
 /* ---------- ciclo ---------- */
 function setBody(h){body.innerHTML=h}
 function render(){sigS=act.key+'|'+act.phase+'|'+rolling;local.rv=local.rv;(V[act.id]||V.lobby).render();chrome();update()}
@@ -131,7 +141,7 @@ function chrome(){
  const s=$('#sec');if(a.sec){s.style.display='';s.textContent=a.sec.label;s.onclick=a.sec.fn}else s.style.display='none';
  document.querySelectorAll('.nv[data-id]').forEach(n=>n.classList.toggle('on',n.dataset.id===act.id))}
 function tick(){const l=$('#tl');if(!l||!act.lim)return;const e=(now()-act.t0)/1000;l.style.width=Math.max(0,100-e/act.lim*100)+'%';
- if(act.id==='quiz'&&act.phase==='q'&&e>act.lim+.4)revealQuiz()}
+ if((act.id==='quiz'||act.id==='slop')&&act.phase==='q'&&e>act.lim+.4)revealQuiz()}
 function rankOv(){let o=$('#rk-ov');if(!showRank){if(o)o.remove();return}
  if(!o){o=document.createElement('div');o.id='rk-ov';o.className='rankov';$('.s-body').appendChild(o)}
  o.innerHTML=eb('Ranking')+'<h1 style="font-size:6vh">Quem está à frente</h1>'+ranking(10);grow()}

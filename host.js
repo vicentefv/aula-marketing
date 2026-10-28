@@ -152,6 +152,12 @@ $('#nav').innerHTML=ACTS.map(a=>'<button class="nv" data-id="'+a.id+'" title="'+
 $('#nav').onclick=e=>{const b=e.target.closest('.nv');if(b)go(b.dataset.id)};
 $('#rk').onclick=toggleRank;
 let nr=0;$('#newr').onclick=async function(){if(!nr){this.textContent='Confirmar nova sala?';nr=setTimeout(()=>{nr=0;this.textContent='Nova sala'},3000);return}clearTimeout(nr);nr=0;this.textContent='Nova sala';LS('aula-room',null);await createRoom();location.href='ecra.html?c='+C};
-addEventListener('keydown',e=>{if(e.target.closest&&e.target.closest('input,textarea'))return;if(e.key==='r'||e.key==='R')toggleRank();else if(e.key===' '||e.key==='Enter'||e.key==='ArrowRight'){e.preventDefault();$('#act').click()}});
-init();
+const EMB=window.parent!==window&&/[?&]embed\b/.test(location.search);
+const toParent=m=>{try{parent.postMessage(Object.assign({aula:1},m),'*')}catch(e){}};
+if(EMB){document.documentElement.classList.add('emb');
+ /* dentro da apresentação: as teclas de navegação passam para a apresentação */
+ addEventListener('keydown',e=>{if(e.target.closest&&e.target.closest('input,textarea'))return;if(e.key==='r'||e.key==='R'){toggleRank();return}e.preventDefault();toParent({t:'key',key:e.key})});
+ addEventListener('message',e=>{const m=e.data;if(!m||!m.aula||m.t!=='go'||!C)return;if(act.id!==m.id)go(m.id)});
+}else addEventListener('keydown',e=>{if(e.target.closest&&e.target.closest('input,textarea'))return;if(e.key==='r'||e.key==='R')toggleRank();else if(e.key===' '||e.key==='Enter'||e.key==='ArrowRight'){e.preventDefault();$('#act').click()}});
+init().then(()=>{if(EMB)toParent({t:'ready',code:C})});
 })();

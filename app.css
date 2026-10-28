@@ -156,3 +156,6 @@ textarea.ta:focus{border-color:var(--violet)}
 
 .inqg .vb{height:1.1vh;border-radius:1vh;background:var(--line);overflow:hidden;margin-top:.5vh}
 .inqg .vb i{display:block;height:100%;border-radius:1vh;background:var(--mint);transition:width .5s}
+
+/* dentro da apresentação */
+.emb .glow{display:none}

@@ -31,6 +31,8 @@
  <div class="err" id="le"></div>
 </div>
 <script>
+/* avisa a apresentação (quando está dentro dela) que a página carregou */
+try{if(window.parent!==window)parent.postMessage({aula:1,t:'loaded'},'*')}catch(e){}
 (()=>{const H="dc96f99a712bf005067bf0985b36f2b1ef789f60060257bf0c8ec4c229637f20",K='aula-prof-ok';
 const sha=async t=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t)))].map(b=>b.toString(16).padStart(2,'0')).join('');
 const st=document.querySelector('.stage'),lk=document.getElementById('lock');st.style.display='none';

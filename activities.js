@@ -10,7 +10,7 @@ const SPINE_LAB=['Era uma vez…','Todos os dias…','Até que um dia…','Por c
 window.ACT={
  lobby:{type:'lobby',t:'Entrada'},
 
- marcas:{type:'cloud',t:'O que é marketing?',q:'O que é marketing para ti? Escreve até 3 palavras.'},
+ marcas:{type:'cloud',t:'Marcas da turma',q:'Escreve marcas de que gostas (até 3). Vão ser usadas nas atividades.',pool:true},
 
  primsec:{type:'sort',t:'Primário ou secundário?',q:'Arrasta cada fonte de dados para o tipo certo.',lim:60,
   buckets:[{k:'p',t:'Primário',c:G},{k:'s',t:'Secundário',c:M}],
@@ -124,7 +124,11 @@ window.QSETS={
 
 /* utilitários partilhados */
 const hsh=s=>{let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0};
-window.assignFor=(id,pid)=>{const a=ACT[id]&&ACT[id].assign;if(!a)return '';const L=ASSIGN[a];return L[hsh(pid+a)%L.length]};
+/* as marcas da turma (nuvem do início) passam a ser as marcas sorteadas nas atividades */
+window.POOL=window.POOL||null;
+window.poolFrom=w=>{const c={};Object.values(w||{}).forEach(x=>{const t=String(x).trim();const k=t.toLowerCase();if(k){c[k]=c[k]||{t,n:0};c[k].n++}});return Object.values(c).sort((a,b)=>b.n-a.n).slice(0,12).map(x=>x.t)};
+window.assignList=a=>a==='marcas'&&Array.isArray(POOL)&&POOL.length>=3?POOL:ASSIGN[a];
+window.assignFor=(id,pid)=>{const a=ACT[id]&&ACT[id].assign;if(!a)return '';const L=assignList(a);return L[hsh(pid+a)%L.length]};
 window.formText=(id,f,A)=>{const d=ACT[id];const e=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  return d.show.replace(/\{(\w+)\}/g,(m,k)=>k==='A'?e(A||''):(f&&f[k]?e(f[k]):'…'))};
 window.formChecks=(id,f)=>{const d=ACT[id];if(!d.check)return null;const t=(f||{})[d.checkField||'t']||'';return d.check==='smart'?smartCheck(t):hookCheck(t)};

@@ -1,5 +1,4 @@
 <meta charset="utf-8">
-<meta name="robots" content="noindex,nofollow">
 <title>Comunicação Digital e Marketing</title>
 
 
@@ -2682,7 +2681,7 @@ const SPINE_LAB=['Era uma vez…','Todos os dias…','Até que um dia…','Por c
 window.ACT={
  lobby:{type:'lobby',t:'Entrada'},
 
- marcas:{type:'cloud',t:'O que é marketing?',q:'O que é marketing para ti? Escreve até 3 palavras.'},
+ marcas:{type:'cloud',t:'Marcas da turma',q:'Escreve marcas de que gostas (até 3). Vão ser usadas nas atividades.',pool:true},
 
  primsec:{type:'sort',t:'Primário ou secundário?',q:'Arrasta cada fonte de dados para o tipo certo.',lim:60,
   buckets:[{k:'p',t:'Primário',c:G},{k:'s',t:'Secundário',c:M}],
@@ -2796,7 +2795,11 @@ window.QSETS={
 
 /* utilitários partilhados */
 const hsh=s=>{let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0};
-window.assignFor=(id,pid)=>{const a=ACT[id]&&ACT[id].assign;if(!a)return '';const L=ASSIGN[a];return L[hsh(pid+a)%L.length]};
+/* as marcas da turma (nuvem do início) passam a ser as marcas sorteadas nas atividades */
+window.POOL=window.POOL||null;
+window.poolFrom=w=>{const c={};Object.values(w||{}).forEach(x=>{const t=String(x).trim();const k=t.toLowerCase();if(k){c[k]=c[k]||{t,n:0};c[k].n++}});return Object.values(c).sort((a,b)=>b.n-a.n).slice(0,12).map(x=>x.t)};
+window.assignList=a=>a==='marcas'&&Array.isArray(POOL)&&POOL.length>=3?POOL:ASSIGN[a];
+window.assignFor=(id,pid)=>{const a=ACT[id]&&ACT[id].assign;if(!a)return '';const L=assignList(a);return L[hsh(pid+a)%L.length]};
 window.formText=(id,f,A)=>{const d=ACT[id];const e=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  return d.show.replace(/\{(\w+)\}/g,(m,k)=>k==='A'?e(A||''):(f&&f[k]?e(f[k]):'…'))};
 window.formChecks=(id,f)=>{const d=ACT[id];if(!d.check)return null;const t=(f||{})[d.checkField||'t']||'';return d.check==='smart'?smartCheck(t):hookCheck(t)};
@@ -4337,8 +4340,10 @@ function use(c){
 }
 function subs(){if(act.key===curKey)return;curKey=act.key;ans={};vt={};if(unA)unA();if(unV)unV();
  const ra=db.ref(P+'/ans/'+curKey),rv=db.ref(P+'/vt/'+curKey);
- const fa=s=>{ans=cleanA(s.val()||{});refresh()},fv=s=>{vt=s.val()||{};refresh()};
+ const fa=s=>{ans=cleanA(s.val()||{});refresh();if((ACT[act.id]||{}).pool)savePool()},fv=s=>{vt=s.val()||{};refresh()};
  ra.on('value',fa);rv.on('value',fv);unA=()=>ra.off('value',fa);unV=()=>rv.off('value',fv)}
+let poolT=null;
+function savePool(){clearTimeout(poolT);poolT=setTimeout(()=>{const w={};Object.keys(ans).forEach(k=>{if(players[k])Object.assign(w,Object.fromEntries(Object.entries((ans[k]||{}).w||{}).map(([i,x])=>[k+i,x])))});const L=poolFrom(w);window.POOL=L;db.ref(P+'/pool').set(L.length?L:null)},800)}
 function cleanP(v){const o={};let n=0;for(const k in v){n++;const p=Object.assign({},v[k]);if(isBad(p.name))p.name='Equipa '+n;o[k]=p}return o}
 function cleanA(v){const o={};for(const k in v){const a=Object.assign({},v[k]);if(a.f&&Object.values(a.f).some(x=>isBad(x)))continue;if(a.w){const w={};for(const x in a.w)if(!isBad(a.w[x]))w[x]=a.w[x];a.w=w}o[k]=a}return o}
 const setAct=o=>db.ref(P+'/act').set(o);
@@ -4392,7 +4397,7 @@ V.cloud={
   const ks=Object.keys(w),cols=CONTENT.cores;
   return `${online()?cnt('Participantes',who):`<div class="lv-in"><input class="lv-inp" id="lvw" maxlength="30" placeholder="Escreve o que disserem e carrega em Enter"></div>`}
    <div class="lv-cloud">${ks.length?ks.map((k,i)=>`<span style="font-size:${Math.min(120,36+w[k].n*18)}px;color:${cols[(i+3)%cols.length]}">${H(w[k].t)}</span>`).join(''):`<span class="mut" style="font-size:40px">${online()?'As respostas aparecem aqui.':'Ainda sem respostas.'}</span>`}</div>`},
- wire(b){const i=b.querySelector('#lvw');if(!i)return;i.onkeydown=e=>{if(e.key==='Enter'){const v=i.value.trim();i.value='';if(!v||isBad(v))return;const W=off_(M.id).w||(off_(M.id).w={});const k=v.toLowerCase();W[k]=W[k]||{t:v,n:0};W[k].n++;draw()}}},
+ wire(b){const i=b.querySelector('#lvw');if(!i)return;i.onkeydown=e=>{if(e.key==='Enter'){const v=i.value.trim();i.value='';if(!v||isBad(v))return;const W=off_(M.id).w||(off_(M.id).w={});const k=v.toLowerCase();W[k]=W[k]||{t:v,n:0};W[k].n++;if(D().pool){const all={};let j=0;Object.values(W).forEach(x=>{for(let r=0;r<x.n;r++)all[j++]=x.t});window.POOL=poolFrom(all)}draw()}}},
  ctl(){return online()?[{t:'Recomeçar',f:()=>start(M.id)}]:[{t:'Limpar',f:()=>{off_(M.id).w={};draw()}}]}
 };
 
@@ -4420,7 +4425,7 @@ V.form={
    if(ph==='rev'&&d.vote)a.sort((x,y)=>(c[y.id]||0)-(c[x.id]||0));const mx=Math.max(1,...Object.values(c));
    const head=(ph==='in'||!d.vote)?cnt(d.group?'Grupos que enviaram':'Enviados',a.length+' / '+plist().length):cnt('Votos',Object.keys(vt).length+' / '+plist().length);
    return `${head}<div class="lv-tiles${wide?' wide':''}" style="${grid}">${a.map((x,i)=>`<div class="card lv-tile${ph==='rev'&&d.vote&&i===0&&(c[x.id]||0)>0?' win':''}"><div class="lv-nm">${dot(x.p.color)}${H(x.p.name)}${ph!=='in'&&d.vote?`<b style="margin-left:auto;font-family:Syne;color:var(--acc)">${c[x.id]||0} voto${(c[x.id]||0)===1?'':'s'}</b>`:''}</div><div class="lv-tx">${formText(id,x.f,x.A)}</div>${d.check?`<div class="lv-cks">${chips(formChecks(id,x.f))}</div>`:''}${ph!=='in'&&d.vote?bar(Math.round((c[x.id]||0)/mx*100)):''}</div>`).join('')||`<p class="lead mut">${d.group?'As respostas dos grupos':'As respostas'} aparecem aqui quando enviarem.</p>`}</div>`}
-  const o=off_(id);o.list=o.list||[];o.draft=o.draft||{};if(d.assign&&!o.A)o.A=ASSIGN[d.assign][Math.floor(Math.random()*ASSIGN[d.assign].length)];
+  const o=off_(id);o.list=o.list||[];o.draft=o.draft||{};if(d.assign&&!o.A){const L=assignList(d.assign);o.A=L[Math.floor(Math.random()*L.length)]}
   const a=o.win?[...o.list].sort((x,y)=>y.v-x.v):o.list;
   return `${d.assign?`<div class="lv-asg"><span class="k">${d.assign==='produtos'?'Produto':'Marca'}</span><b>${H(o.A)}</b><button class="lv-b" id="lvre">Sortear outra</button></div>`:''}
    <div class="lv-form${d.fields.length>4?' many':''}">${d.fields.map(f=>`<label><span>${H(f.l)}</span><input class="lv-inp" data-k="${f.k}" maxlength="200" placeholder="${H(f.ph?'Ex.: '+f.ph:'')}" value="${H(o.draft[f.k]||'')}"></label>`).join('')}</div>
@@ -4428,7 +4433,7 @@ V.form={
    <div class="lv-tiles${wide?' wide':''}" style="${grid};margin-top:18px">${a.map(x=>`<div class="card lv-tile lv-click${o.win&&x===a[0]?' win':''}" data-k="${o.list.indexOf(x)}">${d.vote?`<div class="lv-nm">${x.v} voto${x.v===1?'':'s'}</div>`:''}<div class="lv-tx">${formText(id,x.f,x.A)}</div>${d.check?`<div class="lv-cks">${chips(formChecks(id,x.f))}</div>`:''}</div>`).join('')}</div>`},
  wire(b){if(online())return;const id=M.id,o=off_(id),d=ACT[id];
   b.querySelectorAll('[data-k].lv-inp').forEach(el=>el.oninput=()=>{o.draft[el.dataset.k]=el.value;const ck=b.querySelector('#lvck');if(ck)ck.innerHTML=chips(formChecks(id,o.draft))});
-  const re=b.querySelector('#lvre');if(re)re.onclick=e=>{e.stopPropagation();const L=ASSIGN[d.assign];let n;do{n=L[Math.floor(Math.random()*L.length)]}while(n===o.A&&L.length>1);o.A=n;draw()};
+  const re=b.querySelector('#lvre');if(re)re.onclick=e=>{e.stopPropagation();const L=assignList(d.assign);let n;do{n=L[Math.floor(Math.random()*L.length)]}while(n===o.A&&L.length>1);o.A=n;draw()};
   if(d.vote)b.querySelectorAll('.lv-tile.lv-click').forEach(el=>el.onclick=()=>{const x=o.list[+el.dataset.k];if(x){x.v++;draw()}})},
  ctl(){const id=M.id,d=ACT[id];
   if(online()){const ph=act.phase;
@@ -4507,10 +4512,10 @@ const liveS=(id,aid,group,foot,ebt,title,sub)=>S(id,'ink',group,title,foot,`${eb
  <div class="lv" data-a="up" data-at=".3"><div class="lv-body"></div><div class="lv-ctl"></div></div>`,{init:r=>LV.mount(r,aid)});
 
 liveS('live-entrar','lobby','Abertura',F0,'Ao vivo · Entrar na sala','Peguem no telemóvel','Lê o QR ou escreve o endereço e o código. Um telemóvel por pessoa.');
-liveS('live-marcas','marcas','Marketing',FM1,'Antes de começar','O que é marketing para ti?','Até 3 palavras, sem pensar muito. Não há respostas erradas.');
+liveS('live-marcas','marcas','Abertura',F0,'Ao vivo · Aquecimento','Marcas de que gostam','Escreve até 3. Vão ser as marcas das atividades de hoje.');
 liveS('live-primsec','primsec','Marketing',FM1,'Praticar · Estudo de mercado','Primário ou secundário?','Arrasta cada fonte de dados para o tipo certo.');
-liveS('live-posicionar','posicionar','Marketing',FM1,'Praticar · Posicionamento','Posiciona a marca','Cada telemóvel recebe uma marca. Completa a fórmula e votamos.');
-liveS('live-persona','persona','Marketing',FM1,'Praticar · Persona','Cria a persona','Grupos de 3 ou 4, um telemóvel por grupo. A persona da marca que vos calhar.');
+liveS('live-posicionar','posicionar','Marketing',FM1,'Praticar · Posicionamento','Posiciona a marca','Cada telemóvel recebe uma das marcas da turma. Completa a fórmula e votamos.');
+liveS('live-persona','persona','Marketing',FM1,'Praticar · Persona','Cria a persona','Grupos de 3 ou 4, um telemóvel por grupo. A persona de uma das marcas da turma.');
 liveS('live-4p','quatrop','Marketing',FM1,'Praticar · 4Ps','Que P é este?','Oito decisões da loja Segunda Mão. Arrasta cada uma para o P certo.');
 liveS('live-smart','smart','Marketing',FM1,'Praticar · Objetivos','Torna-o SMART','«Quero mais seguidores.» Reescreve-o como objetivo SMART.');
 liveS('live-canais','canais','Digital',FM2,'Praticar · Meios','Próprio, pago ou ganho?','Arrasta cada meio para o grupo certo.');
@@ -4526,7 +4531,7 @@ liveS('live-quiz','quiz','Fecho',FF,'Ao vivo · Revisão','Quiz final','10 pergu
 
 Object.assign(N4,{
  'live-entrar':'Entrada na sala (1–2 min). A apresentação cria a sala e mostra o QR e o código. A partir daqui, sempre que chegares a um slide de atividade, os telemóveis mudam sozinhos. Se aparecer «Modo apresentador», a página não se ligou (dentro do Claude é sempre assim): usa o endereço do GitHub para ter os telemóveis.',
- 'live-marcas':'Abre o bloco de marketing (2 min). Cada pessoa escreve até 3 palavras. Lê a nuvem em voz alta: quase sempre aparecem «publicidade», «vender» e «anúncios». Usa isso como ponte para o slide seguinte: marketing não é só publicidade, é perceber quem é o cliente, criar algo para ele, comunicar e entregar.',
+ 'live-marcas':'Aquecimento (2 min). Cada pessoa escreve até 3 marcas de que gosta. Comenta 2 ou 3 da nuvem. Diz à turma que estas marcas vão voltar: nas atividades de posicionamento, persona, mini plano, Story Spine e gancho, cada telemóvel recebe uma das marcas mais escolhidas (as 12 com mais votos). Se houver menos de 3 marcas, as atividades usam uma lista de marcas de reserva.',
  'live-primsec':'Prática (2 min), logo a seguir aos dados primários e secundários. Individual. Revela e comenta as que a turma mais trocou: normalmente a sondagem nos stories (primário, foste tu que perguntaste) e o Google Trends (secundário, já existe).',
  'live-posicionar':'Prática (4 min), logo a seguir à fórmula do posicionamento. Cada telemóvel recebe uma marca ao acaso. 2 min para escrever, abre a votação (ninguém vota no seu), revela. Comenta o vencedor: a diferença é concreta e é algo que a concorrência não diz?',
  'live-persona':'Prática (5 min), logo a seguir à Rita. Forma os grupos de 3 ou 4 (ficam até ao workshop) e pede um telemóvel por grupo. Cada telemóvel recebe uma marca: essa passa a ser a marca do grupo. 4 min para escrever, 1 para mostrar. Pergunta: o que é que a persona da marca X tem de diferente da Rita?',
@@ -4597,8 +4602,8 @@ const N2={
 /* ---- Ordem final ---- */
 Object.assign(N2,N3,N4);
 const ORDER=[
- ['Abertura · 10 min',['cover','eu-ola','eu-percurso','eu-projetos','eu-casos','live-entrar','agenda','objetivos','statement-mkt']],
- ['Marketing · 36 min',['d1','live-marcas','o-que-e','hist-producao','hist-vendas','hist-marketing','hist-relacao','hist-digital','ben-notoriedade','ben-relacao','ben-crescimento','mr-oque','mr-secundarios','mr-primarios','mr-quanti','mr-exemplo','live-primsec','stp-segmentar','stp-escolher','stp-posicionar','stp-formula','live-posicionar','persona-def','persona-rita','live-persona','4ps','live-4p','mv-marca','mv-proposta','mv-tom','marcas-conversa','jornada','smart-letras','smart-exemplo','live-smart']],
+ ['Abertura · 10 min',['cover','eu-ola','eu-percurso','eu-projetos','eu-casos','live-entrar','live-marcas','agenda','objetivos','statement-mkt']],
+ ['Marketing · 36 min',['d1','o-que-e','hist-producao','hist-vendas','hist-marketing','hist-relacao','hist-digital','ben-notoriedade','ben-relacao','ben-crescimento','mr-oque','mr-secundarios','mr-primarios','mr-quanti','mr-exemplo','live-primsec','stp-segmentar','stp-escolher','stp-posicionar','stp-formula','live-posicionar','persona-def','persona-rita','live-persona','4ps','live-4p','mv-marca','mv-proposta','mv-tom','marcas-conversa','jornada','smart-letras','smart-exemplo','live-smart']],
  ['Digital · 24 min',['d2','monologo','meio-proprio','meio-pago','meio-ganho','meio-ideal','live-canais','cn-site','cn-redes','cn-email','cn-anuncios','cn-creators','cn-imprensa','cn-fim','pdc-pago','pdc-dados','pdc-comunidade','pdc-fim','calendario','camp-coke','camp-redbull','camp-barbie','camp-fim','kpis','kpi-vaidade','live-metricas','live-plano']],
  ['Pausa · 10 min',['pausa']],
  ['Histórias · 40 min',['d3','statement','forca-atencao','forca-emocao','forca-memoria','facto-historia','ing-personagem','ing-conflito','ing-transformacao','caso-wrapped','wrapped-3','heroi-papeis','heroi-guia','abt-e','abt-mas','abt-porisso','live-abt','story-spine','spine-exemplo','live-spine','live-spinew','gancho-1','gancho-2','gancho-3','gancho-4','gancho-5','ganchos-fim','live-gancho']],

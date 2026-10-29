@@ -38,6 +38,7 @@ function joinForm(){
 function start(){
  STORE.on(P+'/players',v=>{players=v||{};me=players[pid]||me;top();update()});
  STORE.on(P+'/act',v=>{act=v||{id:'lobby',key:'lobby',phase:'in'};subAns();render()});
+ STORE.on(P+'/pool',v=>{const n=Array.isArray(v)?v:null;const ch=JSON.stringify(n)!==JSON.stringify(window.POOL);window.POOL=n;if(ch&&T()==='form'&&act.phase==='in')render()});
 }
 function subAns(){
  if(act.key===curKey)return;curKey=act.key;ans={};myVote=null;local={};

@@ -60,7 +60,9 @@ a{color:inherit}
 .timer{position:absolute;width:var(--sz,172px);height:var(--sz,172px);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-direction:column}
 .timer svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);overflow:visible}
 .timer .tt{font:700 calc(var(--sz,172px)*.25)/1 'DM Sans';font-variant-numeric:tabular-nums;color:var(--fg)}
-.timer .tl{white-space:nowrap;font:700 calc(var(--sz,172px)*.085)/1 'DM Sans';letter-spacing:.14em;text-transform:uppercase;color:var(--mut);margin-top:8px}
+.timer .tl{white-space:nowrap;font:700 calc(var(--sz,172px)*.085)/1 'DM Sans';letter-spacing:.1em;text-transform:uppercase;color:var(--fg);margin-top:calc(var(--sz,172px)*.05);padding:calc(var(--sz,172px)*.04) calc(var(--sz,172px)*.07);border-radius:999px;border:2px solid var(--line);transition:background .25s,color .25s}
+.timer.idle .tl{background:var(--acc);color:var(--on);border-color:var(--acc);box-shadow:0 0 0 0 var(--acc);animation:tlp 1.8s ease-in-out infinite}
+@keyframes tlp{0%,100%{box-shadow:0 0 0 0 rgba(46,224,138,.0)}50%{box-shadow:0 0 0 10px rgba(46,224,138,.25)}}
 .timer.run .tl{color:var(--acc)}
 .timer.end{animation:endp .6s ease-in-out 6}
 @keyframes endp{50%{scale:1.1}}
@@ -295,6 +297,20 @@ mark.s::after{content:attr(data-n);display:inline-block;vertical-align:top;font:
 .lv-form .lv-inp{font-size:26px;padding:12px 18px;border-radius:16px}
 .lv-tiles.wide .lv-tx{font-size:21px;line-height:1.35}
 .lv-tile .lv-tx b{font-family:Syne}
+
+.lv-ready{display:flex;flex-direction:column;align-items:flex-start;gap:18px;padding:30px 0}
+.lv-rt{font:800 150px/1 Syne;color:var(--acc)}
+.lv-ready .lead{font-size:34px;max-width:1100px}
+
+.lv-click{cursor:pointer}
+.lv-clock{font:800 220px/1 Syne;font-variant-numeric:tabular-nums;color:var(--fg);margin-top:10px}
+.lv-clock.over{color:#FF6B6B;animation:endp .6s ease-in-out infinite}
+.lv-res{display:grid;grid-template-columns:auto minmax(0,1fr);gap:70px;align-items:center}
+.lv-crit{display:flex;flex-direction:column;gap:18px}
+.lv-cr{display:grid;grid-template-columns:250px 1fr 120px;align-items:center;gap:22px;font:600 30px 'DM Sans'}
+.lv-cb{height:18px;border-radius:9px;background:var(--cardb);overflow:hidden}
+.lv-cb i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--g3))}
+.lv-cr b{font:800 32px Syne;text-align:right;white-space:nowrap}
 
 html,body{background:#040806}
 body{color:var(--paper)}
@@ -2675,7 +2691,7 @@ window.hookCheck=t=>{t=(t||'').trim();const w=t.split(/\s+/).filter(Boolean).len
    Cada atividade vem logo a seguir à matéria que pratica. Os dados são partilhados
    entre a apresentação (que faz de ecrã) e os telemóveis.
    Tipos: lobby · cloud (nuvem) · sort (arrastar para grupos) · form (escrever, com votação opcional)
-          order (ordenar a história) · quiz (perguntas com tempo) */
+          order (ordenar a história) · quiz (perguntas com tempo) · rate (votação por grupo, de 1 a 5) */
 (()=>{
 const G='#2EE08A',L='#C8F560',M='#7FD6FF',P='#FFB86B';
 const SPINE_LAB=['Era uma vez…','Todos os dias…','Até que um dia…','Por causa disso…','Por causa disso…','Por causa disso…','Até que finalmente…','E desde então…'];
@@ -2746,7 +2762,10 @@ window.ACT={
 
  slop:{type:'quiz',t:'Slop ou não?',lim:15},
  rgpd:{type:'quiz',t:'Pode ou não pode?',lim:15},
- quiz:{type:'quiz',t:'Quiz final',lim:20}
+ quiz:{type:'quiz',t:'Quiz final',lim:20},
+
+ votacao:{type:'rate',t:'Votação dos pitches',pitch:120,
+  crit:[['Persona','Percebe-se para quem é.'],['Objetivo e KPI','É claro e mensurável.'],['História','Há conflito e mudança.'],['Gancho','Pararia o scroll.'],['Canal','Respeita o formato.'],['Originalidade','Foge ao cliché.']]}
 };
 window.ACTS=Object.keys(ACT).map(id=>({id,t:ACT[id].t}));
 
@@ -2913,12 +2932,12 @@ function tick(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)(
 /* ---------- temporizadores ---------- */
 const TM={},CIRC=2*Math.PI*90;
 const fmt=s=>{s=Math.max(0,Math.ceil(s));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
-function drawT(st){const el=st.el;if(!el||!el.isConnected)return;$('.tt',el).textContent=fmt(st.left);$('.pr',el).style.strokeDashoffset=CIRC*(1-st.left/st.total);$('.tl',el).textContent=st.left<=0?'terminou':st.run?'a contar':st.left<st.total?'em pausa':'iniciar';el.classList.toggle('run',st.run)}
+function drawT(st){const el=st.el;if(!el||!el.isConnected)return;$('.tt',el).textContent=fmt(st.left);$('.pr',el).style.strokeDashoffset=CIRC*(1-st.left/st.total);$('.tl',el).textContent=st.left<=0?'Repor':st.run?'Pausar':st.left<st.total?'Continuar':'Começar';el.classList.toggle('run',st.run);el.classList.toggle('idle',!st.run&&st.left>=st.total)}
 function toggleT(st){if(st.left<=0)return resetT(st);if(st.run){st.tw.kill();st.run=false}else{st.run=true;st.tw=gsap.to(st,{left:0,duration:st.left,ease:'none',onUpdate:()=>drawT(st),onComplete:()=>{st.run=false;if(st.el)st.el.classList.add('end');beep();drawT(st)}})}drawT(st)}
 function resetT(st){if(st.tw)st.tw.kill();st.run=false;st.left=st.total;if(st.el)st.el.classList.remove('end');drawT(st)}
 function initTimers(root,id){$$('.timer',root).forEach((el,k)=>{const key=id+k,m=+el.dataset.min;const st=TM[key]||(TM[key]={total:m*60,left:m*60,run:false});st.el=el;el._st=st;
  el.innerHTML=`<svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="90" fill="none" stroke="var(--line)" stroke-width="8"/><circle class="pr" cx="100" cy="100" r="90" fill="none" stroke="var(--acc)" stroke-width="8" stroke-linecap="round" stroke-dasharray="${CIRC}" stroke-dashoffset="0"/></svg><div class="tt"></div><div class="tl"></div>`;
- el.setAttribute('data-int','');el.title='Clique: iniciar/pausar · duplo clique: repor';el.onclick=()=>toggleT(st);el.ondblclick=()=>resetT(st);drawT(st)})}
+ el.setAttribute('data-int','');el.title='Começar / pausar · duplo clique: repor';el.onclick=()=>toggleT(st);el.ondblclick=()=>resetT(st);drawT(st)})}
 
 /* ---------- escolha / sorteio ---------- */
 function initPickers(root){$$('.picker',root).forEach(p=>{const chips=$$('.chip',p),sel=c=>{chips.forEach(x=>x.classList.toggle('sel',x===c))};chips.forEach(c=>c.onclick=()=>sel(c));
@@ -3094,7 +3113,7 @@ const B={
  /* radar: o mercado inteiro e o grupo que escolhemos */
  radar(c,s){let d='';for(let i=0;i<34;i++){const a=R(i,1)*6.283,r=60+R(i,2)*220,x=300+Math.cos(a)*r,y=300+Math.sin(a)*r,t=(x>330&&y<290&&r>90)?1:0;d+=`<circle class="pt${t?' tg':''}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${t?11:9}" fill="var(--mut)" opacity=".55"/>`}
   return SV('radar',c,s,`<g class="rg">${[90,180,270].map(r=>`<circle class="ring" cx="300" cy="300" r="${r}" stroke="${c}" stroke-width="3" opacity=".35"/>`).join('')}</g>
-  <g class="sw" style="transform-origin:300px 300px"><path d="M300 300L300 30A270 270 0 0 1 491 109Z" fill="${c}" opacity=".16"/><path d="M300 300L300 30" stroke="${c}" stroke-width="4"/></g>${d}<circle cx="300" cy="300" r="12" fill="${c}"/>`)},
+  <g class="sw"><path d="M300 300L300 30A270 270 0 0 1 491 109Z" fill="${c}" opacity=".16"/><path d="M300 300L300 30" stroke="${c}" stroke-width="4"/></g>${d}<circle cx="300" cy="300" r="12" fill="${c}"/>`)},
  /* gráfico a crescer */
  chart(c,s){const P='M60 470 C140 450 170 380 240 380 S330 300 380 250 S470 150 540 110';
   return SV('chart',c,s,`${[150,260,370,480].map(y=>`<path class="gl" d="M50 ${y}H560" stroke="var(--line)" stroke-width="2"/>`).join('')}
@@ -3102,15 +3121,15 @@ const B={
   <circle class="pl" cx="540" cy="110" r="22" stroke="${c}" stroke-width="4"/><circle class="dt" cx="540" cy="110" r="16" fill="${c}"/>`)},
  /* megafone: a marca a falar sozinha */
  waves(c,s){return SV('waves',c,s,`<path class="mf" d="M90 250h70l170-90v280l-170-90H90z" stroke="${c}" stroke-width="10"/><path class="mf" d="M130 340l20 110h50l-20-110" stroke="${c}" stroke-width="10"/>
-  ${[0,1,2].map(i=>`<path class="wv" d="M${380+i*55} ${230-i*40}q${50+i*20} ${70+i*40} 0 ${140+i*80}" stroke="${c}" stroke-width="10" style="transform-origin:330px 300px"/>`).join('')}`)},
+  ${[0,1,2].map(i=>`<path class="wv" d="M${380+i*55} ${230-i*40}q${50+i*20} ${70+i*40} 0 ${140+i*80}" stroke="${c}" stroke-width="10"/>`).join('')}`)},
  /* órbita de canais à volta da marca */
  orbit(c,s,labels=['Site','Redes','Email','Anúncios']){const n=labels.length;
   return SV('orbit',c,s,`<ellipse class="ob" cx="300" cy="300" rx="235" ry="235" stroke="var(--line)" stroke-width="3" stroke-dasharray="6 14"/>
-  <g class="rot" style="transform-origin:300px 300px">${labels.map((l,i)=>{const a=i/n*6.283-1.57,x=300+Math.cos(a)*235,y=300+Math.sin(a)*235;return `<g class="nd" transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><g class="cr"><circle r="46" fill="var(--card)" stroke="${c}" stroke-width="4"/><text text-anchor="middle" dy="8" font-family="DM Sans" font-weight="700" font-size="22" fill="var(--fg)" stroke="none">${l}</text></g></g>`}).join('')}</g>
+  <g class="rot">${labels.map((l,i)=>{const a=i/n*6.283-1.57,x=300+Math.cos(a)*235,y=300+Math.sin(a)*235;return `<g class="nd" transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><g class="cr"><circle r="46" fill="var(--card)" stroke="${c}" stroke-width="4"/><text text-anchor="middle" dy="8" font-family="DM Sans" font-weight="700" font-size="22" fill="var(--fg)" stroke="none">${l}</text></g></g>`}).join('')}</g>
   <circle class="ct" cx="300" cy="300" r="80" fill="${c}"/><text class="ct" x="300" y="310" text-anchor="middle" font-family="Syne" font-weight="800" font-size="34" fill="var(--on)" stroke="none">Marca</text>`)},
  /* conversa: marca e pessoas a responderem-se */
  chat(c,s){const bb=[[60,110,330,'l'],[210,250,330,'r'],[60,390,260,'l']];
-  return SV('chat',c,s,`${bb.map((b,i)=>`<g class="bb" style="transform-origin:${b[3]==='l'?b[0]:b[0]+b[2]}px ${b[1]+50}px"><rect x="${b[0]}" y="${b[1]}" width="${b[2]}" height="100" rx="34" fill="${b[3]==='r'?c:'var(--card)'}" stroke="${b[3]==='r'?c:'var(--cardb)'}" stroke-width="3"/>${i<2?`<path d="M${b[0]+40} ${b[1]+42}h${b[2]-110}M${b[0]+40} ${b[1]+66}h${b[2]-170}" stroke="${b[3]==='r'?'var(--on)':'var(--mut)'}" stroke-width="10" opacity=".7"/>`:[0,1,2].map(k=>`<circle class="ty" cx="${b[0]+60+k*42}" cy="${b[1]+50}" r="11" fill="var(--mut)"/>`).join('')}</g>`).join('')}`)},
+  return SV('chat',c,s,`${bb.map((b,i)=>`<g class="bb" data-o="${b[3]==='l'?'0% 50%':'100% 50%'}"><rect x="${b[0]}" y="${b[1]}" width="${b[2]}" height="100" rx="34" fill="${b[3]==='r'?c:'var(--card)'}" stroke="${b[3]==='r'?c:'var(--cardb)'}" stroke-width="3"/>${i<2?`<path d="M${b[0]+40} ${b[1]+42}h${b[2]-110}M${b[0]+40} ${b[1]+66}h${b[2]-170}" stroke="${b[3]==='r'?'var(--on)':'var(--mut)'}" stroke-width="10" opacity=".7"/>`:[0,1,2].map(k=>`<circle class="ty" cx="${b[0]+60+k*42}" cy="${b[1]+50}" r="11" fill="var(--mut)"/>`).join('')}</g>`).join('')}`)},
  /* escudo: dados protegidos */
  shield(c,s){return SV('shield',c,s,`<path class="sh" d="M300 60L490 130V290C490 400 410 490 300 540C190 490 110 400 110 290V130Z" stroke="${c}" stroke-width="12" fill="${c}" fill-opacity=".08"/>
   <path class="ck" d="M210 300L275 365L400 230" stroke="${c}" stroke-width="16"/><rect class="sc" x="120" y="120" width="360" height="8" rx="4" fill="${c}" opacity=".5"/>`)},
@@ -3124,9 +3143,9 @@ const B={
   return SV('funnel',c,s,`${W.map((w,i)=>`<path class="fl" d="M${300-w/2} ${70+i*110}H${300+w/2}L${300+(w-100)/2} ${165+i*110}H${300-(w-100)/2}Z" fill="${c}" opacity="${.25+i*.2}" stroke="none"/>`).join('')}
   ${[0,1,2,3,4,5].map(i=>`<circle class="pc" cx="${200+R(i,3)*200}" cy="40" r="10" fill="${c}"/>`).join('')}`)},
  /* rede de memória: ideias ligadas */
- net(c,s){const N=[[300,300],[150,170],[460,150],[500,380],[330,500],[120,420],[230,80]];const E=[[0,1],[0,2],[0,3],[0,4],[0,5],[1,6],[2,6],[3,4],[5,4],[1,5]];
-  return SV('net',c,s,`${E.map(e=>`<path class="ed" d="M${N[e[0]]}L${N[e[1]]}" stroke="${c}" stroke-width="4" opacity=".45"/>`).join('')}
-  ${N.map((n,i)=>`<circle class="no" cx="${n[0]}" cy="${n[1]}" r="${i?26:44}" fill="${i?'var(--card)':c}" stroke="${c}" stroke-width="5"/>`).join('')}<circle class="sp" r="10" fill="${c}"/>`)},
+ net(c,s){const N=[[90,420],[190,250],[300,360],[390,170],[460,300],[520,150]];const E=N.slice(1).map((_,i)=>[i,i+1]);
+  return SV('net',c,s,`${E.map(e=>{const a=N[e[0]],b=N[e[1]],dx=b[0]-a[0],dy=b[1]-a[1],L=Math.hypot(dx,dy),ra=e[0]===0?36:30,rb=e[1]===N.length-1?36:30;return `<path class="ed" d="M${(a[0]+dx/L*ra).toFixed(1)},${(a[1]+dy/L*ra).toFixed(1)}L${(b[0]-dx/L*rb).toFixed(1)},${(b[1]-dy/L*rb).toFixed(1)}" stroke="${c}" stroke-width="6" opacity=".7"/>`}).join('')}
+  ${N.map((n,i)=>`<circle class="no" data-fx="${n[0]}" data-fy="${n[1]}" cx="${n[0]}" cy="${n[1]}" r="${i===0||i===N.length-1?30:24}" fill="${i===0||i===N.length-1?c:'var(--card)'}" stroke="${c}" stroke-width="6"/>`).join('')}<circle class="sp" r="11" fill="${c}" opacity="0" cx="0" cy="0"/>`)},
  /* batimento: emoção */
  pulse(c,s){const P='M30 300H180L215 230L255 400L300 120L345 470L385 260L410 300H570';
   return SV('pulse',c,s,`<path d="${P}" stroke="var(--line)" stroke-width="10"/><path class="hb" d="${P}" stroke="${c}" stroke-width="12"/>`)},
@@ -3139,36 +3158,42 @@ window.mg=(k,c='var(--acc)',s=520,x)=>B[k](c,s,x);
 const dr=(el,tl,t,d=1.2)=>{const L=el.getTotalLength?el.getTotalLength():800;tl.fromTo(el,{strokeDasharray:L,strokeDashoffset:L},{strokeDashoffset:0,duration:d,ease:'power2.inOut'},t)};
 const q=(s,r)=>[...r.querySelectorAll(s)];
 window.MG={
- radar(el,tl,t){tl.fromTo(q('.ring',el),{scale:0,transformOrigin:'300px 300px'},{scale:1,duration:.9,ease:'expo.out',stagger:.12},t);
-  tl.fromTo(q('.pt',el),{scale:0,transformOrigin:'center',transformBox:'fill-box'},{scale:1,duration:.5,ease:'back.out(2)',stagger:.02},t+.3);
-  tl.set(q('.tg',el),{attr:{fill:el.style.getPropertyValue('--mc')},opacity:1},t+1.2);
-  tl.fromTo(q('.sw',el),{opacity:0},{opacity:1,duration:.4},t+.6);
-  tl.call(()=>{G.to(q('.sw',el),{rotate:360,duration:5,ease:'none',repeat:-1});G.to(q('.tg',el),{scale:1.35,transformOrigin:'center',transformBox:'fill-box',duration:.8,yoyo:true,repeat:-1,ease:'sine.inOut',stagger:.1})},null,t+1.4)},
- chart(el,tl,t){tl.fromTo(q('.gl',el),{scaleX:0,transformOrigin:'0 0'},{scaleX:1,duration:.6,stagger:.08,ease:'power2.out'},t);
+ radar(el,tl,t){const mc=el.style.getPropertyValue('--mc');
+  tl.fromTo(q('.ring',el),{scale:0,svgOrigin:'300 300'},{scale:1,svgOrigin:'300 300',duration:.9,ease:'expo.out',stagger:.12},t);
+  q('.pt',el).forEach((p,i)=>{const r=+p.getAttribute('r');tl.fromTo(p,{attr:{r:0}},{attr:{r},duration:.5,ease:'back.out(2)'},t+.3+i*.02)});
+  tl.fromTo(q('.sw',el),{opacity:0,rotation:0,svgOrigin:'300 300'},{opacity:1,duration:.4,svgOrigin:'300 300'},t+.6);
+  tl.call(()=>{G.to(q('.sw',el),{rotation:360,svgOrigin:'300 300',duration:5,ease:'none',repeat:-1});
+   q('.tg',el).forEach((p,i)=>{const dx=+p.getAttribute('cx')-300,dy=+p.getAttribute('cy')-300;let th=Math.atan2(dx,-dy);if(th<0)th+=6.283;
+    G.delayedCall(th/6.283*5,()=>{if(!p.isConnected)return;p.setAttribute('fill',mc);p.setAttribute('opacity',1);G.fromTo(p,{attr:{r:30}},{attr:{r:13},duration:.5,ease:'back.out(2)',onComplete:()=>{G.to(p,{attr:{r:17},duration:.7,yoyo:true,repeat:-1,ease:'sine.inOut'})}})})})},null,t+1.4)},
+ chart(el,tl,t){tl.fromTo(q('.gl',el),{scaleX:0,transformOrigin:'0% 50%'},{scaleX:1,duration:.6,stagger:.08,ease:'power2.out'},t);
   dr(q('.ln',el)[0],tl,t+.2,1.4);tl.fromTo(q('.ar',el),{opacity:0},{opacity:.14,duration:.8},t+1);
-  tl.fromTo(q('.dt',el),{scale:0,transformOrigin:'540px 110px'},{scale:1,duration:.5,ease:'back.out(2.5)'},t+1.5);
-  tl.call(()=>G.fromTo(q('.pl',el),{scale:1,opacity:.9,transformOrigin:'540px 110px'},{scale:2.4,opacity:0,duration:1.4,repeat:-1,ease:'power1.out'}),null,t+1.8)},
+  tl.fromTo(q('.dt',el),{scale:0,svgOrigin:'540 110'},{scale:1,svgOrigin:'540 110',duration:.5,ease:'back.out(2.5)'},t+1.5);
+  tl.call(()=>G.fromTo(q('.pl',el),{scale:1,opacity:.9,svgOrigin:'540 110'},{scale:2.4,opacity:0,svgOrigin:'540 110',duration:1.4,repeat:-1,ease:'power1.out'}),null,t+1.8)},
  waves(el,tl,t){q('.mf',el).forEach((p,i)=>dr(p,tl,t+i*.2,1));
-  tl.call(()=>G.fromTo(q('.wv',el),{opacity:0,scale:.7},{opacity:1,scale:1,duration:.6,ease:'power2.out',stagger:{each:.25,repeat:-1,repeatDelay:.5,yoyo:true}}),null,t+.8)},
- orbit(el,tl,t){dr(q('.ob',el)[0],tl,t,1.2);tl.fromTo(q('.ct',el),{scale:0,transformOrigin:'300px 300px'},{scale:1,duration:.7,ease:'back.out(1.8)'},t+.2);
+  tl.call(()=>G.fromTo(q('.wv',el),{opacity:0,scale:.7,svgOrigin:'330 300'},{opacity:1,scale:1,svgOrigin:'330 300',duration:.6,ease:'power2.out',stagger:{each:.25,repeat:-1,repeatDelay:.5,yoyo:true}}),null,t+.8)},
+ orbit(el,tl,t){dr(q('.ob',el)[0],tl,t,1.2);tl.fromTo(q('.ct',el),{scale:0,svgOrigin:'300 300'},{scale:1,svgOrigin:'300 300',duration:.7,ease:'back.out(1.8)'},t+.2);
   tl.fromTo(q('.cr',el),{scale:0},{scale:1,duration:.55,ease:'back.out(2)',stagger:.12},t+.6);
-  tl.call(()=>{G.to(q('.rot',el),{rotate:360,duration:40,ease:'none',repeat:-1});G.to(q('.cr',el),{rotate:-360,duration:40,ease:'none',repeat:-1})},null,t+1.2)},
- chat(el,tl,t){tl.fromTo(q('.bb',el),{scale:0,opacity:0},{scale:1,opacity:1,duration:.6,ease:'back.out(1.8)',stagger:.45},t);
+  tl.call(()=>{G.to(q('.rot',el),{rotation:360,svgOrigin:'300 300',duration:40,ease:'none',repeat:-1});G.to(q('.cr',el),{rotation:-360,duration:40,ease:'none',repeat:-1})},null,t+1.2)},
+ chat(el,tl,t){q('.bb',el).forEach((b,i)=>{const o=b.dataset.o;tl.fromTo(b,{scale:0,opacity:0,transformOrigin:o},{scale:1,opacity:1,transformOrigin:o,duration:.6,ease:'back.out(1.8)'},t+i*.45)});
   tl.call(()=>G.to(q('.ty',el),{y:-14,duration:.35,yoyo:true,repeat:-1,ease:'sine.inOut',stagger:.15}),null,t+1.4)},
  shield(el,tl,t){dr(q('.sh',el)[0],tl,t,1.3);dr(q('.ck',el)[0],tl,t+1.1,.6);tl.fromTo(q('.sc',el),{opacity:0},{opacity:.5,duration:.3},t+1.4);
   tl.call(()=>G.fromTo(q('.sc',el),{y:0},{y:330,duration:2.2,yoyo:true,repeat:-1,ease:'sine.inOut'}),null,t+1.5)},
- scan(el,tl,t){tl.fromTo(q('.tl',el),{scaleX:0,transformOrigin:'90px 0'},{scaleX:1,duration:.5,stagger:.08,ease:'power2.out'},t);
+ scan(el,tl,t){tl.fromTo(q('.tl',el),{scaleX:0,transformOrigin:'0% 50%'},{scaleX:1,transformOrigin:'0% 50%',duration:.5,stagger:.08,ease:'power2.out'},t);
   tl.fromTo(q('.bar',el),{opacity:0},{opacity:1,duration:.3},t+.6);
   tl.call(()=>{G.fromTo(q('.bar',el),{y:0},{y:430,duration:2.6,yoyo:true,repeat:-1,ease:'sine.inOut'});G.set(q('.fl',el),{attr:{fill:el.style.getPropertyValue('--mc')}});G.fromTo(q('.fl',el),{opacity:.25},{opacity:.95,duration:.5,delay:.8,yoyo:true,repeat:-1,repeatDelay:1.4})},null,t+.8)},
  funnel(el,tl,t){tl.fromTo(q('.fl',el),{y:-60,opacity:0},{y:0,opacity:(i,e)=>e.getAttribute('opacity'),duration:.6,ease:'back.out(1.6)',stagger:.12},t);
   tl.call(()=>q('.pc',el).forEach((p,i)=>G.fromTo(p,{y:0,opacity:1},{y:460,opacity:0,duration:2.2,ease:'power1.in',repeat:-1,delay:i*.4})),null,t+.8)},
- net(el,tl,t){q('.ed',el).forEach((e,i)=>dr(e,tl,t+.3+i*.06,.6));tl.fromTo(q('.no',el),{scale:0,transformOrigin:'center',transformBox:'fill-box'},{scale:1,duration:.5,ease:'back.out(2)',stagger:.08},t);
-  tl.call(()=>{const N=q('.no',el).map(n=>[+n.getAttribute('cx'),+n.getAttribute('cy')]);const sp=q('.sp',el)[0];const tw=G.timeline({repeat:-1});[1,0,3,4,5,1,6,2,0].forEach(k=>tw.to(sp,{attr:{cx:N[k][0],cy:N[k][1]},duration:.55,ease:'power1.inOut'}));
-   G.to(q('.no',el).slice(1),{scale:1.15,transformOrigin:'center',transformBox:'fill-box',duration:.6,yoyo:true,repeat:-1,stagger:.2,ease:'sine.inOut'})},null,t+1.2)},
+ net(el,tl,t){const nodes=q('.no',el),eds=q('.ed',el),sp=q('.sp',el)[0];
+  const F=nodes.map(n=>[+n.dataset.fx,+n.dataset.fy]);
+  nodes.forEach((n,i)=>{const sx=60+R(i,7)*480,sy=60+R(i,8)*480;n.setAttribute('cx',sx);n.setAttribute('cy',sy);tl.fromTo(n,{attr:{r:0}},{attr:{r:i===0?30:26},duration:.4,ease:'back.out(2)'},t+i*.05);
+   tl.to(n,{attr:{cx:F[i][0],cy:F[i][1]},duration:1,ease:'power3.inOut'},t+.9)});
+  eds.forEach((e,i)=>dr(e,tl,t+1.9+i*.25,.4));
+  tl.call(()=>{const tw=G.timeline({repeat:-1,repeatDelay:.4});sp.setAttribute('opacity',1);tw.set(sp,{attr:{cx:F[0][0],cy:F[0][1]}});F.forEach((p,i)=>{if(i)tw.to(sp,{attr:{cx:p[0],cy:p[1]},duration:.55,ease:'power1.inOut'});});
+   nodes.forEach((n,i)=>G.to(n,{attr:{r:i===0?36:32},duration:.5,yoyo:true,repeat:-1,repeatDelay:1.6,delay:i*.55+.2,ease:'sine.inOut'}))},null,t+1.9+eds.length*.25+.4)},
  pulse(el,tl,t){const p=q('.hb',el)[0];dr(p,tl,t,1.2);
   tl.call(()=>{const L=p.getTotalLength();G.fromTo(p,{strokeDasharray:`180 ${L}`,strokeDashoffset:180},{strokeDashoffset:-L,duration:1.8,ease:'none',repeat:-1})},null,t+1.3)},
  feed(el,tl,t){tl.fromTo(el,{y:40,opacity:0},{y:0,opacity:1,duration:.8,ease:'expo.out'},t);
-  tl.call(()=>{const f=q('.fd',el);const tw=G.timeline({repeat:-1,repeatDelay:.6});tw.fromTo(f,{y:0},{y:-390,duration:1.6,ease:'power2.inOut'}).to(f,{y:-390,duration:1.4}).to(f,{scale:1.06,transformOrigin:'300px 690px',duration:.3,yoyo:true,repeat:1}).to(f,{y:0,duration:.8,ease:'power2.inOut'})},null,t+.6)}
+  tl.call(()=>{const f=q('.fd',el);const tw=G.timeline({repeat:-1,repeatDelay:.6});tw.fromTo(f,{y:0},{y:-390,duration:1.6,ease:'power2.inOut'}).to(f,{y:-390,duration:1.4}).to(f,{scale:1.06,svgOrigin:'300 690',duration:.3,yoyo:true,repeat:1}).to(f,{y:0,duration:.8,ease:'power2.inOut'})},null,t+.6)}
 };
 })();
 
@@ -3336,10 +3361,10 @@ S('heroi-guia','ink','Bloco 2 · 40 min','O cliente é o herói','Baseado no mod
  {onStep:(r,el,i)=>{if(i<4){G.to(q('#jd',r),{left:208+i*416-18,opacity:1,duration:1,ease:'power3.inOut'});G.to(q('#jl',r),{scaleX:i/3,duration:1,ease:'power3.inOut'})}},
   onUnstep:(r,el,i)=>{if(i>0){G.to(q('#jd',r),{left:208+(i-1)*416-18,duration:.5});G.to(q('#jl',r),{scaleX:(i-1)/3,duration:.5})}else G.to(q('#jd',r),{opacity:0})}});
 
-const ARC=[['Gancho','Prende a atenção',300,-40],['Rutura','Algo corre mal',640,-90],['Clímax','Maior tensão',1070,0],['Novo normal','A transformação',1540,-40]];
+const ARC=[['Gancho','Prende a atenção',300,-40],['Rutura','Algo corre mal',640,-90],['Clímax','Maior tensão',1070,0],['Novo normal','A transformação',1560,-30]];
 const ARCP='M20 450 C120 450 180 380 300 372 C440 364 490 320 640 300 C820 276 890 130 1070 130 C1230 130 1260 340 1400 345 C1480 348 1520 342 1640 342';
 S('arco','ink','Bloco 2 · 40 min','O arco emocional',F2,`
- ${eb('Bloco 3 · O ritmo da história')}${ti('O arco emocional')}${sb('Uma boa história sobe, bate no ponto mais alto e desce para um novo equilíbrio.','font-size:34px')}
+ ${eb('Histórias · O ritmo da história')}${ti('O arco emocional')}${sb('Uma boa história sobe, bate no ponto mais alto e desce para um novo equilíbrio.','font-size:34px')}
  <div style="${abs(128,350,'width:1664px;height:560px')}">
  <svg viewBox="0 0 1664 560" width="1664" height="560" style="position:absolute;inset:0;overflow:visible">
   <defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--g6)" stop-opacity=".5"/><stop offset="1" stop-color="var(--g6)" stop-opacity="0"/></linearGradient><linearGradient id="cg" x1="0" x2="1"><stop offset="0" stop-color="var(--g2)"/><stop offset=".6" stop-color="var(--g1)"/><stop offset="1" stop-color="var(--g3)"/></linearGradient><clipPath id="clp"><rect id="clr" x="0" y="-80" width="0" height="680"/></clipPath></defs>
@@ -3350,7 +3375,7 @@ S('arco','ink','Bloco 2 · 40 min','O arco emocional',F2,`
   <circle id="cd" r="15" fill="#fff" cx="20" cy="450"/><circle id="cd2" r="15" fill="none" stroke="#fff" stroke-width="3" cx="20" cy="450" opacity=".6"/>
  </svg>
  <div data-a="fade" class="mut" style="${abs(0,506,'font-size:24px;letter-spacing:.14em;text-transform:uppercase')}">Tempo →</div>
- ${ARC.map((a,i)=>`<div id="al${i}" data-step data-a="pop" data-at=".9" style="${abs(a[2]-150+a[3],0,'width:300px;text-align:center;white-space:nowrap')}"><div style="font:800 40px Syne;color:${['var(--g2)','var(--g1)','var(--g3)','var(--fg)'][i]}">${a[0]}</div><div class="mut" style="font-size:26px;margin-top:4px">${a[1]}</div></div>`).join('')}
+ ${ARC.map((a,i)=>`<div id="al${i}" data-step data-a="pop" data-at=".9" style="${abs(a[2]-150+a[3],0,'width:300px;text-align:center;white-space:nowrap')}"><div style="font:800 34px Syne;color:${['var(--g2)','var(--g1)','var(--g3)','var(--fg)'][i]}">${a[0]}</div><div class="mut" style="font-size:26px;margin-top:4px">${a[1]}</div></div>`).join('')}
  </div>`,
  {init:(r,tl)=>{
    const p=q('#cv',r),L=p.getTotalLength();p.style.strokeDasharray=L;p.style.strokeDashoffset=L;
@@ -3466,12 +3491,8 @@ const BING=['Reconciliação','Avós com um segredo','Vizinhos que se surpreende
 S('act-cliche','ember','Bloco 3 · 30 min','Atividade 04 · Bingo dos clichés','Fórmulas a violeta: ECO, «Quem ganha o concurso (anual) do melhor anúncio de Natal?»',act({n:'04',meta:'10 min · em pares',title:'Bingo dos clichés',sub:'Os anúncios de Natal repetem fórmulas. Quantas consegues apanhar?',min:10,
  steps:['Vê dois anúncios de Natal.','Marca os clichés que encontras.','Reescreve um com outro conflito.'],
  deb:'Quem completar uma linha diz «Bingo!» e justifica.',
- right:`<div class="bg3" data-a="kids">${BING.map((b,i)=>`<div class="bc ${i<4?'src':''}" data-int><i></i><span style="font-size:23px">${b}</span></div>`).join('')}</div><div id="bgb" class="hero" style="font-size:84px;margin-top:22px;text-align:center;color:var(--acc);opacity:0">BINGO!</div>`}),
- {init:(r)=>{
-  const cells=qq('.bc',r),on=new Set(),done=new Set();
-  const L=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-  cells.forEach((c,i)=>c.onclick=()=>{const k=c.classList.toggle('on');k?on.add(i):on.delete(i);G.to(q('i',c),{scale:k?2.8:0,duration:.5,ease:k?'power3.out':'power2.in'});TK();
-   L.forEach((l,li)=>{if(l.every(x=>on.has(x))){if(!done.has(li)){done.add(li);const b=q('#bgb',r);G.fromTo(b,{opacity:1,scale:.4},{scale:1,duration:.8,ease:'elastic.out(1,.5)'});G.to(b,{opacity:0,delay:2.4,duration:.6});const rc=c.getBoundingClientRect();CF((rc.left-ENG.OX)/ENG.SC,(rc.top-ENG.OY)/ENG.SC,90);ENG.beep(2)}}else done.delete(li)})})}});
+ right:`<div class="bg3" data-a="kids">${BING.map((b,i)=>`<div class="bc ${i<4?'src':''}" style="cursor:default"><i></i><span style="font-size:23px">${b}</span></div>`).join('')}</div>`}),
+ {});
 
 /* ================= WORKSHOP ================= */
 
@@ -3504,35 +3525,30 @@ S('wk-dados','ember','Workshop · 40 min','Lança os dados',FW+' · Marcas e per
   qq('[data-pass]',r).forEach(b=>b.onclick=()=>roll(reels[+b.dataset.pass]));
  }});
 
-const EN=[['Persona e objetivo SMART','Para quem é e o que querem alcançar, com número e prazo.'],['Story Spine em 8 frases','A história completa, com a persona como protagonista.'],['Gancho e peça no canal','A primeira frase ou imagem, e o rascunho no formato sorteado.'],['KPI e tipo de meio','O sinal a medir e se o canal é próprio, pago ou ganho.']];
-const CHK='<div class="chk"><svg viewBox="0 0 34 34"><path d="M6 18 L14 26 L28 8"/></svg></div>';
+const EN=[['Persona e objetivo SMART','Para quem e para quê.'],['Story Spine em 8 frases','A história da persona.'],['Gancho e peça no canal','O primeiro segundo e o rascunho.'],['KPI e tipo de meio','O que medir e onde.']];
 S('wk-entregaveis','ink','Workshop · 40 min','O que entregar',FW,`
  ${eb('Workshop · Criação em 9 minutos')}${ti('O que entregar')}
  <div class="timer" data-min="9" data-a="pop" style="right:128px;top:84px;--sz:210px"></div>
  <div class="g2" data-a="kids" style="${abs(128,320,'right:128px;gap:28px')}">
- ${EN.map(e=>`<div class="card ck row" data-int style="gap:34px;padding:38px 44px;height:238px;cursor:pointer">${CHK}<div><div class="t3" style="font-size:42px">${e[0]}</div><div class="txt mut" style="margin-top:12px;font-size:28px">${e[1]}</div></div></div>`).join('')}
- </div>
- <div data-a="fade" class="mut" style="${abs(128,860,'font-size:26px')}">Toca num cartão para marcar como feito.</div>`,
- {init:(r)=>initChecks(r,(n,t)=>{if(n===t)CF(960,600,100)})});
+ ${EN.map((e,i)=>`<div class="card row" style="gap:40px;padding:38px 48px;height:238px"><div class="num" style="font-size:96px;min-width:110px;color:${['var(--g1)','var(--g2)','var(--g3)','var(--g4)'][i]}">${i+1}</div><div><div class="t3" style="font-size:46px">${e[0]}</div><div class="txt mut" style="margin-top:12px;font-size:30px">${e[1]}</div></div></div>`).join('')}
+ </div>`);
 
 const CR=[['Persona','Percebe-se para quem é e porque lhe importa?'],['Objetivo e KPI','É claro, mensurável e tem prazo?'],['História','Há conflito e o fim é diferente do início?'],['Gancho','Parava o scroll? Querias ver até ao fim?'],['Canal','A história respeita a gramática do formato?'],['Originalidade','Fugiu ao cliché?']];
 S('wk-criterios','cream','Workshop · 40 min','Como vamos votar',FW,`
  ${eb('Workshop · Votação')}${ti('Como vamos votar')}
- <div class="g3" data-a="kids" style="${abs(128,296,'right:128px;gap:22px')}">
- ${CR.map((c,i)=>`<div class="card" data-crit="${i}" style="height:220px;padding:26px 32px"><div class="t3" style="font-size:40px">${c[0]}</div><div class="txt mut" style="font-size:25px;margin:6px 0 16px;line-height:1.25">${c[1]}</div><div class="vts">${[1,2,3,4,5].map(n=>`<button class="vt" data-int data-v="${n}">${n}</button>`).join('')}</div></div>`).join('')}
+ <div class="g3" data-a="kids" style="${abs(128,296,'right:128px;gap:24px')}">
+ ${CR.map((c,i)=>`<div class="card" style="height:190px;display:flex;align-items:center;gap:28px;padding:0 36px"><div class="num" style="font-size:84px;min-width:64px;color:${['var(--g1)','var(--g2)','var(--g3)','var(--g4)','var(--g5)','var(--g6)'][i]}">${i+1}</div><div class="t3" style="font-size:46px">${c[0]}</div></div>`).join('')}
  </div>
- <div data-a="up" style="${abs(128,800,'width:1664px;display:flex;align-items:center;gap:40px')}"><div><div class="k">Média da equipa</div><div id="avg" style="font:700 110px/1 'DM Sans';color:var(--acc);font-variant-numeric:tabular-nums">–</div></div><div class="lead mut" style="font-size:30px;flex:1">Cada pessoa pontua de 1 a 5 em cada critério. Ganha a equipa com a maior média.</div><button class="btn" data-int id="vrs" style="font-size:24px">Repor</button></div>`,
- {init:(r)=>{
-  const vals={},avg=q('#avg',r);
-  const upd=()=>{const v=Object.values(vals);avg.textContent=v.length?(v.reduce((a,b)=>a+b,0)/v.length).toFixed(1).replace('.',','):'–'};
-  qq('[data-crit]',r).forEach(c=>{const i=c.dataset.crit;qq('.vt',c).forEach(b=>b.onclick=()=>{const n=+b.dataset.v;if(vals[i]===n)delete vals[i];else vals[i]=n;qq('.vt',c).forEach(x=>x.classList.toggle('on',vals[i]!=null&&+x.dataset.v<=vals[i]));upd();TK();if(Object.keys(vals).length===6)CF(960,700,60)})});
-  q('#vrs',r).onclick=()=>{for(const k in vals)delete vals[k];qq('.vt',r).forEach(x=>x.classList.remove('on'));upd()};
- }});
+ <div data-a="up" style="${abs(128,740,'width:1664px;display:flex;align-items:center;gap:60px')}">
+  <div style="display:flex;gap:16px">${[1,2,3,4,5].map(n=>`<div class="vdot" style="width:92px;height:92px;border-radius:50%;border:5px solid var(--acc);display:flex;align-items:center;justify-content:center;font:800 44px Syne;color:var(--acc)">${n}</div>`).join('')}</div>
+  <div class="title" style="font-size:50px;margin:0;max-width:900px">O responsável de cada grupo <span class="acc">vota no telemóvel.</span></div>
+ </div>`,
+ {init:(r,tl)=>{tl.fromTo(qq('.vdot',r),{scale:.6,opacity:.3},{scale:1,opacity:1,duration:.5,ease:'back.out(2)',stagger:.15},1.2);tl.call(()=>{G.to(qq('.vdot',r),{backgroundColor:'rgba(46,224,138,.22)',duration:.5,yoyo:true,repeat:-1,repeatDelay:1.2,stagger:{each:.18,repeat:-1,repeatDelay:2}})},null,2.4)}});
 
 S('wk-palco','coral','Workshop · 40 min','Palco: 2 minutos por equipa',FW,`
  ${eb('Workshop · Pitch e votação · 10 min')}${ti('Palco: 2 minutos por equipa','max-width:1400px;font-size:76px')}
- <div class="timer" data-min="2" data-a="pop" style="right:150px;top:280px;--sz:400px"></div>
- <div style="${abs(128,396,'width:1130px;display:flex;flex-direction:column;gap:12px')}">
+ <div data-a="pop" class="hero" style="${abs(1190,440,'font-size:150px;line-height:1')}">2:00</div>
+ <div style="${abs(128,396,'width:1030px;display:flex;flex-direction:column;gap:12px')}">
  ${[['A estratégia','Persona, objetivo SMART, canal e KPI.'],['A história','Story Spine em voz alta, o gancho e a peça.']].map((s,i)=>`<div class="card row" data-step data-a="left" style="padding:16px 32px;gap:28px"><div style="text-align:center;min-width:130px"><div style="font:700 54px/1 'DM Sans'">1</div><div class="k" style="font-size:18px;margin-top:4px">minuto</div></div><div><div class="t3" style="font-size:38px">${s[0]}</div><div class="txt" style="font-size:29px;margin-top:4px">${s[1]}</div></div></div>`).join('')}
  </div>
  <div style="${abs(128,850)}"><div class="k" data-a="up" style="margin-bottom:16px">Feedback da turma</div><div data-a="kids" style="display:flex;gap:18px"><span class="pill" style="font-size:28px;text-transform:none;letter-spacing:0">«Gostei de…»</span><span class="pill" style="font-size:28px;text-transform:none;letter-spacing:0">«Mudava…»</span><span class="pill" style="font-size:28px;text-transform:none;letter-spacing:0">«E se…?»</span></div></div>`);
@@ -3547,13 +3563,17 @@ S('takeaways','ink','Fecho · 5 min','Cinco ideias para levar',FF,`
  {onStep:(r,el,i)=>{if(i===4)CF(960,560,90)}});
 
 const CLK=['Para quem é e que objetivo serve?','Qual é o conflito e o que muda?','O gancho aguenta o primeiro segundo?','A história respeita o canal?','Podia ser de qualquer marca?','É verdadeira e tenho autorização?'];
-S('checklist','cream','Fecho · 5 min','Checklist antes de publicar',FF,`
- ${eb('Fecho · Para guardar')}${ti('Checklist antes de publicar')}
- <div class="g2" data-a="kids" style="${abs(128,296,'right:128px;gap:20px 28px')}">
- ${CLK.map(c=>`<div class="card ck row" data-int style="gap:30px;padding:0 40px;height:128px;cursor:pointer">${CHK}<div style="font:700 36px/1.2 Syne">${c}</div></div>`).join('')}
- </div>
- <div data-a="up" style="${abs(128,760,'width:1664px')}"><div style="height:14px;border-radius:7px;background:var(--cardb);overflow:hidden"><div id="cpb" style="height:100%;width:100%;background:linear-gradient(90deg,var(--acc),var(--g3));transform:scaleX(0);transform-origin:0 50%"></div></div><div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:22px"><div id="cmsg" class="title" style="font-size:60px;margin:0">Responde às seis perguntas.</div><div id="cn" style="font:700 60px 'DM Sans';color:var(--acc);font-variant-numeric:tabular-nums">0 / 6</div></div></div>`,
- {init:(r)=>initChecks(r,(n,t)=>{G.to(q('#cpb',r),{scaleX:n/t,duration:.6,ease:'power3.out'});q('#cn',r).textContent=n+' / '+t;q('#cmsg',r).textContent=n===t?'Pronto a publicar.':n?'Falta pouco…':'Responde às seis perguntas.';if(n===t)CF(960,800,120)})});
+const CKI2=[['Público','<circle cx="60" cy="42" r="18"/><path d="M24 102 Q24 68 60 68 Q96 68 96 102"/>'],['Conflito','<path d="M68 12 L34 64 H58 L50 108 L88 50 H62Z"/>'],['Gancho','<path d="M72 14 V72 A24 24 0 0 1 24 72"/><path d="M14 62 L24 74 L36 62"/>'],['Canal','<rect x="34" y="12" width="52" height="96" rx="12"/><path d="M52 94 H68"/>'],['Verdade','<path d="M60 10 L98 26 V60 C98 86 80 102 60 112 C40 102 22 86 22 60 V26Z"/><path d="M42 60 L56 74 L80 46"/>']];
+S('checklist','cream','Fecho · 5 min','Antes de publicar',FF,`
+ ${eb('Fecho · Para guardar')}${ti('Antes de publicar')}
+ <div style="${abs(128,330,'width:1664px;height:560px')}">
+  <svg viewBox="0 0 1664 560" width="1664" height="560" style="position:absolute;inset:0;overflow:visible" fill="none"><path id="ckl" d="M130 180 H1534" stroke="var(--line)" stroke-width="10" stroke-linecap="round"/><path id="ckp" d="M130 180 H1534" stroke="var(--acc)" stroke-width="10" stroke-linecap="round"/></svg>
+  ${CKI2.map((c,i)=>`<div class="ckn" style="position:absolute;left:${130+i*351-150}px;top:0;width:300px;display:flex;flex-direction:column;align-items:center"><div class="ckc" style="width:190px;height:190px;border-radius:50%;background:var(--card);border:5px solid var(--acc);display:flex;align-items:center;justify-content:center;margin-top:85px"><svg viewBox="0 0 120 120" width="104" height="104" fill="none" stroke="var(--acc)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">${c[1]}</svg></div><div class="t3 ckt" style="font-size:54px;margin-top:40px">${c[0]}</div></div>`).join('')}
+ </div>`,
+ {init:(r,tl)=>{const p=q('#ckp',r),L=p.getTotalLength();p.style.strokeDasharray=L;
+  tl.fromTo(p,{strokeDashoffset:L},{strokeDashoffset:0,duration:2.4,ease:'none'},.5);
+  qq('.ckn',r).forEach((n,i)=>{const at=.5+i/4*2.4-.3+.15;tl.fromTo(q('.ckc',n),{scale:0,opacity:0},{scale:1,opacity:1,duration:.55,ease:'back.out(2)'},Math.max(.3,at));tl.fromTo(q('.ckt',n),{y:24,opacity:0},{y:0,opacity:1,duration:.5,ease:'power3.out'},Math.max(.3,at)+.15)});
+  tl.call(()=>{G.to(qq('.ckc',r),{y:-10,duration:1.4,yoyo:true,repeat:-1,ease:'sine.inOut',stagger:.2})},null,3.4)}});
 
 const SRC=[['DataReportal','Digital 2026: Portugal'],['Wikipedia · Executive Digest','LEGO Friends, Gymshark e Cartão Continente'],['Kotler, Kartajaya e Setiawan','Marketing 5.0 (livro)'],['Donald Miller','Building a StoryBrand (livro)'],['StoryPrompt','The Story Spine, also known as Pixar’s story structure'],['Music Business Worldwide','Spotify Wrapped 2025'],['TechCrunch · CreatorDB · Mediashower','Duolingo e Wendy’s: marcas que falam como pessoas'],['Packaging News · Tubefilter · Guinness','Share a Coke (Austrália) · Red Bull Stratos'],['Restaurant Dive · Adweek','Burger King: Whopper Detour (2018)'],['EUR-Lex · CNPD','Regulamento Geral sobre a Proteção de Dados (UE 2016/679)'],['artificialintelligenceact.eu','Regulamento da IA da UE, art. 50 (transparência)']];
 S('fontes','ink','Fecho · 5 min','Fontes e leituras','Fontes consultadas em outubro de 2026 · '+PN,`
@@ -3662,7 +3682,7 @@ S('d-ia','violet','IA','IA: o bom e o slop','',div('05','IA · 15 minutos','IA: 
 S('ia-brief','ink','IA','O pedido',FA+' · Exemplo fictício',`
  ${eb('IA · O pedido')}${ti('Mesmo pedido, dois resultados')}
  <div class="card" data-a="left" style="${abs(128,300,'width:1220px;padding:38px 48px;border-left:10px solid var(--acc)')}"><div class="k">Pedido</div><div style="font:500 40px/1.35 'DM Sans';margin-top:16px">«Escreve um gancho e uma legenda de Instagram para o lançamento da coleção de outono da Segunda Mão, uma loja de roupa em segunda mão.»</div></div>
- <svg data-a="draw" width="260" height="120" viewBox="0 0 260 120" fill="none" stroke="var(--acc)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" style="${abs(240,520)}"><path d="M130 6 V44 M130 44 C130 70 50 60 50 100 M130 44 C130 70 210 60 210 100"/><path d="M36 86 L50 102 L64 86 M196 86 L210 102 L224 86"/></svg>
+ <svg data-a="draw" width="700" height="80" viewBox="0 0 700 80" fill="none" stroke="var(--acc)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" style="${abs(388,584)}"><path d="M350 4 V24 M350 24 C350 52 38 40 38 70 M350 24 C350 52 662 40 662 70"/><path d="M26 58 L38 72 L50 58 M650 58 L662 72 L674 58"/></svg>
  <div data-a="kids" style="${abs(128,660,'width:1220px;display:grid;grid-template-columns:1fr 1fr;gap:28px')}">
   ${['A','B'].map(l=>`<div class="card row" style="height:150px;padding:0 40px;gap:30px"><div style="font:800 100px/1 Syne;color:var(--acc)">${l}</div><div class="txt mut" style="font-size:30px">Texto ${l}</div></div>`).join('')}
  </div>
@@ -3721,13 +3741,16 @@ S('ia-metodo','ink','IA','Cinco movimentos',FA,`
  <div data-a="fade" class="mut" style="${abs(128,950,'font-size:25px')}">Hoje, nas atividades, sem IA: primeiro treina-se o olho.</div>`);
 
 const CKI=['Tem uma pessoa, um número ou um lugar real?','Tem uma opinião ou um conflito?','Podia ser de outra marca?','Soa a mim quando leio em voz alta?','Verifiquei nomes, datas e números?','Se parece real e foi feito com IA, assinalei?'];
+const IAI={
+ verdade:'<circle cx="90" cy="90" r="56"/><path d="M132 132 L176 176"/><path d="M66 90 L84 108 L118 72"/>',
+ voz:'<path d="M40 36 H160 A14 14 0 0 1 174 50 V116 A14 14 0 0 1 160 130 H100 L64 164 V130 H40 A14 14 0 0 1 26 116 V50 A14 14 0 0 1 40 36Z"/><path class="wv" d="M62 83 V97"/><path class="wv" d="M81 68 V112"/><path class="wv" d="M100 78 V102"/><path class="wv" d="M119 62 V118"/><path class="wv" d="M138 83 V97"/>',
+ ia:'<rect x="26" y="62" width="148" height="96" rx="24"/><path d="M82 92 V128"/><path d="M104 130 L120 90 L136 130 M110 116 H130"/><path d="M162 18 V50 M146 34 H178"/>'};
 S('ia-check','cream','IA','Antes de publicar com IA',FA,`
  ${eb('IA · Para guardar')}${ti('Antes de publicar com IA')}
- <div class="g2" data-a="kids" style="${abs(128,296,'right:128px;gap:20px 28px')}">
- ${CKI.map(c=>`<div class="card ck row" data-int style="gap:30px;padding:0 40px;height:128px;cursor:pointer">${CHK}<div style="font:700 32px/1.2 Syne">${c}</div></div>`).join('')}
- </div>
- <div data-a="up" style="${abs(128,760,'width:1664px')}"><div style="height:14px;border-radius:7px;background:var(--cardb);overflow:hidden"><div id="cpb" style="height:100%;width:100%;background:linear-gradient(90deg,var(--acc),var(--g3));transform:scaleX(0);transform-origin:0 50%"></div></div><div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:22px"><div id="cmsg" class="title" style="font-size:56px;margin:0">Responde às seis perguntas.</div><div id="cn" style="font:700 60px 'DM Sans';color:var(--acc);font-variant-numeric:tabular-nums">0 / 6</div></div></div>`,
- {init:(r)=>initChecks(r,(n,t)=>{G.to(q('#cpb',r),{scaleX:n/t,duration:.6,ease:'power3.out'});q('#cn',r).textContent=n+' / '+t;q('#cmsg',r).textContent=n===t?'Já parece teu.':n?'Falta pouco…':'Responde às seis perguntas.';if(n===t)CF(960,800,120)})});
+ <div data-a="kids" style="${abs(128,300,'width:1664px;display:grid;grid-template-columns:repeat(3,1fr);gap:40px')}">
+ ${[['verdade','É verdade?'],['voz','Soa a mim?'],['ia','Disse que é IA?']].map(c=>`<div class="card" style="height:560px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:50px"><svg data-a="draw" data-dur="1.1" class="ick" viewBox="0 0 200 200" width="260" height="260" fill="none" stroke="var(--acc)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" style="overflow:visible">${IAI[c[0]]}</svg><div class="t3" style="font-size:52px;text-align:center">${c[1]}</div></div>`).join('')}
+ </div>`,
+ {init:(r,tl)=>{tl.call(()=>{G.to(qq('.ick',r),{y:-12,duration:1.8,yoyo:true,repeat:-1,ease:'sine.inOut',stagger:.35});G.fromTo(qq('.wv',r),{scaleY:.3,svgOrigin:'100 100'},{scaleY:1,svgOrigin:'100 100',duration:.5,yoyo:true,repeat:-1,ease:'sine.inOut',stagger:.12})},null,1.6)}});
 
 /* ---------- Notas de apresentador (novas e atualizadas) ---------- */
 const N3={
@@ -3758,7 +3781,7 @@ const N3={
  'ia-ab':'Os lados A e B são sorteados quando abres a apresentação (recarrega a página para trocar). Dá 1 minuto a ler em silêncio e abre a votação com a mão no ar; conta e regista nos botões (shift+clique tira um voto). Pergunta a 2 ou 3 alunos porquê, sem corrigir. Carrega em seguida para as pistas (procura abertura, adjetivos, números, opinião) e, quando houver debate, carrega outra vez para revelar qual é o bom e qual é o slop. Os números marcados no slop são os seis sinais do slide seguinte.',
  'ia-sinais':'Revela um sinal de cada vez; o trecho destacado no texto acende com o número. Insiste: nenhum destes sinais é um erro de português. É texto correto e vazio. O que falta é uma pessoa, um número, um lugar e uma opinião. Pergunta: troquem o nome da loja por outro nome qualquer. Alguma frase deixa de fazer sentido? Se não, é slop.',
  'ia-metodo':'Os cinco movimentos para usar IA sem cair no genérico. 1) Contexto real: quem és, para quem, em que tom, com exemplos teus. 2) Matéria tua: a Marta, os 14 €, o bolso descosido: é o que a IA não tem. 3) Várias versões: pede cinco e escolhe ou mistura. 4) Edita à mão: corta tudo o que podia ser de qualquer marca. 5) Verifica os factos: nomes, datas, números e promessas. Frase final: tu és o autor, a IA é o assistente. Se tiveres um exemplo teu de antes e depois, mostra-o aqui.',
- 'ia-check':'Checklist para guardar (fotografar). Passa pelas seis perguntas e deixa a turma marcar. A última liga à ética: se usaste IA para criar algo que parece real, assinala. A frase final, “já parece teu”, é o critério de qualidade.',
+ 'ia-check':'Três perguntas para guardar antes de publicar com IA: é verdade (nomes, datas, números e factos verificados)? Soa a mim (lido em voz alta, parece meu ou podia ser de qualquer marca)? Disse que é IA (se parece real e foi feito com IA, assinala)? Liga à ética que vem a seguir.',
  'etica':'Momento curto (2 min) mas importante. Quando uma história é inventada ou encenada, a audiência tem de poder saber. Com a IA generativa é mais fácil do que nunca produzir “testemunhos” e “cenas reais” falsas; recorda a turma de que a confiança é o ativo mais difícil de reconstruir.',
  'rgpd':'Ética e RGPD (3 min). Consentimento livre, informado, específico e claro; usar os dados só para a finalidade comunicada; direitos de acesso, retificação e apagamento; coimas até 20 milhões de euros ou 4% do volume de negócios mundial, o que for mais alto (RGPD, art. 83). Publicidade: parcerias pagas com creators têm de estar identificadas (#pub ou “parceria paga”). IA: o Regulamento da IA da UE (art. 50) exige que conteúdo gerado por IA que possa enganar, como deepfakes, seja identificado; as regras aplicam-se desde 2 de agosto de 2026. Confirma o estado atual antes de citares em contexto avaliativo.',
  'd5':'Início do workshop (2:30). 25 minutos: brief (3), criação (9), ensaio (3) e palco (10). Os grupos já existem desde a atividade 01. Cada grupo precisa de papel e canetas ou de um documento partilhado, e de um telemóvel para o cronómetro. Sem IA no workshop.',
@@ -3766,8 +3789,6 @@ const N3={
  'wk-dados':'Os grupos podem manter a marca e a persona das atividades 01 e 02 e lançar só o conflito e o canal, ou lançar tudo para um desafio novo. Cada grupo só pode passar uma coluna. Marcas e personagens fictícias. Duração: 3 minutos.',
  'wk-entregaveis':'Deixa este slide projetado durante a criação (9 min), com o cronómetro. Os quatro entregáveis juntam as duas metades da aula: persona e objetivo (marketing), Story Spine e gancho (histórias), canal e KPI (digital). Aos 6 minutos, avisa que faltam 3.',
  'takeaways':'Fecho (2:55). Revela as cinco ideias. A quarta é a do bloco de IA: a IA ajuda a escrever, quem decide o que é bom é a pessoa. Volta à pergunta da abertura: o objetivo que parecia mais difícil ficou mais claro?',
- 'checklist':'Slide para fotografar. A primeira pergunta é de estratégia, as seguintes de história e canal; a quinta (“podia ser de qualquer marca?”) vem do bloco de IA. Se alguma ficar sem resposta, o conteúdo ainda não está pronto.',
- 'fontes':'Os números de Portugal vêm do DataReportal (Digital 2026: Portugal). Os números do Spotify Wrapped 2025 vêm do Music Business Worldwide; o caso do Duolingo vem do TechCrunch e o do Wendy’s da Mediashower; o Whopper Detour vem do Restaurant Dive e da Adweek. Para ética: RGPD (Regulamento UE 2016/679) e Regulamento da IA, art. 50. Confirma os dados nas fontes originais antes de os usares numa avaliação. A origem da Story Spine é habitualmente atribuída a Kenn Adams; o ABT é de Randy Olson. Marketing 5.0 é uma boa leitura de base.'
 };
 
 /* ===== Comunicação Digital e Marketing: ordem final ===== */
@@ -4501,8 +4522,13 @@ const submitted=()=>Object.keys(ans).filter(k=>players[k]);
 function award(map){const u={};for(const pid in map)u[pid+'/pts/'+act.key]=map[pid];return db.ref(P+'/players').update(u)}
 const TS=()=>firebase.database.ServerValue.TIMESTAMP;
 function start(id){const d=ACT[id]||{},run=uid().slice(0,4);const A={id,run,phase:'in',t0:TS(),key:id==='lobby'?'lobby':id+run};
- if(d.lim)A.lim=d.lim;if(d.type==='quiz'){A.idx=0;A.phase='q';A.key=id+run+'_0'}
+ if(d.lim){A.lim=d.lim;A.phase='ready'}if(d.type==='quiz'){A.idx=0;A.key=id+run+'_0'}
  return setAct(A)}
+/* atividades com tempo só arrancam quando carregas em Começar */
+const begin=()=>{const d=ACT[M.id]||{};patch({phase:d.type==='quiz'?'q':'in',t0:TS()})};
+const limTxt=s=>{const m=Math.floor(s/60),x=s%60;return m?(m+' min'+(x?' '+x+' s':'')):x+' s'};
+function readyView(){const d=ACT[M.id]||{},n=plist().length;
+ return `<div class="lv-ready"><div class="k">${d.type==='quiz'?'Primeira pergunta':'Tempo'}</div><div class="lv-rt">${limTxt(act.lim||d.lim||60)}</div>${d.type==='quiz'?'<div class="k">por pergunta</div>':''}<p class="lead">${n} ${n===1?'equipa ligada':'equipas ligadas'}. Quando estiverem prontas, carrega em Começar.</p></div>`}
 function follow(id){if(online()&&act.id!==id)start(id)}
 
 /* ---------- peças de interface ---------- */
@@ -4609,6 +4635,39 @@ V.order={
   return [{t:'Revelar',p:1,f:()=>{const o=off_(id);o.rev=true;o.sel=null;draw()}},{t:'Baralhar',f:()=>{OFF[id]={};draw()}}]}
 };
 
+/* votação por grupo: o responsável de cada grupo vota no telemóvel e vê-se a média */
+function rateStats(target,N){const sum=Array(N).fill(0);let n=0;
+ Object.keys(ans).forEach(k=>{if(k===target||!players[k])return;const s=((ans[k]||{}).r||{})[target];if(typeof s!=='string')return;const a=s.split(',').map(Number);if(a.length!==N||a.some(x=>!(x>=1&&x<=5)))return;a.forEach((x,i)=>sum[i]+=x);n++});
+ return n?{n,crit:sum.map(x=>x/n),avg:sum.reduce((x,y)=>x+y,0)/(N*n)}:null}
+const f1=x=>x.toFixed(1).replace('.',',');
+const tmName=p=>`<span style="display:inline-flex;align-items:center;gap:16px">${dot(p.color)}${H(p.name)}</span>`;
+V.rate={
+ body(){
+  if(!online())return offMsg();
+  const d=D(),CR_=d.crit,N=CR_.length,ps=plist(),st={};ps.forEach(p=>st[p.id]=rateStats(p.id,N));
+  const cur=act.cur&&players[act.cur]?players[act.cur]:null,ph=act.phase;
+  if(ph==='end'){const a=ps.filter(p=>st[p.id]).sort((x,y)=>st[y.id].avg-st[x.id].avg);
+   if(!a.length)return '<p class="lead">Ainda não há votos.</p>';
+   return `<div class="k" style="margin-bottom:18px">Média por grupo</div><div class="lv-rank">${a.map((p,i)=>`<div class="lv-rrow"><span class="lv-rk">${i+1}</span><div class="lv-rbar"><i style="width:${Math.round(st[p.id].avg/5*100)}%;background:${p.color}"></i><b>${H(p.name)}</b></div><span class="lv-pt">${f1(st[p.id].avg)}</span></div>`).join('')}</div>`}
+  if(cur&&ph==='pitch')return `<div class="lv-ready"><div class="k">A apresentar</div><div class="lv-rt" style="font-size:96px">${tmName(cur)}</div><div class="lv-clock" id="lvck">${fmt_(d.pitch||120)}</div></div>`;
+  if(cur&&ph==='vote'){const others=ps.filter(p=>p.id!==act.cur);const done=others.filter(p=>(((ans[p.id]||{}).r||{})[act.cur]));
+   return `${cnt('Votos',done.length+' / '+others.length)}<div class="k" style="margin-bottom:10px">A votar</div><div class="lv-rt" style="font-size:84px;margin-bottom:26px">${tmName(cur)}</div><div class="lv-pl">${others.map(p=>{const s=!!(((ans[p.id]||{}).r||{})[act.cur]);return `<span class="lv-chip${s?' done':''}">${dot(p.color)}${H(p.name)}${s?' · votou':''}</span>`}).join('')}</div><p class="lead mut" style="margin-top:22px">O responsável de cada grupo vota no telemóvel, de 1 a 5 em cada critério.</p>`}
+  if(cur&&ph==='rev'){const s=st[act.cur];
+   if(!s)return `<div class="lv-rt" style="font-size:84px">${tmName(cur)}</div><p class="lead">Sem votos.</p>`;
+   return `<div class="lv-res"><div><div class="k">${tmName(cur)}</div><div class="lv-rt" style="font-size:200px">${f1(s.avg)}</div><div class="k mut">média de ${s.n} ${s.n===1?'voto':'votos'}</div></div><div class="lv-crit">${CR_.map((c,i)=>`<div class="lv-cr"><span>${H(c[0])}</span><div class="lv-cb"><i style="width:${s.crit[i]/5*100}%"></i></div><b>${f1(s.crit[i])}</b></div>`).join('')}</div></div>`}
+  return `<p class="lead" style="margin-bottom:20px">Quem apresenta a seguir? Toca na equipa.</p><div class="lv-tiles">${ps.map(p=>`<div class="card lv-tile lv-click" data-t="${p.id}"><div class="lv-nm">${dot(p.color)}${H(p.name)}${st[p.id]?`<b style="margin-left:auto;font-family:Syne;color:var(--acc);font-size:44px">${f1(st[p.id].avg)}</b>`:'<span class="mut" style="margin-left:auto;font-size:20px">por apresentar</span>'}</div></div>`).join('')||'<p class="lead">Ainda ninguém entrou na sala.</p>'}</div>`},
+ wire(b){if(!online())return;b.querySelectorAll('[data-t]').forEach(el=>el.onclick=()=>patch({phase:'pitch',cur:el.dataset.t,t0:TS()}))},
+ tick(){if(!online()||act.phase!=='pitch'||act.id!==M.id)return;const el=M.body.querySelector('#lvck');if(!el)return;const l=(D().pitch||120)-(now()-act.t0)/1000;el.textContent=fmt_(l);el.classList.toggle('over',l<=0)},
+ ctl(){if(!online())return mode==='offline'?offCtl():[];const ph=act.phase,id=M.id;
+  const back=()=>patch({phase:'in',cur:null}),any=plist().some(p=>rateStats(p.id,D().crit.length));
+  if(ph==='pitch')return [{t:'Abrir votação',p:1,f:()=>patch({phase:'vote'})},{t:'Outra equipa',f:back}];
+  if(ph==='vote')return [{t:'Mostrar média',p:1,f:()=>patch({phase:'rev'})},{t:'Outra equipa',f:back}];
+  if(ph==='rev')return [{t:'Seguinte equipa',p:1,f:back},{t:'Ver ranking',f:()=>patch({phase:'end'})}];
+  if(ph==='end')return [{t:'Voltar às equipas',p:1,f:back},{t:'Recomeçar',f:()=>start(id)}];
+  return any?[{t:'Ver ranking',f:()=>patch({phase:'end'})}]:[]}
+};
+const fmt_=s=>{s=Math.max(0,Math.ceil(s));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
+
 /* perguntas com tempo */
 V.quiz={
  body(){const id=M.id,QS=QSETS[id]||[];
@@ -4637,9 +4696,10 @@ function status(){const s=M&&M.st;if(!s)return;
 function view(){return V[(ACT[M.id]||{}).type]||V.lobby}
 function draw(){if(!M||!M.root.isConnected)return;const v=view();
  const y=M.body.scrollTop,ae=document.activeElement,inside=ae&&M.body.contains(ae),fk=inside?(ae.id?'#'+ae.id:ae.dataset&&ae.dataset.k?'[data-k="'+ae.dataset.k+'"]':null):null,sel=inside&&ae.selectionStart;
- M.body.innerHTML=v.body();v.wire&&v.wire(M.body);M.body.scrollTop=y;
+ const rdy=online()&&act.phase==='ready'&&act.id===M.id&&!!(ACT[M.id]||{}).lim;
+ M.body.innerHTML=rdy?readyView():v.body();if(!rdy&&v.wire)v.wire(M.body);M.body.scrollTop=y;
  if(fk){const e=M.body.querySelector(fk);if(e){e.focus();try{e.setSelectionRange(sel,sel)}catch(x){}}}
- const cs=v.ctl();M.bar.innerHTML='';cs.forEach(c=>{const b=document.createElement(c.href?'a':'button');b.className='lv-b'+(c.p?' pri':'');b.textContent=c.t;if(c.href){b.href=c.href;b.target='_blank';b.rel='noopener'}else b.onclick=e=>{e.stopPropagation();c.f()};M.bar.appendChild(b)});
+ const cs=rdy?[{t:'Começar',p:1,f:begin}]:v.ctl();M.bar.innerHTML='';cs.forEach(c=>{const b=document.createElement(c.href?'a':'button');b.className='lv-b'+(c.p?' pri':'');b.textContent=c.t;if(c.href){b.href=c.href;b.target='_blank';b.rel='noopener'}else b.onclick=e=>{e.stopPropagation();c.f()};M.bar.appendChild(b)});
  status()}
 let pend=0;function refresh(){if(!M)return;if(pend)return;pend=requestAnimationFrame(()=>{pend=0;draw()})}
 function mount(root,id){
@@ -4674,26 +4734,27 @@ liveS('live-spinew','spinew','Histórias',F1,'Praticar · Story Spine','A vossa 
 liveS('live-gancho','gancho','Histórias',F2,'Praticar · Ganchos','O melhor gancho','A frase que abre o vídeo da vossa marca. Depois votamos.');
 liveS('live-slop','slop','IA',FA,'Praticar · IA','Slop ou não?','6 frases da Segunda Mão. Vazia ou com substância?');
 liveS('live-rgpd','rgpd','Ética e RGPD',FE,'Praticar · RGPD e publicidade','Pode ou não pode?','6 situações. Decide depressa.');
+liveS('live-votacao','votacao','Workshop',FW,'Palco · Votação','Votação dos pitches','Cada equipa apresenta e as outras votam no telemóvel.');
 liveS('live-quiz','quiz','Fecho',FF,'Ao vivo · Revisão','Quiz final','10 perguntas sobre toda a aula. Quanto mais rápido, mais pontos.');
 
 Object.assign(N4,{
  'live-entrar':'Entrada na sala (1–2 min). A apresentação cria a sala e mostra o QR e o código. A partir daqui, sempre que chegares a um slide de atividade, os telemóveis mudam sozinhos. Se aparecer «Modo apresentador», a página não se ligou (dentro do Claude é sempre assim): usa o endereço do GitHub para ter os telemóveis.',
  'live-marcas':'Aquecimento (2 min). Cada pessoa escreve até 3 marcas de que gosta. Comenta 2 ou 3 da nuvem. Diz à turma que estas marcas vão voltar: nas atividades de posicionamento, persona, mini plano, Story Spine e gancho, cada telemóvel recebe uma das marcas mais escolhidas (as 12 com mais votos). Se houver menos de 3 marcas, as atividades usam uma lista de marcas de reserva.',
- 'live-primsec':'Prática (2 min), logo a seguir aos dados primários e secundários. Individual. Revela e comenta as que a turma mais trocou: normalmente a sondagem nos stories (primário, foste tu que perguntaste) e o Google Trends (secundário, já existe).',
- 'live-posicionar':'Prática (4 min), logo a seguir à fórmula do posicionamento. Cada telemóvel recebe uma marca ao acaso. 2 min para escrever, abre a votação (ninguém vota no seu), revela. Comenta o vencedor: a diferença é concreta e é algo que a concorrência não diz?',
- 'live-persona':'Prática (5 min), logo a seguir à Rita. Forma os grupos de 3 ou 4 (ficam até ao workshop) e pede um telemóvel por grupo. Cada telemóvel recebe uma marca: essa passa a ser a marca do grupo. 4 min para escrever, 1 para mostrar. Pergunta: o que é que a persona da marca X tem de diferente da Rita?',
+ 'live-primsec':'Prática (2 min), logo a seguir aos dados primários e secundários. Individual. Revela e comenta as que a turma mais trocou: normalmente a sondagem nos stories (primário, foste tu que perguntaste) e o Google Trends (secundário, já existe). O tempo só começa quando carregas em «Começar».',
+ 'live-posicionar':'Prática (4 min), logo a seguir à fórmula do posicionamento. Cada telemóvel recebe uma marca ao acaso. 2 min para escrever, abre a votação (ninguém vota no seu), revela. Comenta o vencedor: a diferença é concreta e é algo que a concorrência não diz? O tempo só começa quando carregas em «Começar».',
+ 'live-persona':'Prática (5 min), logo a seguir à Rita. Forma os grupos de 3 ou 4 (ficam até ao workshop) e pede um telemóvel por grupo. Cada telemóvel recebe uma marca: essa passa a ser a marca do grupo. 4 min para escrever, 1 para mostrar. Pergunta: o que é que a persona da marca X tem de diferente da Rita? O tempo só começa quando carregas em «Começar».',
  'live-4p':'Prática (2 min), logo a seguir aos 4Ps. Individual. As trocas mais comuns: a garantia de troca (é produto, faz parte do que vendes) e vender na Vinted (é praça, onde a pessoa compra).',
- 'live-smart':'Prática (3 min), logo a seguir ao «Do vago ao SMART». Individual. A verificação automática é simples (procura número, prazo, verbo…): usa-a como ponto de partida. Abre a votação e revela.',
- 'live-canais':'Prática (2 min), logo a seguir aos três meios. Individual. Revela e comenta o creator pago e o post impulsionado (pagos, mesmo parecendo conteúdo).',
- 'live-metricas':'Prática (2 min), logo a seguir à métrica de vaidade. Individual. As impressões e as views não são inúteis, mas para «vender mais» não dizem se estás mais perto.',
- 'live-plano':'A atividade «para guardar» (5 min). Um telemóvel por grupo, o mesmo da persona: a marca mantém-se. Objetivo SMART, dois canais com o papel de cada um e o KPI. É a base do workshop.',
- 'live-abt':'Prática (3 min), logo a seguir ao E, MAS, POR ISSO. Individual: cada telemóvel recebe um produto. Abre a votação e revela. Comenta: o MAS tem mesmo um conflito?',
- 'live-spine':'Prática (2 min), logo a seguir ao exemplo da Story Spine. Individual: ordenar as 8 frases. Revela e lê a história em voz alta.',
- 'live-spinew':'Prática em grupo (8 min), com o telemóvel do grupo: a Story Spine da marca do grupo. Vai servir no workshop. Abre a votação no fim e lê a vencedora.',
- 'live-gancho':'Prática (3 min), logo a seguir aos 5 tipos de gancho. Um gancho por grupo, para a sua marca. Abre a votação e revela. Comenta com a checklist: curto, curiosidade, concreto.',
- 'live-slop':'Prática (2 min), logo a seguir ao que falta ao slop. Depois de cada revelação, pergunta: que sinal é este? Teste rápido: troca o nome da loja; se a frase continuar a funcionar, é slop.',
- 'live-rgpd':'Prática (2 min), logo a seguir às regras de RGPD e publicidade. Seis situações rápidas. Lê a explicação de cada uma em voz alta.',
- 'live-quiz':'Quiz final (5 min). 10 perguntas sobre toda a aula, 20 segundos cada; respostas rápidas valem mais. No fim aparece o ranking com os pontos de todas as atividades.'
+ 'live-smart':'Prática (3 min), logo a seguir ao «Do vago ao SMART». Individual. A verificação automática é simples (procura número, prazo, verbo…): usa-a como ponto de partida. Abre a votação e revela. O tempo só começa quando carregas em «Começar».',
+ 'live-canais':'Prática (2 min), logo a seguir aos três meios. Individual. Revela e comenta o creator pago e o post impulsionado (pagos, mesmo parecendo conteúdo). O tempo só começa quando carregas em «Começar».',
+ 'live-metricas':'Prática (2 min), logo a seguir à métrica de vaidade. Individual. As impressões e as views não são inúteis, mas para «vender mais» não dizem se estás mais perto. O tempo só começa quando carregas em «Começar».',
+ 'live-plano':'A atividade «para guardar» (5 min). Um telemóvel por grupo, o mesmo da persona: a marca mantém-se. Objetivo SMART, dois canais com o papel de cada um e o KPI. É a base do workshop. O tempo só começa quando carregas em «Começar».',
+ 'live-abt':'Prática (3 min), logo a seguir ao E, MAS, POR ISSO. Individual: cada telemóvel recebe um produto. Abre a votação e revela. Comenta: o MAS tem mesmo um conflito? O tempo só começa quando carregas em «Começar».',
+ 'live-spine':'Prática (2 min), logo a seguir ao exemplo da Story Spine. Individual: ordenar as 8 frases. Revela e lê a história em voz alta. O tempo só começa quando carregas em «Começar».',
+ 'live-spinew':'Prática em grupo (8 min), com o telemóvel do grupo: a Story Spine da marca do grupo. Vai servir no workshop. Abre a votação no fim e lê a vencedora. O tempo só começa quando carregas em «Começar».',
+ 'live-gancho':'Prática (3 min), logo a seguir aos 5 tipos de gancho. Um gancho por grupo, para a sua marca. Abre a votação e revela. Comenta com a checklist: curto, curiosidade, concreto. O tempo só começa quando carregas em «Começar».',
+ 'live-slop':'Prática (2 min), logo a seguir ao que falta ao slop. Depois de cada revelação, pergunta: que sinal é este? Teste rápido: troca o nome da loja; se a frase continuar a funcionar, é slop. O tempo só começa quando carregas em «Começar».',
+ 'live-rgpd':'Prática (2 min), logo a seguir às regras de RGPD e publicidade. Seis situações rápidas. Lê a explicação de cada uma em voz alta. O tempo só começa quando carregas em «Começar».',
+ 'live-quiz':'Quiz final (5 min). 10 perguntas sobre toda a aula, 20 segundos cada; respostas rápidas valem mais. No fim aparece o ranking com os pontos de todas as atividades. O tempo só começa quando carregas em «Começar».'
 });
 
 /* ---- Notas novas e atualizadas ---- */
@@ -4728,16 +4789,17 @@ const N2={
  'wk-regras':'Explica o fluxo em 1 minuto. 5 min de brief, 12 de criação, 3 de ensaio e 10 de palco. Os papéis ajudam a repartir o trabalho; em grupos de 3, o estratega e o guionista juntam-se.',
  'wk-dados':'Os grupos podem manter a marca e a persona das atividades 01 e 02 e lançar só o conflito e o canal, ou lançar tudo para um desafio novo. Cada grupo só pode passar uma coluna. Marcas e personagens fictícias. Duração: 5 minutos.',
  'wk-entregaveis':'Deixa este slide projetado durante a criação (12 min), com o cronómetro. Os quatro entregáveis juntam as duas partes da aula: persona e objetivo (Parte 1), Story Spine e gancho (Parte 2), canal e KPI (as duas). Aos 9 minutos, avisa que faltam 3.',
- 'wk-criterios':'Mostra os critérios antes do pitch. Os dois primeiros avaliam a estratégia, os outros a história e o canal. Cada grupo não vota em si próprio. Podes usar os botões para registar a média de cada grupo em direto.',
- 'wk-palco':'Pitches (10 min): até 5 grupos × 2 minutos, com o cronómetro. Primeiro a estratégia, depois a história. 15–20 segundos de feedback com as três frases. Duplo clique no cronómetro para o repor entre grupos.',
+ 'wk-criterios':'Mostra os seis critérios antes do pitch. Os dois primeiros avaliam a estratégia, os outros a história e o canal. O responsável de cada grupo vota no telemóvel, de 1 a 5 em cada critério, e ninguém vota no próprio grupo. A média de cada grupo aparece no slide da votação.',
+ 'wk-palco':'Regras do palco (10 min): até 5 grupos × 2 minutos. Primeiro a estratégia (1 min), depois a história (1 min). O relógio e a votação fazem-se no slide seguinte. Deixa 15–20 segundos de feedback com as três frases.',
+ 'live-votacao':'Palco e votação ao vivo. Cada grupo tem o telemóvel do responsável ligado à sala. Toca na equipa que vai apresentar: aparece o relógio de 2 minutos (1 de estratégia, 1 de história). Quando acabar, carrega em «Abrir votação»: os responsáveis das outras equipas pontuam de 1 a 5 os seis critérios no telemóvel (ninguém vota no próprio grupo). Quando todos tiverem votado, «Mostrar média» revela a nota do grupo e a média por critério. «Seguinte equipa» volta à lista. No fim, «Ver ranking» mostra a média de todos os grupos. Se um telemóvel falhar, o grupo pode votar no de outro.',
  'takeaways':'Fecho (2:55). Revela as cinco ideias: as três primeiras vêm da Parte 1, as duas últimas juntam as duas partes. Volta à pergunta da abertura: o objetivo que parecia mais difícil ficou mais claro?',
- 'checklist':'Slide para fotografar. As duas primeiras perguntas são de estratégia, as restantes de história e canal. Se alguma ficar sem resposta, o conteúdo ainda não está pronto.',
- 'fontes':'Os números de Portugal vêm do DataReportal (Digital 2026: Portugal). Os números do Spotify Wrapped 2025 vêm do Music Business Worldwide; o caso do Duolingo vem do TechCrunch e o do Wendy’s da Mediashower; o Whopper Detour vem do Restaurant Dive e da Adweek. Confirma-os nas fontes originais antes de os usares numa avaliação. A origem da Story Spine é habitualmente atribuída a Kenn Adams; confirma antes de a citar formalmente. Marketing 5.0 é uma boa leitura de base para a Parte 1.',
+ 'checklist':'Slide para fotografar, sem texto corrido: cinco paragens antes de publicar. Público (para quem é), Conflito (o que está em jogo), Gancho (o primeiro segundo), Canal (respeita o formato) e Verdade (é real e tenho autorização). Deixa a animação correr e pergunta à turma qual destas costuma falhar mais.',
  'marcas-conversa':'Dois exemplos de marcas que falam como pessoas e que o público jovem segue. Duolingo: a mascote Duo, a coruja verde, é a cara da marca no TikTok, com memes e piadas sobre quem falta às lições (mais de 18 milhões de seguidores, segundo a CreatorDB em setembro de 2026). Em fevereiro de 2025 a marca anunciou a «morte» do Duo; no dia seguinte, os downloads no Android subiram 38% e as pesquisas 58% (Similarweb, citado pelo TechCrunch). Wendy’s: respostas humorísticas no X desde 2017; o National Roast Day existe desde 2018 e, em 2023, o #NationalRoastDay teve mais de 116 milhões de visualizações no TikTok (dado divulgado pela plataforma e reproduzido pela Mediashower; confirma antes de citar como número oficial). Terceiro cartão: dá 30 segundos para 2 ou 3 alunos dizerem uma marca que seguem porque “fala como um amigo”, e o que faz de diferente. Escreve as respostas no quadro: vais reutilizá-las nos meios ganhos e na persona. Pergunta extra: qual destas marcas já vos respondeu ou gozou convosco?',
  'tres-forcas':'Explica cada força em 1 minuto com um exemplo que eles vivem: uma série que não conseguem parar de ver (Stranger Things, Squid Game) = atenção, o “só mais um episódio”; um filme que os fez chorar = emoção; as letras e os memes que sabem de cor = memória. Cuidado: não cites estatísticas do tipo “as histórias são X vezes mais memoráveis” sem fonte, circulam muitas e raramente têm origem fiável.',
  'caso-wrapped':'Caso real. Spotify Wrapped 2025: 200 milhões de utilizadores participaram nas primeiras 24 horas (+19% face ao ano anterior) e cerca de 500 milhões de partilhas, incluindo partilhas na app, descargas e capturas de ecrã (Music Business Worldwide, 2025). Os dois cartões são ilustrativos, não são ecrãs reais. Revela os três ingredientes: a personagem és tu, o conflito é não saberes o que a tua música diz de ti, a transformação é descobrires a tua identidade e quereres mostrá-la. Pergunta: quem partilhou o seu Wrapped? Porquê? A marca não fala de si: dá-te uma história para contares.',
  'heroi-guia':'Ideia-chave de marketing: o cliente é o protagonista; a marca é o mentor (pensa em Yoda e Luke Skywalker, ou em Mando e Grogu). No Wrapped, o herói és tu e o Spotify é o guia. Pede à turma para pensar numa marca que conhecem bem e responder: no último conteúdo que viram, quem era o herói, o cliente ou a marca? Normalmente é a marca, e é por isso que esses conteúdos passam despercebidos.',
  'story-spine':'Aquecimento de 1 minuto: pede a alguém para contar o enredo de uma série ou filme que viu nas frases “Era uma vez… Todos os dias… Até que um dia…”. Explica as 8 frases com calma e revela-as por ordem. Insiste em 3 ideias: (1) as frases “Por causa disso” encadeiam causa e efeito, é isso que dá motor à história; (2) o clímax é o momento em que o conflito se resolve ou rebenta; (3) a última frase mostra a transformação, o novo normal. A estrutura é muitas vezes atribuída a Kenn Adams (improviso) e popularizada através da Pixar; se a usares em contexto avaliativo, confirma a origem.',
+ 'arco':'O arco emocional da história. Revela de ponto em ponto e a bolinha vai subindo pela curva: Gancho (prende a atenção), Rutura (algo corre mal), Clímax (o ponto de maior tensão) e Novo normal (a transformação). Liga à Story Spine: da rotina à rutura sobe, o «até que finalmente» é o clímax, e o «desde então» é a descida para o novo equilíbrio. Pergunta à turma: em que filme ou série viram este desenho?',
  'spine-exemplo':'Lê o exemplo em voz alta, frase a frase. Depois pede à turma: onde está a personagem? Qual é o conflito? Qual é a transformação? Repara que o produto só aparece no fim, como resultado, não como ponto de partida. A loja Segunda Mão é inventada para esta aula; o conflito (fast fashion a 5 euros) é um que eles conhecem bem. Pergunta: já trocaram ou venderam roupa online?',
  'ganchos':'Cinco tipos de gancho, cada um com um exemplo inventado. Lê-os em voz alta e pede à turma que diga qual os faria parar o scroll, e porquê. Liga com a Story Spine: o gancho é, na prática, a frase “Até que um dia…” trazida para o início. Desafio rápido (1 min): peça a cada aluno que escreva um gancho para um vídeo sobre a sua semana de aulas. No workshop, cada equipa terá de escrever o seu gancho.',
  'reels':'Em vídeo curto o gancho e a tensão quase se confundem: não há tempo para “contextualizar”. A coluna do telemóvel mostra a proporção aproximada de cada batida (a tensão ocupa a maior parte). Exemplo para a turma: “Perdi o voo por causa de uma meia” (gancho), o que aconteceu (tensão), a lição (recompensa), “envia isto a quem também se esquece de tudo” (convite). Exemplo inventado para a aula. Pergunta: quantos segundos esperam antes de fazer scroll?',
@@ -4753,12 +4815,12 @@ const ORDER=[
  ['Marketing · 36 min',['d1','o-que-e','hist-producao','hist-vendas','hist-marketing','hist-relacao','hist-digital','ben-notoriedade','ben-relacao','ben-crescimento','mr-oque','mr-secundarios','mr-primarios','mr-quanti','mr-exemplo','live-primsec','stp-segmentar','stp-escolher','stp-posicionar','stp-formula','live-posicionar','persona-def','persona-rita','live-persona','4ps','live-4p','mv-marca','mv-proposta','mv-tom','marcas-conversa','jornada','smart-letras','smart-exemplo','live-smart']],
  ['Digital · 24 min',['d2','monologo','meio-proprio','meio-pago','meio-ganho','meio-ideal','live-canais','cn-site','cn-redes','cn-email','cn-anuncios','cn-creators','cn-imprensa','cn-fim','pdc-pago','pdc-dados','pdc-comunidade','pdc-fim','calendario','camp-coke','camp-redbull','camp-burger','camp-fim','kpis','kpi-vaidade','live-metricas','live-plano']],
  ['Pausa · 10 min',['pausa']],
- ['Histórias · 40 min',['d3','statement','forca-atencao','forca-emocao','forca-memoria','facto-historia','ing-personagem','ing-conflito','ing-transformacao','caso-wrapped','wrapped-3','heroi-papeis','heroi-guia','abt-e','abt-mas','abt-porisso','live-abt','story-spine','spine-exemplo','live-spine','live-spinew','gancho-1','gancho-2','gancho-3','gancho-4','gancho-5','ganchos-fim','live-gancho']],
+ ['Histórias · 40 min',['d3','statement','forca-atencao','forca-emocao','forca-memoria','facto-historia','ing-personagem','ing-conflito','ing-transformacao','caso-wrapped','wrapped-3','heroi-papeis','heroi-guia','abt-e','abt-mas','abt-porisso','live-abt','story-spine','arco','spine-exemplo','live-spine','live-spinew','gancho-1','gancho-2','gancho-3','gancho-4','gancho-5','ganchos-fim','live-gancho']],
  ['Da história ao canal · 10 min',['d4','canais','reels','carrossel']],
  ['IA: o bom e o slop · 15 min',['d-ia','ia-brief','ia-ab','sinal-1','sinal-2','sinal-3','sinal-4','sinal-5','sinal-6','sinal-falta','live-slop','mov-1','mov-2','mov-3','mov-4','mov-5','mov-fim','ia-check']],
  ['Ética e RGPD · 5 min',['etica','rg-consent','rg-final','rg-direitos','rg-coimas','pub-etiqueta','ia-assinala','live-rgpd']],
- ['Workshop · 25 min',['d5','wk-regras','wk-dados','wk-entregaveis','wk-criterios','wk-palco']],
- ['Fecho · 5 min',['live-quiz','takeaways','checklist','fontes','fecho']]
+ ['Workshop · 25 min',['d5','wk-regras','wk-dados','wk-entregaveis','wk-criterios','wk-palco','live-votacao']],
+ ['Fecho · 5 min',['live-quiz','takeaways','checklist','fecho']]
 ];
 
 const BYID={};SLIDES.forEach(s=>BYID[s.id]=s);

@@ -2,7 +2,7 @@
    Cada atividade vem logo a seguir à matéria que pratica. Os dados são partilhados
    entre a apresentação (que faz de ecrã) e os telemóveis.
    Tipos: lobby · cloud (nuvem) · sort (arrastar para grupos) · form (escrever, com votação opcional)
-          order (ordenar a história) · quiz (perguntas com tempo) */
+          order (ordenar a história) · quiz (perguntas com tempo) · rate (votação por grupo, de 1 a 5) */
 (()=>{
 const G='#2EE08A',L='#C8F560',M='#7FD6FF',P='#FFB86B';
 const SPINE_LAB=['Era uma vez…','Todos os dias…','Até que um dia…','Por causa disso…','Por causa disso…','Por causa disso…','Até que finalmente…','E desde então…'];
@@ -73,7 +73,10 @@ window.ACT={
 
  slop:{type:'quiz',t:'Slop ou não?',lim:15},
  rgpd:{type:'quiz',t:'Pode ou não pode?',lim:15},
- quiz:{type:'quiz',t:'Quiz final',lim:20}
+ quiz:{type:'quiz',t:'Quiz final',lim:20},
+
+ votacao:{type:'rate',t:'Votação dos pitches',pitch:120,
+  crit:[['Persona','Percebe-se para quem é.'],['Objetivo e KPI','É claro e mensurável.'],['História','Há conflito e mudança.'],['Gancho','Pararia o scroll.'],['Canal','Respeita o formato.'],['Originalidade','Foge ao cliché.']]}
 };
 window.ACTS=Object.keys(ACT).map(id=>({id,t:ACT[id].t}));
 

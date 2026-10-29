@@ -47,8 +47,8 @@ function subAns(){
  unVt=STORE.on(P+'/vt/'+curKey+'/'+pid,v=>{myVote=v;update()});
 }
 const T=()=>(ACT[act.id]||ACT.lobby).type;
-function render(){clearInterval(timer);sig=act.key+'|'+act.phase;const f=VIEWS[T()]||VIEWS.lobby;f.render();update(true)}
-function update(force){const f=VIEWS[T()]||VIEWS.lobby;if(f.update)f.update(force)}
+function render(){clearInterval(timer);sig=act.key+'|'+act.phase;if(act.phase==='ready'&&(D().lim)){setMain(head()+'<div class="center rise"><div class="bigdot" style="background:'+(me?me.color:'var(--violet)')+'"></div><h2>Prepara-te</h2><p class="sub">Começa quando o professor carregar em Começar.</p></div>');return}const f=VIEWS[T()]||VIEWS.lobby;f.render();update(true)}
+function update(force){if(act.phase==='ready')return;const f=VIEWS[T()]||VIEWS.lobby;if(f.update)f.update(force)}
 const startTimer=(el,lim)=>{const f=()=>{const e=(STORE.now()-act.t0)/1000;const x=Math.max(0,1-e/lim);const b=$(el);if(b)b.style.transform='scaleX('+x+')';return e<lim};f();timer=setInterval(()=>{if(!f())clearInterval(timer)},150)};
 const elapsed=()=>(STORE.now()-act.t0)/1000;
 const D=()=>ACT[act.id]||{};
@@ -106,6 +106,22 @@ order:{render(){
   $('#sd').onclick=()=>{local.order=[...$('#sl').children].map(n=>+n.dataset.i);STORE.set(P+'/ans/'+curKey+'/'+pid,{o:local.order.join(',')});vib(25)}},
  update(){const m=$('#ms');if(m&&act.phase==='in')m.textContent=ans[pid]?'Enviado. Podes reordenar e reenviar até acabar o tempo.':''}},
 
+rate:{render(){const d=D(),N=d.crit.length,cur=act.cur,tm=cur&&players[cur];
+  const msg=(h,s)=>setMain(head()+'<div class="center rise"><div class="bigdot" style="background:'+(tm?tm.color:(me?me.color:'var(--violet)'))+'"></div><h2>'+h+'</h2>'+(s?'<p class="sub">'+s+'</p>':'')+'</div>');
+  if(act.phase==='end'){msg('Resultados no ecrã','Obrigado pelos votos.');return}
+  if(!tm||act.phase==='in'){msg('Aguarda a próxima equipa','Olha para o ecrã.');return}
+  if(cur===pid){msg('É a vossa vez!','Não votam na vossa equipa. Apresentem com calma.');return}
+  if(act.phase==='pitch'){msg(esc(tm.name)+' está a apresentar','Prepara-te para votar.');return}
+  if(act.phase==='rev'){msg('Média no ecrã','Já está tudo.');return}
+  local.rv=local.rv||{};if(!local.rv[cur])local.rv[cur]=Array(N).fill(0);
+  setMain(head()+'<h2 style="font-size:clamp(20px,5.4vw,26px)">Vota em '+esc(tm.name)+'</h2><p class="sub" style="margin-bottom:8px">De 1 (fraco) a 5 (excelente) em cada critério.</p>'+d.crit.map((c,i)=>'<div class="rrow" data-i="'+i+'"><div class="rl2"><b>'+esc(c[0])+'</b><small>'+esc(c[1])+'</small></div><div class="rb">'+[1,2,3,4,5].map(n=>'<button class="rn" data-n="'+n+'">'+n+'</button>').join('')+'</div></div>').join('')+'<button class="btn" id="rs" style="margin-top:16px;width:100%">Enviar voto</button><p class="sub" id="ms"></p>');
+  main.onclick=e=>{const b=e.target.closest('.rn');if(!b||act.phase!=='vote')return;const row=b.closest('.rrow');local.rv[cur][+row.dataset.i]=+b.dataset.n;vib();paint()};
+  const rs=$('#rs');if(rs)rs.onclick=()=>{const v=local.rv[cur];if(v.some(x=>!x)){$('#ms').textContent='Falta pontuar todos os critérios.';vib(40);return}STORE.set(P+'/ans/'+curKey+'/'+pid+'/r/'+cur,v.join(','));vib(20);$('#ms').textContent='Voto enviado. Podes alterar até fechar.'};
+  paint()},
+ update(){if(act.phase!=='vote'||!act.cur||act.cur===pid)return;const N=D().crit.length;local.rv=local.rv||{};const mine=((ans[pid]||{}).r||{})[act.cur];
+  if(mine&&!(local.rv[act.cur]&&local.rv[act.cur].some(x=>x))){local.rv[act.cur]=String(mine).split(',').map(Number);paint()}
+  const m=$('#ms');if(m&&mine&&!m.textContent)m.textContent='Voto enviado. Podes alterar até fechar.'}},
+
 quiz:{render(){const QS=QSETS[act.id]||[],Q=QS[act.idx];
   if(act.phase==='q'){
    setMain(head()+'<p class="sub">'+(act.idx+1)+' de '+QS.length+'</p><div class="tbar"><i id="tb"></i></div><h2 style="font-size:clamp(20px,5.6vw,28px)">'+esc(Q.q)+'</h2><div class="opts" id="ops">'+Q.o.map((o,i)=>'<button class="opt c'+i+'" data-i="'+i+'">'+esc(o)+'</button>').join('')+'</div><p class="sub" id="st"></p>');
@@ -116,6 +132,8 @@ quiz:{render(){const QS=QSETS[act.id]||[],Q=QS[act.idx];
   }else{setMain('<div class="center"><h2>Fim</h2><p class="sub">Vê o ranking no ecrã.</p></div>')}},
  update(){if(act.phase!=='q')return;const a=ans[pid];document.querySelectorAll('.opt').forEach(b=>{const s=a&&+b.dataset.i===a.c;b.classList.toggle('sel',!!s);b.classList.toggle('dim',!!a&&!s)});const s=$('#st');if(s)s.textContent=a?'Resposta enviada. Espera pelos outros…':''}}
 };
+
+function paint(){const cur=act.cur,v=local.rv&&local.rv[cur];if(!v)return;main.querySelectorAll('.rrow').forEach(r=>{const x=v[+r.dataset.i];r.querySelectorAll('.rn').forEach(b=>b.classList.toggle('sel',+b.dataset.n===x))})}
 
 /* ---------- arrastar ---------- */
 function place(i,k){if(local.cur==null)return;local.cur=null;vib(15);STORE.set(P+'/ans/'+curKey+'/'+pid+'/m/'+i,k);const m=((ans[pid]||{}).m)||{};m[i]=k;ans[pid]=Object.assign({},ans[pid],{m});update()}

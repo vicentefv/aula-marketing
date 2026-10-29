@@ -161,3 +161,10 @@ textarea.ta:focus{border-color:var(--violet)}
 .emb .glow{display:none}
 .fi{width:100%;background:var(--bg2);border:2px solid var(--line);border-radius:14px;padding:12px 14px;font-size:1rem;outline:none}
 .fi:focus{border-color:var(--violet)}
+
+/* votação por grupo */
+.rrow{display:flex;flex-direction:column;gap:8px;padding:12px 0;border-bottom:1px solid var(--line)}
+.rl2{display:flex;flex-direction:column;gap:2px}.rl2 b{font-size:1.02rem}.rl2 small{color:var(--mut);font-size:.82rem}
+.rb{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.rn{height:48px;border-radius:14px;background:var(--bg3);border:2px solid var(--line);color:var(--ink);font:800 1.15rem 'Syne',sans-serif;transition:transform .1s,background .15s}
+.rn.sel{background:var(--coral);border-color:var(--coral);color:#06120B;transform:scale(1.06)}

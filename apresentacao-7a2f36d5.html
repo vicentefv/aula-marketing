@@ -283,6 +283,17 @@ mark.s::after{content:attr(data-n);display:inline-block;vertical-align:top;font:
 .lv-frame{position:absolute;left:0;top:0;width:1920px;height:1080px;border:0;visibility:hidden;background:#080C0A}
 .lv-frame.on{visibility:visible}
 #stage.lvf #hud{opacity:0}
+/* formulários e sorteio no modo apresentador */
+.lv-asg{display:flex;align-items:center;gap:20px;margin-bottom:16px}
+.lv-asg b{font:800 38px Syne}
+.lv-asg .lv-b{padding:10px 22px;font-size:20px}
+.lv-form{display:grid;grid-template-columns:1fr 1fr;gap:12px 22px}
+.lv-form.many{grid-template-columns:1fr 1fr}
+.lv-form label{display:flex;flex-direction:column;gap:6px}
+.lv-form label span{font:700 20px 'DM Sans';letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+.lv-form .lv-inp{font-size:26px;padding:12px 18px;border-radius:16px}
+.lv-tiles.wide .lv-tx{font-size:21px;line-height:1.35}
+.lv-tile .lv-tx b{font-family:Syne}
 
 html,body{background:#040806}
 body{color:var(--paper)}
@@ -2659,60 +2670,89 @@ window.hookCheck=t=>{t=(t||'').trim();const w=t.split(/\s+/).filter(Boolean).len
   const j=col(n.replace(/[^a-z]/g,''));return JOIN.some(p=>j.includes(p))};
 })();
 
-/* Atividades: dados partilhados entre o ecrã (apresentação ou ecra.html) e os telemóveis.
-   A ordem segue a apresentação «Comunicação Digital e Marketing». */
-window.ACTS=[
- {id:'lobby',t:'Entrada',d:'QR e código da sala'},
- {id:'marcas',t:'Marcas',d:'Nuvem de marcas de que gostam'},
- {id:'inquerito',t:'Inquérito',d:'3 perguntas, resultados ao vivo (dados primários)'},
- {id:'sorteio',t:'Sorteio',d:'Marca, persona, conflito e canal para cada grupo'},
- {id:'canais',t:'Próprio, pago, ganho',d:'Arrastar cada meio para o sítio certo'},
- {id:'smart',t:'Objetivo SMART',d:'Escrever e receber verificação automática'},
- {id:'spine',t:'Story Spine',d:'Ordenar a história por arrastar'},
- {id:'gancho',t:'Melhor gancho',d:'Escrever, votar e coroar'},
- {id:'slop',t:'Slop ou não?',d:'6 frases: vazio ou com substância?'},
- {id:'quiz',t:'Quiz final',d:'10 perguntas, quem for mais rápido ganha mais'}
-];
+/* Atividades da aula «Comunicação Digital e Marketing».
+   Cada atividade vem logo a seguir à matéria que pratica. Os dados são partilhados
+   entre a apresentação (que faz de ecrã) e os telemóveis.
+   Tipos: lobby · cloud (nuvem) · sort (arrastar para grupos) · form (escrever, com votação opcional)
+          order (ordenar a história) · quiz (perguntas com tempo) */
+(()=>{
+const G='#2EE08A',L='#C8F560',M='#7FD6FF',P='#FFB86B';
+const SPINE_LAB=['Era uma vez…','Todos os dias…','Até que um dia…','Por causa disso…','Por causa disso…','Por causa disso…','Até que finalmente…','E desde então…'];
 
-window.PALAVRAS_Q='Escreve uma marca de que gostas (até 3).';
+window.ACT={
+ lobby:{type:'lobby',t:'Entrada'},
 
-/* inquérito ao vivo: dados primários e quantitativos recolhidos na própria aula */
-window.INQ=[
- {q:'Onde compraste a última peça de roupa?',o:['Loja física','Loja online','Segunda mão (Vinted, feiras…)','Já nem me lembro']},
- {q:'Quanto tempo passas por dia nas redes sociais?',o:['Menos de 1 hora','1 a 2 horas','2 a 4 horas','Mais de 4 horas']},
- {q:'Que app abres primeiro de manhã?',o:['Instagram','TikTok','WhatsApp','YouTube','Outra']}
-];
+ marcas:{type:'cloud',t:'Marcas',q:'Escreve uma marca de que gostas (até 3).'},
 
-/* slop ou não: exemplos inventados da loja fictícia Segunda Mão */
-window.SLOP=[
- {q:'«Pronta para elevar o teu estilo a outro nível?»',o:['Slop','Tem substância'],a:0,why:'Abertura vazia: serve a qualquer marca do mundo.'},
- {q:'«O casaco da foto chegou ontem de Braga: 12 €, botões originais e um rasgão no bolso que te mostramos no vídeo.»',o:['Slop','Tem substância'],a:1,why:'Tem lugar, número e um defeito admitido. Só esta loja podia ter escrito isto.'},
- {q:'«Acreditamos que a moda sustentável é o futuro.»',o:['Slop','Tem substância'],a:0,why:'Valores de cartaz, sem prova nem opinião própria.'},
- {q:'«Peças únicas, cheias de estilo e história.»',o:['Slop','Tem substância'],a:0,why:'Adjetivos sem prova. Que peças? Que história?'},
- {q:'«A Marta trouxe 30 peças da avó. Sábado às 10h estão todas na loja, a 5 € cada.»',o:['Slop','Tem substância'],a:1,why:'Uma pessoa, um número, um dia e uma hora.'},
- {q:'«Visita-nos e descobre o look perfeito para ti!»',o:['Slop','Tem substância'],a:0,why:'Fecho genérico: sem dia, sem hora, sem motivo. Troca o nome da loja e continua a funcionar.'}
-];
+ primsec:{type:'sort',t:'Primário ou secundário?',q:'Arrasta cada fonte de dados para o tipo certo.',lim:60,
+  buckets:[{k:'p',t:'Primário',c:G},{k:'s',t:'Secundário',c:M}],
+  items:[{t:'Censos do INE sobre a população de Lisboa',b:'s'},{t:'Inquérito feito por ti a 30 estudantes do campus',b:'p'},
+   {t:'Pesquisas por «roupa vintage» no Google Trends',b:'s'},{t:'Entrevista a 5 clientes da loja',b:'p'},
+   {t:'Relatório DataReportal sobre redes sociais em Portugal',b:'s'},{t:'Observar durante 1 hora quem entra na loja',b:'p'},
+   {t:'Estatísticas da Pordata sobre rendimentos',b:'s'},{t:'Sondagem nos stories da marca',b:'p'}]},
 
-/* quiz final: revisão de toda a aula */
-window.QUIZ=[
- {q:'Na época da produção (até 1920), qual era a lógica das empresas?',o:['Fazer muito e barato','Ouvir primeiro o cliente','Criar comunidade online','Personalizar ofertas'],a:0,why:'Ford, 1922: «Qualquer cor, desde que seja preto.»'},
- {q:'Fazer um inquérito teu a 10 estudantes dá dados…',o:['Secundários','Primários','Ganhos','De vaidade'],a:1,why:'Primários: recolhes tu, para a tua pergunta. Os secundários já existem (INE, Pordata…).'},
- {q:'Qual é a ordem certa?',o:['Posicionar, segmentar, escolher','Segmentar, escolher o público-alvo, posicionar','Escolher, posicionar, segmentar','Segmentar, posicionar, escolher'],a:1,why:'Primeiro divides o mercado, depois escolhes quem servir e só então decides o lugar na cabeça dessa pessoa.'},
- {q:'Nos 4Ps, o que é a «Praça»?',o:['O preço','Onde e como a pessoa compra','O anúncio','A embalagem'],a:1,why:'Produto, Preço, Praça e Promoção.'},
- {q:'Um fã que fala da marca nos stories, sem lhe pagarem, é um meio…',o:['Próprio','Pago','Ganho','Alugado'],a:2,why:'Ganho é o que os outros dizem de nós sem pagarmos.'},
- {q:'Qual destes objetivos é SMART?',o:['Ter mais seguidores','Chegar aos 5 000 seguidores no TikTok até 30 de junho','Ficar famoso','Postar muito'],a:1,why:'Tem número e prazo: dá para medir.'},
- {q:'Um vídeo teve 2 milhões de views e só 3 vendas. Aqui as views são…',o:['O melhor KPI','Uma métrica de vaidade','Um dado secundário','Um gancho'],a:1,why:'Sobem mas não dizem se o objetivo está mais perto.'},
- {q:'Na Story Spine, que frase vem logo a seguir a «Todos os dias…»?',o:['Por causa disso…','E desde então…','Até que um dia…','Até que finalmente…'],a:2,why:'A rotina quebra-se com «Até que um dia…».'},
- {q:'Qual destes é um sinal de slop?',o:['Um número concreto','Uma pessoa com nome','Adjetivos sem prova («únicas», «perfeito»)','Uma opinião própria'],a:2,why:'O slop é texto correto e vazio: serve a qualquer marca.'},
- {q:'Uma creator recebeu dinheiro para mostrar um produto. O que tem de fazer?',o:['Nada, se gostar do produto','Assinalar que é publicidade, de forma visível','Pôr #pub no fim de 30 hashtags','Pedir autorização à CNPD'],a:1,why:'Tem de se ver que é publicidade: «#pub» ou «parceria paga», bem visível.'}
-];
+ posicionar:{type:'form',t:'Posiciona a marca',q:'Completa a fórmula para a marca que te calhou.',lim:150,assign:'marcas',vote:true,
+  fields:[{k:'pub',l:'Para (o público)',ph:'estudantes que acabaram de chegar à cidade'},{k:'nec',l:'que (a necessidade)',ph:'querem treinar sem gastar muito'},
+   {k:'cat',l:'a marca é (a categoria)',ph:'o ginásio'},{k:'dif',l:'que (a diferença)',ph:'abre às 6h e não pede fidelização'}],
+  show:'Para {pub} que {nec}, {A} é {cat} que {dif}.'},
 
-window.CANAIS=[
- {t:'Newsletter da marca',b:'own'},{t:'Site e blog',b:'own'},{t:'Perfil do TikTok da marca',b:'own'},
- {t:'Anúncio nos Reels (Meta Ads)',b:'paid'},{t:'Campanha no Google Ads',b:'paid'},{t:'Creator pago a mostrar o produto',b:'paid'},{t:'Post impulsionado',b:'paid'},
- {t:'Meme de fãs que se torna viral',b:'earned'},{t:'Cliente que recomenda nos stories',b:'earned'},{t:'Avaliação de 5 estrelas no Google',b:'earned'}
-];
-window.BUCKETS=[{k:'own',t:'Próprio',c:'#5ED3A1'},{k:'paid',t:'Pago',c:'#FFB02E'},{k:'earned',t:'Ganho',c:'#A596FF'}];
+ persona:{type:'form',t:'Cria a persona',q:'Um telemóvel por grupo. A persona da marca que vos calhou.',lim:300,assign:'marcas',group:true,
+  fields:[{k:'nome',l:'Nome e idade',ph:'Rita, 21 anos'},{k:'dia',l:'Como é o dia dela?',ph:'estuda de manhã, trabalha num café à tarde'},
+   {k:'obj',l:'O que quer conseguir?',ph:'poupar para ir de Erasmus'},{k:'fru',l:'O que a frustra?',ph:'perder tempo à procura de coisas baratas'},
+   {k:'onl',l:'Onde passa tempo online e em quem confia?',ph:'TikTok; confia em amigos e em creators pequenos'}],
+  show:'<b>{nome}</b> · {A}<br>Dia: {dia}<br>Quer: {obj}<br>Frustra-a: {fru}<br>Online: {onl}'},
+
+ quatrop:{type:'sort',t:'Que P é este?',q:'Loja Segunda Mão: arrasta cada decisão para o P certo.',lim:75,
+  buckets:[{k:'pr',t:'Produto',c:G},{k:'pc',t:'Preço',c:L},{k:'pa',t:'Praça',c:M},{k:'pm',t:'Promoção',c:P}],
+  items:[{t:'Vender peças vintage escolhidas uma a uma',b:'pr'},{t:'Desconto de 20% para estudantes',b:'pc'},
+   {t:'Abrir um pop-up no campus ao sábado',b:'pa'},{t:'Publicar 3 TikToks por semana',b:'pm'},
+   {t:'Garantia de troca durante 30 dias',b:'pr'},{t:'Vender também pela Vinted',b:'pa'},
+   {t:'Pagar a uma creator para mostrar a coleção',b:'pm'},{t:'Peças entre 8 € e 40 €',b:'pc'}]},
+
+ smart:{type:'form',t:'Torna-o SMART',q:'Transforma «Quero mais seguidores» num objetivo SMART.',lim:120,vote:true,check:'smart',
+  fields:[{k:'t',l:'O objetivo SMART',ph:'Chegar aos 2 000 seguidores no TikTok até 31 de janeiro, com 3 vídeos por semana',ta:true}],show:'{t}'},
+
+ canais:{type:'sort',t:'Próprio, pago ou ganho?',q:'Arrasta cada meio para o grupo certo.',lim:75,
+  buckets:[{k:'own',t:'Próprio',c:G},{k:'paid',t:'Pago',c:L},{k:'earned',t:'Ganho',c:M}],
+  items:[{t:'Newsletter da marca',b:'own'},{t:'Site e blog',b:'own'},{t:'Perfil do TikTok da marca',b:'own'},
+   {t:'Anúncio nos Reels (Meta Ads)',b:'paid'},{t:'Campanha no Google Ads',b:'paid'},{t:'Creator pago a mostrar o produto',b:'paid'},{t:'Post impulsionado',b:'paid'},
+   {t:'Meme de fãs que se torna viral',b:'earned'},{t:'Cliente que recomenda nos stories',b:'earned'},{t:'Avaliação de 5 estrelas no Google',b:'earned'}]},
+
+ metricas:{type:'sort',t:'Útil ou vaidade?',q:'Objetivo: vender mais na loja online. Que métricas interessam?',lim:60,
+  buckets:[{k:'u',t:'Útil',c:G},{k:'v',t:'Vaidade',c:P}],
+  items:[{t:'Gostos no último post',b:'v'},{t:'Compras vindas do Instagram',b:'u'},{t:'Número de seguidores',b:'v'},
+   {t:'Taxa de conversão do site',b:'u'},{t:'Visualizações de um Reel',b:'v'},{t:'Cliques no link para a loja',b:'u'},
+   {t:'Clientes que voltam a comprar',b:'u'},{t:'Impressões de um anúncio',b:'v'}]},
+
+ plano:{type:'form',t:'Mini plano',q:'Um telemóvel por grupo, para a vossa marca. Guardem: é a base do workshop.',lim:300,assign:'marcas',group:true,check:'smart',checkField:'obj',
+  fields:[{k:'obj',l:'Objetivo SMART',ph:'Vender 40 peças online até ao fim do mês',ta:true},{k:'c1',l:'Canal 1 e o papel dele',ph:'TikTok: dar a conhecer a loja'},
+   {k:'c2',l:'Canal 2 e o papel dele',ph:'Newsletter: avisar das peças novas'},{k:'kpi',l:'KPI a acompanhar',ph:'compras vindas do TikTok'}],
+  show:'<b>{A}</b><br>Objetivo: {obj}<br>{c1}<br>{c2}<br>KPI: {kpi}'},
+
+ abt:{type:'form',t:'Escreve em 3 frases',q:'E… MAS… POR ISSO… para o produto que te calhou.',lim:150,assign:'produtos',vote:true,
+  fields:[{k:'e',l:'E… (a situação)',ph:'Todos os dias carrego o telemóvel antes de sair'},{k:'mas',l:'MAS… (o conflito)',ph:'às 16h já estou sem bateria e sem mapa'},
+   {k:'pi',l:'POR ISSO… (a ação)',ph:'trago sempre este powerbank no bolso'}],
+  show:'<b>{A}</b>: {e}, mas {mas}. Por isso, {pi}.'},
+
+ spine:{type:'order',t:'Ordena a história',q:'8 frases baralhadas. Ponham-nas por ordem.',lim:100},
+
+ spinew:{type:'form',t:'A vossa Story Spine',q:'Um telemóvel por grupo: a história da vossa marca em 8 frases.',lim:480,assign:'marcas',group:true,vote:true,
+  fields:SPINE_LAB.map((l,i)=>({k:'s'+i,l,ph:''})),
+  show:'<b>{A}</b><br>'+SPINE_LAB.map((l,i)=>l+' {s'+i+'}').join('<br>')},
+
+ gancho:{type:'form',t:'O melhor gancho',q:'A frase que abre o vídeo da vossa marca.',lim:120,assign:'marcas',vote:true,check:'hook',
+  fields:[{k:'t',l:'O gancho',ph:'Ninguém te conta isto sobre o pão de ontem…'}],show:'«{t}»'},
+
+ slop:{type:'quiz',t:'Slop ou não?',lim:15},
+ rgpd:{type:'quiz',t:'Pode ou não pode?',lim:15},
+ quiz:{type:'quiz',t:'Quiz final',lim:20}
+};
+window.ACTS=Object.keys(ACT).map(id=>({id,t:ACT[id].t}));
+
+window.ASSIGN={
+ marcas:['Loja de roupa em segunda mão','Festival de música','App de entregas de comida','Ginásio low-cost','Marca de ténis sustentáveis','Café perto da faculdade','Estúdio de pilates','Livraria independente','Loja online de plantas','App de transportes'],
+ produtos:['Powerbank','Garrafa reutilizável','App para dividir contas','Auriculares sem fios','Sapatilhas de corrida','Cartão de transporte']
+};
 
 window.SPINE=[
  'Era uma vez uma estudante de Braga que fazia vídeos de cozinha económica para ninguém ver.',
@@ -2724,6 +2764,44 @@ window.SPINE=[
  'Até que finalmente a série chegou aos 100 mil seguidores sem perder a honestidade.',
  'E desde então, cada receita começa com a mesma frase: «Hoje o orçamento é de 2 €.»'
 ];
+
+const SG=['Slop','Tem substância'],PN=['Pode','Não pode'];
+window.QSETS={
+ slop:[
+  {q:'«Pronta para elevar o teu estilo a outro nível?»',o:SG,a:0,why:'Abertura vazia: serve a qualquer marca do mundo.'},
+  {q:'«O casaco da foto chegou ontem de Braga: 12 €, botões originais e um rasgão no bolso que te mostramos no vídeo.»',o:SG,a:1,why:'Tem lugar, número e um defeito admitido. Só esta loja podia ter escrito isto.'},
+  {q:'«Acreditamos que a moda sustentável é o futuro.»',o:SG,a:0,why:'Valores de cartaz, sem prova nem opinião própria.'},
+  {q:'«Peças únicas, cheias de estilo e história.»',o:SG,a:0,why:'Adjetivos sem prova. Que peças? Que história?'},
+  {q:'«A Marta trouxe 30 peças da avó. Sábado às 10h estão todas na loja, a 5 € cada.»',o:SG,a:1,why:'Uma pessoa, um número, um dia e uma hora.'},
+  {q:'«Visita-nos e descobre o look perfeito para ti!»',o:SG,a:0,why:'Fecho genérico: sem dia, sem hora, sem motivo. Troca o nome da loja e continua a funcionar.'}],
+ rgpd:[
+  {q:'Enviar a newsletter a quem deixou o email só para participar num passatempo.',o:PN,a:1,why:'Finalidade: os dados só servem para aquilo que disseste. Para a newsletter, pede consentimento à parte.'},
+  {q:'Pôr a caixa «Aceito receber novidades» já marcada no formulário.',o:PN,a:1,why:'O consentimento tem de ser ativo. Caixas já marcadas não valem.'},
+  {q:'Uma creator mostra um produto que lhe pagaram para mostrar, com «parceria paga» bem visível.',o:PN,a:0,why:'Pode: tem de se ver que é publicidade, e aqui vê-se.'},
+  {q:'Usar a foto de um cliente num anúncio sem lhe pedir autorização.',o:PN,a:1,why:'Imagem de uma pessoa é um dado pessoal: precisa de autorização.'},
+  {q:'Um cliente pede para apagar os seus dados e a loja apaga-os.',o:PN,a:0,why:'Pode e deve: é um direito da pessoa.'},
+  {q:'Publicar a imagem de um «cliente satisfeito» feita com IA, sem dizer que é IA.',o:PN,a:1,why:'Se parece real e pode enganar, tem de ser assinalado.'}],
+ quiz:[
+  {q:'Na época da produção (até 1920), qual era a lógica das empresas?',o:['Fazer muito e barato','Ouvir primeiro o cliente','Criar comunidade online','Personalizar ofertas'],a:0,why:'Ford, 1922: «Qualquer cor, desde que seja preto.»'},
+  {q:'Fazer um inquérito teu a 10 estudantes dá dados…',o:['Secundários','Primários','Ganhos','De vaidade'],a:1,why:'Primários: recolhes tu, para a tua pergunta. Os secundários já existem (INE, Pordata…).'},
+  {q:'Qual é a ordem certa?',o:['Posicionar, segmentar, escolher','Segmentar, escolher o público-alvo, posicionar','Escolher, posicionar, segmentar','Segmentar, posicionar, escolher'],a:1,why:'Primeiro divides o mercado, depois escolhes quem servir e só então decides o lugar na cabeça dessa pessoa.'},
+  {q:'Nos 4Ps, o que é a «Praça»?',o:['O preço','Onde e como a pessoa compra','O anúncio','A embalagem'],a:1,why:'Produto, Preço, Praça e Promoção.'},
+  {q:'Um fã que fala da marca nos stories, sem lhe pagarem, é um meio…',o:['Próprio','Pago','Ganho','Alugado'],a:2,why:'Ganho é o que os outros dizem de nós sem pagarmos.'},
+  {q:'Qual destes objetivos é SMART?',o:['Ter mais seguidores','Chegar aos 5 000 seguidores no TikTok até 30 de junho','Ficar famoso','Postar muito'],a:1,why:'Tem número e prazo: dá para medir.'},
+  {q:'Um vídeo teve 2 milhões de views e só 3 vendas. Aqui as views são…',o:['O melhor KPI','Uma métrica de vaidade','Um dado secundário','Um gancho'],a:1,why:'Sobem mas não dizem se o objetivo está mais perto.'},
+  {q:'Na Story Spine, que frase vem logo a seguir a «Todos os dias…»?',o:['Por causa disso…','E desde então…','Até que um dia…','Até que finalmente…'],a:2,why:'A rotina quebra-se com «Até que um dia…».'},
+  {q:'Qual destes é um sinal de slop?',o:['Um número concreto','Uma pessoa com nome','Adjetivos sem prova («únicas», «perfeito»)','Uma opinião própria'],a:2,why:'O slop é texto correto e vazio: serve a qualquer marca.'},
+  {q:'Uma creator recebeu dinheiro para mostrar um produto. O que tem de fazer?',o:['Nada, se gostar do produto','Assinalar que é publicidade, de forma visível','Pôr #pub no fim de 30 hashtags','Pedir autorização à CNPD'],a:1,why:'Tem de se ver que é publicidade: «#pub» ou «parceria paga», bem visível.'}]
+};
+
+/* utilitários partilhados */
+const hsh=s=>{let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0};
+window.assignFor=(id,pid)=>{const a=ACT[id]&&ACT[id].assign;if(!a)return '';const L=ASSIGN[a];return L[hsh(pid+a)%L.length]};
+window.formText=(id,f,A)=>{const d=ACT[id];const e=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ return d.show.replace(/\{(\w+)\}/g,(m,k)=>k==='A'?e(A||''):(f&&f[k]?e(f[k]):'…'))};
+window.formChecks=(id,f)=>{const d=ACT[id];if(!d.check)return null;const t=(f||{})[d.checkField||'t']||'';return d.check==='smart'?smartCheck(t):hookCheck(t)};
+window.formFilled=(id,f)=>ACT[id].fields.filter(x=>f&&String(f[x.k]||'').trim()).length;
+})();
 </script>
 <script>/* ===== Motor da apresentação ===== */
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
@@ -4215,53 +4293,32 @@ Object.assign(N4,{
 
 /* ================= ATIVIDADES AO VIVO DENTRO DA APRESENTAÇÃO =================
    A apresentação faz de ecrã da sala: cria a sala, mostra o QR e os resultados dos telemóveis.
-   Os telemóveis usam o site dos alunos (GitHub Pages). Sem ligação à sala, cada atividade
-   passa a modo apresentador e funciona só no ecrã. */
+   Os telemóveis usam o site dos alunos (GitHub Pages). Sem ligação (por exemplo, dentro do Claude),
+   cada atividade passa a modo apresentador e funciona só no ecrã. */
 const LV=(()=>{
 const BASE=window.LV_BASE||'https://vicentefv.github.io/aula-marketing/',SHORT='vicentefv.github.io/aula-marketing';
+const DECK_URL='https://vicentefv.github.io/aula-marketing/apresentacao-7a2f36d5.html';
 const LSG=k=>{try{return localStorage.getItem(k)}catch(e){return null}},LSS=(k,v)=>{try{if(v==null)localStorage.removeItem(k);else localStorage.setItem(k,v)}catch(e){}};
 const ALPHA='ABCDEFGHJKMNPQRSTUVWXYZ23456789';
 const shuf=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const H=s=>esc(s);
-let db=null,mode='idle',conn=false,off=0,C=null,P=null,players={},act={id:'lobby',key:'lobby',phase:'in'},ans={},vt={},curKey=null,unA=null,unV=null,cto=null,listening=false;
-let M=null; /* atividade montada: {id,root,body,bar,st,tick} */
-const OFF={};let rolling=false;
+let db=null,mode='idle',off=0,C=null,P=null,players={},act={id:'lobby',key:'lobby',phase:'in'},ans={},vt={},curKey=null,unA=null,unV=null,cto=null,listening=false;
+let M=null;const OFF={};
 const now=()=>Date.now()+off;
 const online=()=>mode==='online';
+const IN_CLAUDE=(()=>{try{const p=location.protocol,h=location.hostname;return !(p==='file:'||/github\.io$/.test(h)||/^(localhost|127\.0\.0\.1)$/.test(h))}catch(e){return true}})();
 
-/* ---------- ecrã da sala embutido (quando a página não pode ligar-se diretamente à base de dados) ---------- */
-const ORIG=new URL(BASE).origin;let FR=null,frameOK=false,frameReady=false,ftimer=null;
-function tryFrame(){if(FR)return;FR=document.createElement('iframe');FR.className='lv-frame';FR.title='Ecrã da sala';FR.src=BASE+'ecra.html?embed=1';
- const st=document.getElementById('stage'),sl=document.getElementById('slides');st.insertBefore(FR,sl.nextSibling);
- clearTimeout(ftimer);ftimer=setTimeout(()=>{if(!frameOK&&mode!=='online'){mode='offline';refresh(true)}},12000)}
-function dropFrame(){if(FR){FR.remove();FR=null}frameOK=frameReady=false;document.getElementById('stage').classList.remove('lvf')}
-function showFrame(id){if(!FR)return;FR.classList.add('on');document.getElementById('stage').classList.add('lvf');if(frameReady)FR.contentWindow.postMessage({aula:1,t:'go',id},ORIG)}
-function hideFrame(){if(!FR)return;FR.classList.remove('on');document.getElementById('stage').classList.remove('lvf');try{if(document.activeElement===FR)FR.blur();window.focus()}catch(e){}}
-addEventListener('message',e=>{if(e.origin!==ORIG||!FR||e.source!==FR.contentWindow)return;const m=e.data;if(!m||!m.aula)return;
- if(m.t==='loaded'){frameOK=true;clearTimeout(ftimer);if(mode!=='online'){mode='frame';refresh(true)}}
- else if(m.t==='ready'){frameOK=frameReady=true;if(mode!=='online')mode='frame';if(M)showFrame(M.id);refresh(true)}
- else if(m.t==='key'&&typeof m.key==='string'&&m.key.length<20){dispatchEvent(new KeyboardEvent('keydown',{key:m.key}))}});
-
-/* se a página bloquear a ligação (por exemplo, dentro do Claude), passa logo a modo apresentador */
-let blockedFB=false,blockedFR=false;
-document.addEventListener('securitypolicyviolation',e=>{const u=String(e.blockedURI||'');
- if(/firebasedatabase|firebaseio/.test(u))blockedFB=true;if(u.indexOf(ORIG)===0||/github\.io/.test(u))blockedFR=true;
- if(mode==='connecting'&&blockedFB&&(blockedFR||!FR)){clearTimeout(cto);clearTimeout(ftimer);mode='offline';refresh(true)}});
-/* ---------- ligação ---------- */
-/* dentro do Claude a página não pode ligar-se a outros sites: nem tenta (evita erros) */
-const IN_CLAUDE=(()=>{try{const p=location.protocol,h=location.hostname;
- /* só tenta ligar quando a apresentação está aberta como ficheiro, no GitHub Pages ou num servidor local */
- return !(p==='file:'||/github\.io$/.test(h)||/^(localhost|127\.0\.0\.1)$/.test(h))}catch(e){return true}})();
+/* ---------- ligação à sala ---------- */
+document.addEventListener('securitypolicyviolation',e=>{if(/firebasedatabase|firebaseio/.test(String(e.blockedURI||''))&&mode==='connecting'){clearTimeout(cto);mode='offline';refresh()}});
 function connect(){
- if(mode==='online'||mode==='connecting'||mode==='frame')return;
- tryFrame();
- if(!window.firebase||!window.FB_CONFIG){mode=frameOK?'frame':'connecting';refresh(true);return}
- mode='connecting';refresh(true);
- try{if(!db){try{firebase.database.INTERNAL&&firebase.database.INTERNAL.forceWebSockets&&firebase.database.INTERNAL.forceWebSockets()}catch(x){}const app=firebase.apps.length?firebase.app():firebase.initializeApp(FB_CONFIG);db=firebase.database(app)}else db.goOnline()}catch(e){mode='offline';refresh(true);return}
- clearTimeout(cto);cto=setTimeout(()=>{if(mode==='connecting'){mode=frameOK?'frame':'offline';if(mode==='offline'&&FR&&!frameOK)mode='connecting';try{db.goOffline()}catch(e){}refresh(true)}},9000);
+ if(mode==='online'||mode==='connecting')return;
+ if(!window.firebase||!window.FB_CONFIG){mode='offline';refresh();return}
+ mode='connecting';refresh();
+ try{if(!db){try{firebase.database.INTERNAL.forceWebSockets()}catch(x){}const app=firebase.apps.length?firebase.app():firebase.initializeApp(FB_CONFIG);db=firebase.database(app)}else db.goOnline()}catch(e){mode='offline';refresh();return}
+ clearTimeout(cto);cto=setTimeout(()=>{if(mode==='connecting'){mode='offline';try{db.goOffline()}catch(e){}refresh()}},9000);
  if(listening)return;listening=true;
  db.ref('.info/serverTimeOffset').on('value',s=>{off=s.val()||0});
- db.ref('.info/connected').on('value',s=>{conn=!!s.val();if(conn&&mode!=='online'){clearTimeout(cto);ensureRoom().then(()=>{mode='online';dropFrame();refresh(true);if(M)follow(M.id)}).catch(()=>{mode='offline';refresh(true)})}else refresh()});
+ db.ref('.info/connected').on('value',s=>{if(s.val()&&mode!=='online'){clearTimeout(cto);ensureRoom().then(()=>{mode='online';refresh();if(M)follow(M.id)}).catch(()=>{mode='offline';refresh()})}else refresh()});
 }
 async function ensureRoom(){
  if(C&&P)return;
@@ -4276,26 +4333,23 @@ function use(c){
  if(P){db.ref(P+'/players').off();db.ref(P+'/act').off()}
  C=c;P='rooms/'+c;curKey=null;
  db.ref(P+'/players').on('value',s=>{players=cleanP(s.val()||{});refresh()});
- db.ref(P+'/act').on('value',s=>{act=s.val()||{id:'lobby',key:'lobby',phase:'in'};subs();refresh(true)});
+ db.ref(P+'/act').on('value',s=>{act=s.val()||{id:'lobby',key:'lobby',phase:'in'};subs();refresh()});
 }
 function subs(){if(act.key===curKey)return;curKey=act.key;ans={};vt={};if(unA)unA();if(unV)unV();
  const ra=db.ref(P+'/ans/'+curKey),rv=db.ref(P+'/vt/'+curKey);
  const fa=s=>{ans=cleanA(s.val()||{});refresh()},fv=s=>{vt=s.val()||{};refresh()};
  ra.on('value',fa);rv.on('value',fv);unA=()=>ra.off('value',fa);unV=()=>rv.off('value',fv)}
 function cleanP(v){const o={};let n=0;for(const k in v){n++;const p=Object.assign({},v[k]);if(isBad(p.name))p.name='Equipa '+n;o[k]=p}return o}
-function cleanA(v){const o={};for(const k in v){const a=Object.assign({},v[k]);if(a.t&&isBad(a.t))continue;if(a.w){const w={};for(const x in a.w)if(!isBad(a.w[x]))w[x]=a.w[x];a.w=w}o[k]=a}return o}
+function cleanA(v){const o={};for(const k in v){const a=Object.assign({},v[k]);if(a.f&&Object.values(a.f).some(x=>isBad(x)))continue;if(a.w){const w={};for(const x in a.w)if(!isBad(a.w[x]))w[x]=a.w[x];a.w=w}o[k]=a}return o}
 const setAct=o=>db.ref(P+'/act').set(o);
 const patch=o=>setAct(Object.assign({},act,o));
 const plist=()=>Object.keys(players).map(k=>Object.assign({id:k},players[k])).sort((a,b)=>(a.at||0)-(b.at||0));
 const tot=p=>Object.values((p&&p.pts)||{}).reduce((a,b)=>a+(+b||0),0);
 const submitted=()=>Object.keys(ans).filter(k=>players[k]);
 function award(map){const u={};for(const pid in map)u[pid+'/pts/'+act.key]=map[pid];return db.ref(P+'/players').update(u)}
-const SETQ=id=>id==='slop'?SLOP:QUIZ;
-function start(id){const run=uid().slice(0,4);const A={id,run,phase:'in',t0:firebase.database.ServerValue.TIMESTAMP,key:id==='lobby'?'lobby':id+run};
- if(id==='quiz'||id==='slop'){A.idx=0;A.phase='q';A.lim=id==='slop'?15:20;A.key=id+run+'_0'}
- if(id==='marcas')A.q=PALAVRAS_Q;
- if(id==='canais')A.lim=75;if(id==='smart')A.lim=150;if(id==='gancho')A.lim=120;if(id==='spine')A.lim=100;
- if(OFF.ng)A.ng=OFF.ng;
+const TS=()=>firebase.database.ServerValue.TIMESTAMP;
+function start(id){const d=ACT[id]||{},run=uid().slice(0,4);const A={id,run,phase:'in',t0:TS(),key:id==='lobby'?'lobby':id+run};
+ if(d.lim)A.lim=d.lim;if(d.type==='quiz'){A.idx=0;A.phase='q';A.key=id+run+'_0'}
  return setAct(A)}
 function follow(id){if(online()&&act.id!==id)start(id)}
 
@@ -4303,14 +4357,17 @@ function follow(id){if(online()&&act.id!==id)start(id)}
 const qrSVG=(txt,cell)=>{try{const q=qrcode(0,'M');q.addData(txt);q.make();return q.createSvgTag({cellSize:cell||6,margin:0,scalable:true})}catch(e){return ''}};
 const joinURL=()=>BASE+'jogar.html?c='+C;
 const dot=c=>`<i style="display:inline-block;width:18px;height:18px;border-radius:50%;background:${c};flex:none"></i>`;
-const chips=ch=>ch.map(x=>`<span class="lv-ck ${x[1]?'ok':''}">${x[1]?'✓ ':''}${x[0]}</span>`).join('');
+const chips=ch=>ch?ch.map(x=>`<span class="lv-ck ${x[1]?'ok':''}">${x[1]?'✓ ':''}${x[0]}</span>`).join(''):'';
 const bar=(pct,hl)=>`<div class="lv-bar0"><i style="width:${pct}%;${hl?'background:var(--g3)':''}"></i></div>`;
 const cnt=(lab,v)=>`<div class="lv-cnt"><span>${lab}</span><b>${v}</b></div>`;
+const tip=t=>`<div class="lv-tip">${t}</div>`;
 function ranking(n){const a=plist().map(p=>[p,tot(p)]).sort((x,y)=>y[1]-x[1]).slice(0,n||8);const mx=Math.max(1,...a.map(x=>x[1]));
  if(!a.length)return '<p class="lead">Ainda ninguém entrou na sala.</p>';
  return '<div class="lv-rank">'+a.map((x,i)=>`<div class="lv-rrow"><span class="lv-rk">${i+1}</span><div class="lv-rbar"><i style="width:${Math.round(x[1]/mx*100)}%;background:${x[0].color}"></i><b>${H(x[0].name)}</b></div><span class="lv-pt">${x[1]}</span></div>`).join('')+'</div>'}
+const D=()=>ACT[M.id]||{};
+const off_=id=>OFF[id]||(OFF[id]={});
 
-/* ---------- vistas: cada uma tem modo ao vivo (telemóveis) e modo apresentador ---------- */
+/* ---------- vistas por tipo: cada uma tem modo ao vivo (telemóveis) e modo apresentador ---------- */
 const V={};
 V.lobby={
  body(){
@@ -4320,147 +4377,128 @@ V.lobby={
    <div class="k" style="margin-top:10px;color:var(--mut)">${plist().length} na sala</div><div class="lv-pl">${plist().slice(-40).map(p=>`<span class="lv-chip">${dot(p.color)}${H(p.name)}</span>`).join('')}</div></div></div>`;
   if(mode==='connecting'||mode==='idle')return `<div class="lv-msg"><div class="lv-spin"></div><div class="t3">A ligar à sala dos telemóveis…</div></div>`;
   return offMsg()},
- ctl(){return online()?[{t:'Nova sala',f:async()=>{LSS('deck-room',null);const c=await newRoom();use(c);refresh(true)}}]:mode==='offline'?offCtl():[]}
+ ctl(){return online()?[{t:'Nova sala',f:async()=>{LSS('deck-room',null);const c=await newRoom();use(c);refresh()}}]:mode==='offline'?offCtl():[]}
 };
 function offMsg(){return `<div class="lv-msg"><div class="t3">${IN_CLAUDE?'Dentro do Claude, a apresentação não pode ligar-se aos telemóveis.':'Esta página não conseguiu ligar-se à sala dos telemóveis.'}</div>
- <p class="lead" style="max-width:1200px">As atividades seguintes funcionam no modo apresentador: a turma responde em voz alta ou de braço no ar e tu registas aqui. Para usar os telemóveis, abre o ficheiro da apresentação no Chrome ou o ecrã da sala noutro separador.</p>
- <div class="lv-url">${BASE}ecra.html</div></div>`}
-function offCtl(){return [{t:'Tentar ligar outra vez',f:()=>{dropFrame();mode='idle';connect()},p:1},{t:'Abrir o ecrã da sala',href:BASE+'ecra.html'}]}
+ <p class="lead" style="max-width:1300px">${IN_CLAUDE?'Para usar os telemóveis, abre a apresentação no endereço abaixo, no Chrome. Aqui, as atividades funcionam em modo apresentador: a turma responde em voz alta e tu registas.':'Confirma a ligação à internet e tenta outra vez. Enquanto isso, as atividades funcionam em modo apresentador.'}</p>
+ ${IN_CLAUDE?`<div class="lv-url">${DECK_URL.replace('https://','')}</div>`:''}</div>`}
+function offCtl(){return IN_CLAUDE?[{t:'Abrir a apresentação com telemóveis',href:DECK_URL,p:1}]:[{t:'Tentar ligar outra vez',f:()=>{mode='idle';connect()},p:1}]}
 
-V.marcas={
+/* nuvem de palavras */
+V.cloud={
  body(){let w={},who=0;
-  if(online()){Object.keys(ans).forEach(k=>{if(!players[k])return;who++;Object.values((ans[k]||{}).w||{}).forEach(x=>{x=String(x).trim();const key=x.toLowerCase();if(key)w[key]=w[key]||{t:x,n:0},w[key].n++})})}
-  else{w=OFF.marcas||(OFF.marcas={})}
+  if(online()){Object.keys(ans).forEach(k=>{if(!players[k])return;who++;Object.values((ans[k]||{}).w||{}).forEach(x=>{x=String(x).trim();const key=x.toLowerCase();if(key){w[key]=w[key]||{t:x,n:0};w[key].n++}})})}
+  else w=off_(M.id).w||(off_(M.id).w={});
   const ks=Object.keys(w),cols=CONTENT.cores;
-  return `${online()?cnt('Participantes',who):`<div class="lv-in"><input class="lv-inp" id="lvw" maxlength="30" placeholder="Escreve a marca que disserem e carrega em Enter"></div>`}
-   <div class="lv-cloud">${ks.length?ks.map((k,i)=>`<span style="font-size:${Math.min(120,36+w[k].n*18)}px;color:${cols[(i+3)%cols.length]}">${H(w[k].t)}</span>`).join(''):`<span class="mut" style="font-size:40px">${online()?'As marcas aparecem aqui quando a turma enviar.':'Ainda sem marcas.'}</span>`}</div>`},
- wire(b){const i=b.querySelector('#lvw');if(!i)return;i.focus();i.onkeydown=e=>{if(e.key==='Enter'){const v=i.value.trim();if(!v||isBad(v)){i.value='';return}const k=v.toLowerCase();const w=OFF.marcas||(OFF.marcas={});w[k]=w[k]||{t:v,n:0};w[k].n++;i.value='';draw();setTimeout(()=>{const j=M&&M.body.querySelector('#lvw');if(j)j.focus()},0)}}},
- ctl(){return online()?[{t:'Recomeçar',f:()=>start('marcas')}]:[{t:'Limpar',f:()=>{OFF.marcas={};draw()}}]}
+  return `${online()?cnt('Participantes',who):`<div class="lv-in"><input class="lv-inp" id="lvw" maxlength="30" placeholder="Escreve o que disserem e carrega em Enter"></div>`}
+   <div class="lv-cloud">${ks.length?ks.map((k,i)=>`<span style="font-size:${Math.min(120,36+w[k].n*18)}px;color:${cols[(i+3)%cols.length]}">${H(w[k].t)}</span>`).join(''):`<span class="mut" style="font-size:40px">${online()?'As respostas aparecem aqui.':'Ainda sem respostas.'}</span>`}</div>`},
+ wire(b){const i=b.querySelector('#lvw');if(!i)return;i.onkeydown=e=>{if(e.key==='Enter'){const v=i.value.trim();i.value='';if(!v||isBad(v))return;const W=off_(M.id).w||(off_(M.id).w={});const k=v.toLowerCase();W[k]=W[k]||{t:v,n:0};W[k].n++;draw()}}},
+ ctl(){return online()?[{t:'Recomeçar',f:()=>start(M.id)}]:[{t:'Limpar',f:()=>{off_(M.id).w={};draw()}}]}
 };
 
-V.inquerito={
- body(){let Cn,who=0;
-  if(online()){Cn=INQ.map(Q=>Q.o.map(()=>0));Object.keys(ans).forEach(k=>{if(!players[k])return;const a=(ans[k]||{}).a||{};if(Object.keys(a).length)who++;for(const qi in a){const i=a[qi];if(Cn[qi]&&Cn[qi][i]!=null)Cn[qi][i]++}})}
-  else Cn=OFF.inq||(OFF.inq=INQ.map(Q=>Q.o.map(()=>0)));
-  return `${online()?cnt(act.phase==='rev'?'Inquérito fechado · responderam':'Responderam',who+' / '+plist().length):`<div class="lv-tip">Pergunta em voz alta e conta os braços no ar. Clique soma 1, Shift+clique tira 1.</div>`}
-  <div class="lv-inq">${INQ.map((Q,qi)=>{const t=Cn[qi].reduce((x,y)=>x+y,0),mx=Math.max(...Cn[qi]);return `<div class="card lv-q"><div style="font:700 30px/1.2 'DM Sans';margin-bottom:22px">${qi+1}. ${H(Q.q)}</div>${Q.o.map((o,i)=>{const pc=t?Math.round(Cn[qi][i]/t*100):0;return `<div class="lv-opt" data-q="${qi}" data-i="${i}"><div class="lv-ol"><span>${H(o)}</span><b>${online()?pc+'%':Cn[qi][i]}</b></div>${bar(pc,Cn[qi][i]===mx&&mx>0)}</div>`}).join('')}</div>`}).join('')}</div>`},
- wire(b){if(online())return;b.querySelectorAll('.lv-opt').forEach(el=>el.onclick=e=>{const q=+el.dataset.q,i=+el.dataset.i;OFF.inq[q][i]=Math.max(0,OFF.inq[q][i]+(e.shiftKey?-1:1));draw()})},
- ctl(){if(online())return act.phase==='rev'?[{t:'Reabrir inquérito',f:()=>patch({phase:'in'})}]:[{t:'Fechar inquérito',f:()=>patch({phase:'rev'}),p:1}];return [{t:'Limpar contagens',f:()=>{OFF.inq=null;draw()}}]}
+/* arrastar para grupos */
+V.sort={
+ body(){const d=D(),IT=d.items,B=Object.fromEntries(d.buckets.map(b=>[b.k,b]));
+  const tag=b=>`<span class="lv-tag" style="background:${b.c}">${H(b.t)}</span>`;
+  if(online()){const ps=plist(),n=IT.length;
+   if(act.phase==='rev')return `<div class="lv-items">${IT.map((c,i)=>{const ok=ps.filter(p=>((ans[p.id]||{}).m||{})[i]===c.b).length;return `<div class="lv-it"><span>${H(c.t)}</span><span style="display:flex;gap:18px;align-items:center"><span class="mut">${ok}/${ps.length}</span>${tag(B[c.b])}</span></div>`}).join('')}</div>`;
+   let dn=0;const pg=ps.map(p=>{const m=Object.keys((ans[p.id]||{}).m||{}).length;if(m>=n)dn++;return `<span class="lv-chip${m>=n?' done':''}">${dot(p.color)}${H(p.name)} · ${m}/${n}</span>`}).join('');
+   return `${cnt('Terminaram',dn+' / '+ps.length)}<div class="lv-bk" style="grid-template-columns:repeat(${d.buckets.length},1fr)">${d.buckets.map(b=>`<div style="background:${b.c}">${H(b.t)}</div>`).join('')}</div><div class="lv-pl">${pg}</div>`}
+  const o=off_(M.id);o.m=o.m||{};
+  return `${tip('Clica num cartão para o pôr num grupo (cada clique muda). A turma decide, tu clicas. Depois revela.')}<div class="lv-items">${IT.map((c,i)=>{const k=o.m[i],b=k&&B[k];const st=o.rev?(k===c.b?' ok':' no'):'';return `<div class="lv-it lv-click${st}" data-i="${i}"><span>${H(c.t)}</span><span style="display:flex;gap:12px;align-items:center">${b?tag(b):'<span class="mut">por decidir</span>'}${o.rev&&k!==c.b?`<span class="mut">certo:</span>${tag(B[c.b])}`:''}</span></div>`}).join('')}</div>`},
+ wire(b){if(online())return;b.querySelectorAll('.lv-click').forEach(el=>el.onclick=()=>{const o=off_(M.id),i=+el.dataset.i,ks=[undefined].concat(D().buckets.map(x=>x.k));o.m[i]=ks[(ks.indexOf(o.m[i])+1)%ks.length];o.rev=false;draw()})},
+ ctl(){const id=M.id;if(online()){if(act.phase==='rev')return [{t:'Recomeçar',f:()=>start(id)}];return [{t:'Revelar',p:1,f:()=>{const IT=ACT[id].items,m={};plist().forEach(p=>{const a=(ans[p.id]||{}).m||{};m[p.id]=IT.reduce((s,c,i)=>s+(a[i]===c.b?20:0),0)});award(m).then(()=>patch({phase:'rev'}))}}]}
+  return [{t:'Revelar',p:1,f:()=>{off_(id).rev=true;draw()}},{t:'Limpar',f:()=>{OFF[id]={};draw()}}]}
 };
 
-V.sorteio={
- groups(){return online()?(act.groups||[]):((OFF.sorteio||{}).groups||[])},
- body(){const n=OFF.ng||4,G=this.groups();
-  const sel=`<div class="lv-ng"><span class="k">Quantos grupos?</span>${[2,3,4,5,6,7,8].map(k=>`<button class="lv-b${k===n?' on':''}" data-ng="${k}">${k}</button>`).join('')}</div>`;
-  if(rolling)return sel+`<div class="lv-cloud" id="lvroll" style="font-size:64px"></div>`;
-  if(!G.length)return sel+`<div class="lv-msg"><div class="t3">Cada grupo recebe uma marca, uma persona, um conflito e um canal.</div><p class="lead">${online()?'Os telemóveis mostram o resultado logo a seguir.':'Escolhe o número de grupos e sorteia.'}</p></div>`;
-  return sel+`<div class="lv-groups" style="grid-template-columns:repeat(${G.length>6?4:G.length>4?3:G.length},1fr)">${G.map((g,i)=>`<div class="card lv-g"><div class="k">Grupo ${i+1}</div><div class="lv-gm">${H(g.m)}</div><div class="lv-gl"><small>Persona</small>${H(g.p)}</div><div class="lv-gl"><small>Conflito</small>${H(g.c)}</div><div class="lv-gl"><small>Canal</small>${H(g.k)}</div></div>`).join('')}</div>`},
- wire(b){b.querySelectorAll('[data-ng]').forEach(x=>x.onclick=()=>{OFF.ng=+x.dataset.ng;draw()});
-  const r=b.querySelector('#lvroll');if(r){const all=[].concat(CONTENT.marcas,CONTENT.personas,CONTENT.conflitos,CONTENT.canais);const f=()=>{if(!rolling||!r.isConnected)return;r.innerHTML=shuf(all).slice(0,5).map((w,i)=>`<span style="color:${CONTENT.cores[i*2]}">${H(w)}</span>`).join('');setTimeout(f,90)};f()}},
- roll(){if(rolling)return;rolling=true;draw();setTimeout(()=>{const n=OFF.ng||4,m=shuf(CONTENT.marcas),pe=shuf(CONTENT.personas),co=shuf(CONTENT.conflitos),ca=shuf(CONTENT.canais);
-  const groups=Array.from({length:n},(_,i)=>({m:m[i%m.length],p:pe[i%pe.length],c:co[i%co.length],k:ca[i%ca.length]}));rolling=false;
-  if(online())patch({phase:'rev',ng:n,groups});else{OFF.sorteio={groups};draw()}
-  try{const r=M.body.getBoundingClientRect();ENG.confetti((r.left+r.width/2-ENG.OX)/ENG.SC,(r.top+80-ENG.OY)/ENG.SC,40)}catch(e){}},1300)},
- ctl(){return [{t:this.groups().length?'Sortear outra vez':'Sortear',f:()=>this.roll(),p:1}]}
+/* escrever (com votação opcional) */
+function votesCount(){const c={};Object.values(vt).forEach(x=>{c[x]=(c[x]||0)+1});return c}
+V.form={
+ body(){const d=D(),id=M.id,wide=d.fields.length>5;
+  const grid=`grid-template-columns:repeat(${wide?2:3},1fr)`;
+  if(online()){const ph=act.phase,c=votesCount();let a=submitted().map(k=>({p:players[k],id:k,f:ans[k].f||{},A:ans[k].a}));
+   if(ph==='rev'&&d.vote)a.sort((x,y)=>(c[y.id]||0)-(c[x.id]||0));const mx=Math.max(1,...Object.values(c));
+   const head=(ph==='in'||!d.vote)?cnt(d.group?'Grupos que enviaram':'Enviados',a.length+' / '+plist().length):cnt('Votos',Object.keys(vt).length+' / '+plist().length);
+   return `${head}<div class="lv-tiles${wide?' wide':''}" style="${grid}">${a.map((x,i)=>`<div class="card lv-tile${ph==='rev'&&d.vote&&i===0&&(c[x.id]||0)>0?' win':''}"><div class="lv-nm">${dot(x.p.color)}${H(x.p.name)}${ph!=='in'&&d.vote?`<b style="margin-left:auto;font-family:Syne;color:var(--acc)">${c[x.id]||0} voto${(c[x.id]||0)===1?'':'s'}</b>`:''}</div><div class="lv-tx">${formText(id,x.f,x.A)}</div>${d.check?`<div class="lv-cks">${chips(formChecks(id,x.f))}</div>`:''}${ph!=='in'&&d.vote?bar(Math.round((c[x.id]||0)/mx*100)):''}</div>`).join('')||`<p class="lead mut">${d.group?'As respostas dos grupos':'As respostas'} aparecem aqui quando enviarem.</p>`}</div>`}
+  const o=off_(id);o.list=o.list||[];o.draft=o.draft||{};if(d.assign&&!o.A)o.A=ASSIGN[d.assign][Math.floor(Math.random()*ASSIGN[d.assign].length)];
+  const a=o.win?[...o.list].sort((x,y)=>y.v-x.v):o.list;
+  return `${d.assign?`<div class="lv-asg"><span class="k">${d.assign==='produtos'?'Produto':'Marca'}</span><b>${H(o.A)}</b><button class="lv-b" id="lvre">Sortear outra</button></div>`:''}
+   <div class="lv-form${d.fields.length>4?' many':''}">${d.fields.map(f=>`<label><span>${H(f.l)}</span><input class="lv-inp" data-k="${f.k}" maxlength="200" placeholder="${H(f.ph?'Ex.: '+f.ph:'')}" value="${H(o.draft[f.k]||'')}"></label>`).join('')}</div>
+   ${d.check?`<div class="lv-cks" id="lvck" style="margin-top:12px">${chips(formChecks(id,o.draft))}</div>`:''}
+   <div class="lv-tiles${wide?' wide':''}" style="${grid};margin-top:18px">${a.map(x=>`<div class="card lv-tile lv-click${o.win&&x===a[0]?' win':''}" data-k="${o.list.indexOf(x)}">${d.vote?`<div class="lv-nm">${x.v} voto${x.v===1?'':'s'}</div>`:''}<div class="lv-tx">${formText(id,x.f,x.A)}</div>${d.check?`<div class="lv-cks">${chips(formChecks(id,x.f))}</div>`:''}</div>`).join('')}</div>`},
+ wire(b){if(online())return;const id=M.id,o=off_(id),d=ACT[id];
+  b.querySelectorAll('[data-k].lv-inp').forEach(el=>el.oninput=()=>{o.draft[el.dataset.k]=el.value;const ck=b.querySelector('#lvck');if(ck)ck.innerHTML=chips(formChecks(id,o.draft))});
+  const re=b.querySelector('#lvre');if(re)re.onclick=e=>{e.stopPropagation();const L=ASSIGN[d.assign];let n;do{n=L[Math.floor(Math.random()*L.length)]}while(n===o.A&&L.length>1);o.A=n;draw()};
+  if(d.vote)b.querySelectorAll('.lv-tile.lv-click').forEach(el=>el.onclick=()=>{const x=o.list[+el.dataset.k];if(x){x.v++;draw()}})},
+ ctl(){const id=M.id,d=ACT[id];
+  if(online()){const ph=act.phase;
+   const scoreChecks=m=>{if(!d.check)return;submitted().forEach(k=>{const c=formChecks(id,ans[k].f)||[];m[k]=(m[k]||0)+c.filter(x=>x[1]).length*20})};
+   if(ph==='in')return d.vote?[{t:'Abrir votação',p:1,f:()=>patch({phase:'vote'})}]:[{t:'Fechar e mostrar',p:1,f:()=>{const m={};submitted().forEach(k=>m[k]=50);scoreChecks(m);award(m).then(()=>patch({phase:'rev'}))}}];
+   if(ph==='vote')return [{t:'Revelar vencedor',p:1,f:()=>{const c=votesCount(),m={};plist().forEach(p=>m[p.id]=(c[p.id]||0)*100);scoreChecks(m);award(m).then(()=>patch({phase:'rev'}))}}];
+   return [{t:'Recomeçar',f:()=>start(id)}]}
+  const o=off_(id);
+  const cs=[{t:'Guardar resposta',p:1,f:()=>{const f={};Object.keys(o.draft||{}).forEach(k=>{const v=String(o.draft[k]||'').trim();if(v)f[k]=v});if(!Object.keys(f).length||Object.values(f).some(isBad))return;o.list.unshift({f,A:o.A,v:0});o.draft={};o.win=false;draw()}}];
+  if(d.vote&&o.list&&o.list.length>1)cs.push({t:'Mostrar vencedor',f:()=>{o.win=true;draw()}});
+  cs.push({t:'Limpar',f:()=>{OFF[id]={};draw()}});return cs}
 };
 
-V.canais={
- body(){const B=Object.fromEntries(BUCKETS.map(b=>[b.k,b]));
-  if(online()){const ps=plist(),n=CANAIS.length;
-   if(act.phase==='rev')return `<div class="lv-items">${CANAIS.map((c,i)=>{const ok=ps.filter(p=>((ans[p.id]||{}).m||{})[i]===c.b).length;return `<div class="lv-it"><span>${H(c.t)}</span><span style="display:flex;gap:18px;align-items:center"><span class="mut">${ok}/${ps.length} certos</span><span class="lv-tag" style="background:${B[c.b].c}">${B[c.b].t}</span></span></div>`}).join('')}</div>`;
-   let d=0;const pg=ps.map(p=>{const m=Object.keys((ans[p.id]||{}).m||{}).length;if(m>=n)d++;return `<span class="lv-chip${m>=n?' done':''}">${dot(p.color)}${H(p.name)} · ${m}/${n}</span>`}).join('');
-   return `${cnt('Terminaram',d+' / '+ps.length)}<div class="lv-bk">${BUCKETS.map(b=>`<div style="background:${b.c}">${b.t}</div>`).join('')}</div><div class="lv-pl">${pg}</div>`}
-  const o=OFF.canais||(OFF.canais={m:{},rev:false});
-  return `<div class="lv-tip">Clica num meio para o pôr em Próprio, Pago ou Ganho (cada clique muda). Depois revela.</div><div class="lv-items">${CANAIS.map((c,i)=>{const k=o.m[i],b=k&&B[k];const st=o.rev?(k===c.b?' ok':' no'):'';return `<div class="lv-it lv-click${st}" data-i="${i}"><span>${H(c.t)}</span><span style="display:flex;gap:14px;align-items:center">${b?`<span class="lv-tag" style="background:${b.c}">${b.t}</span>`:'<span class="mut">por decidir</span>'}${o.rev&&k!==c.b?`<span class="lv-tag" style="background:${B[c.b].c}">certo: ${B[c.b].t}</span>`:''}</span></div>`}).join('')}</div>`},
- wire(b){if(online())return;b.querySelectorAll('.lv-click').forEach(el=>el.onclick=()=>{const o=OFF.canais,i=+el.dataset.i,ks=[undefined,'own','paid','earned'];o.m[i]=ks[(ks.indexOf(o.m[i])+1)%4];o.rev=false;draw()})},
- ctl(){if(online()){if(act.phase==='rev')return [{t:'Recomeçar',f:()=>start('canais')}];return [{t:'Revelar',p:1,f:()=>{const m={};plist().forEach(p=>{const a=(ans[p.id]||{}).m||{};m[p.id]=CANAIS.reduce((s,c,i)=>s+(a[i]===c.b?30:0),0)});award(m).then(()=>patch({phase:'rev'}))}}]}
-  return [{t:'Revelar',p:1,f:()=>{OFF.canais.rev=true;draw()}},{t:'Limpar',f:()=>{OFF.canais={m:{},rev:false};draw()}}]}
-};
-
-V.smart={
- body(){
-  if(online()){const rv=act.phase==='rev';let a=submitted().map(k=>({p:players[k],t:ans[k].t||'',ch:smartCheck(ans[k].t)}));if(rv)a.sort((x,y)=>y.ch.filter(c=>c[1]).length-x.ch.filter(c=>c[1]).length);
-   return `${cnt('Enviados',a.length+' / '+plist().length)}<div class="lv-tiles">${a.map((x,i)=>`<div class="card lv-tile${rv&&i===0?' win':''}"><div class="lv-nm">${dot(x.p.color)}${H(x.p.name)}</div><div class="lv-tx">${H(x.t)}</div><div class="lv-cks">${chips(x.ch)}</div></div>`).join('')||'<p class="lead mut">Os objetivos aparecem aqui quando os grupos enviarem.</p>'}</div>`}
-  const L=OFF.smart||(OFF.smart={list:[],draft:''});
-  return `<div class="lv-in"><textarea class="lv-inp lv-ta" id="lvt" maxlength="240" placeholder="Escreve o objetivo que o grupo disser. Ex.: Aumentar as vendas online em 20% até ao fim de março.">${H(L.draft)}</textarea><div class="lv-cks" id="lvck">${chips(smartCheck(L.draft))}</div></div>
-   <div class="lv-tiles" style="margin-top:20px">${L.list.map(t=>`<div class="card lv-tile"><div class="lv-tx">${H(t)}</div><div class="lv-cks">${chips(smartCheck(t))}</div></div>`).join('')}</div>`},
- wire(b){const t=b.querySelector('#lvt');if(!t)return;t.oninput=()=>{OFF.smart.draft=t.value;b.querySelector('#lvck').innerHTML=chips(smartCheck(t.value))}},
- ctl(){if(online())return act.phase==='rev'?[{t:'Recomeçar',f:()=>start('smart')}]:[{t:'Revelar e pontuar',p:1,f:()=>{const m={};plist().forEach(p=>{const a=ans[p.id];m[p.id]=a?smartCheck(a.t).filter(x=>x[1]).length*20:0});award(m).then(()=>patch({phase:'rev'}))}}];
-  return [{t:'Guardar objetivo',p:1,f:()=>{const L=OFF.smart;const v=(L.draft||'').trim();if(v&&!isBad(v)){L.list.unshift(v);L.draft=''}draw()}},{t:'Limpar',f:()=>{OFF.smart={list:[],draft:''};draw()}}]}
-};
-
-V.spine={
+/* ordenar a história */
+V.order={
  body(){
   if(online()){const ps=plist();
    if(act.phase==='rev'){const a=ps.map(p=>{const o=(ans[p.id]&&ans[p.id].o)?ans[p.id].o.split(',').map(Number):[];return[p,SPINE.reduce((s,_,i)=>s+(o[i]===i?1:0),0)]}).sort((x,y)=>y[1]-x[1]).slice(0,8);
     return `<div style="display:flex;gap:40px"><div class="lv-story" style="flex:1.6">${SPINE.map((s,i)=>`<div class="lv-sl"><b>${i+1}</b><span>${H(s)}</span></div>`).join('')}</div><div style="flex:1"><div class="k" style="margin-bottom:16px">Posições certas</div>${a.map(x=>`<div class="lv-it" style="margin-bottom:10px"><span>${dot(x[0].color)} ${H(x[0].name)}</span><b style="font-family:Syne">${x[1]} / ${SPINE.length}</b></div>`).join('')}</div></div>`}
    let d=0;const pg=ps.map(p=>{const s=!!(ans[p.id]&&ans[p.id].o);if(s)d++;return `<span class="lv-chip${s?' done':''}">${dot(p.color)}${H(p.name)}${s?' · enviou':''}</span>`}).join('');
    return `${cnt('Enviaram',d+' / '+ps.length)}<p class="lead">Ordenem as 8 frases no telemóvel, arrastando.</p><div class="lv-pl">${pg}</div>`}
-  const o=OFF.spine||(OFF.spine={order:shuf(SPINE.map((_,i)=>i)),sel:null,rev:false});
-  return `<div class="lv-tip">Clica numa frase e depois noutra para trocar de lugar. A turma diz a ordem, tu trocas.</div><div class="lv-story">${o.order.map((k,pos)=>`<div class="lv-sl lv-click${o.sel===pos?' sel':''}${o.rev?(k===pos?' ok':' no'):''}" data-p="${pos}"><b>${o.rev?k+1:pos+1}</b><span>${H(SPINE[k])}</span></div>`).join('')}</div>`},
- wire(b){if(online())return;b.querySelectorAll('.lv-sl').forEach(el=>el.onclick=()=>{const o=OFF.spine,p=+el.dataset.p;if(o.rev)o.rev=false;if(o.sel==null){o.sel=p}else{const t=o.order[o.sel];o.order[o.sel]=o.order[p];o.order[p]=t;o.sel=null}draw()})},
- ctl(){if(online())return act.phase==='rev'?[{t:'Recomeçar',f:()=>start('spine')}]:[{t:'Revelar',p:1,f:()=>{const m={};plist().forEach(p=>{const o=(ans[p.id]&&ans[p.id].o)?ans[p.id].o.split(',').map(Number):[];m[p.id]=SPINE.reduce((s,_,i)=>s+(o[i]===i?40:0),0)});award(m).then(()=>patch({phase:'rev'}))}}];
-  return [{t:'Revelar',p:1,f:()=>{OFF.spine.rev=true;OFF.spine.sel=null;draw()}},{t:'Baralhar',f:()=>{OFF.spine=null;draw()}}]}
+  const o=off_(M.id);if(!o.order)Object.assign(o,{order:shuf(SPINE.map((_,i)=>i)),sel:null,rev:false});
+  return `${tip('Clica numa frase e depois noutra para trocar de lugar. A turma diz a ordem, tu trocas.')}<div class="lv-story">${o.order.map((k,pos)=>`<div class="lv-sl lv-click${o.sel===pos?' sel':''}${o.rev?(k===pos?' ok':' no'):''}" data-p="${pos}"><b>${o.rev?k+1:pos+1}</b><span>${H(SPINE[k])}</span></div>`).join('')}</div>`},
+ wire(b){if(online())return;b.querySelectorAll('.lv-sl').forEach(el=>el.onclick=()=>{const o=off_(M.id),p=+el.dataset.p;o.rev=false;if(o.sel==null){o.sel=p}else{const t=o.order[o.sel];o.order[o.sel]=o.order[p];o.order[p]=t;o.sel=null}draw()})},
+ ctl(){const id=M.id;if(online())return act.phase==='rev'?[{t:'Recomeçar',f:()=>start(id)}]:[{t:'Revelar',p:1,f:()=>{const m={};plist().forEach(p=>{const o=(ans[p.id]&&ans[p.id].o)?ans[p.id].o.split(',').map(Number):[];m[p.id]=SPINE.reduce((s,_,i)=>s+(o[i]===i?40:0),0)});award(m).then(()=>patch({phase:'rev'}))}}];
+  return [{t:'Revelar',p:1,f:()=>{const o=off_(id);o.rev=true;o.sel=null;draw()}},{t:'Baralhar',f:()=>{OFF[id]={};draw()}}]}
 };
 
-V.gancho={
- body(){
-  if(online()){const ph=act.phase;let a=submitted().map(k=>({p:players[k],id:k,t:ans[k].t||''}));const c={};Object.values(vt).forEach(x=>{c[x]=(c[x]||0)+1});const nv=Object.keys(vt).length;if(ph==='rev')a.sort((x,y)=>(c[y.id]||0)-(c[x.id]||0));const mx=Math.max(1,...Object.values(c));
-   return `${cnt(ph==='in'?'Enviados':'Votos',(ph==='in'?a.length:nv)+' / '+plist().length)}<div class="lv-tiles">${a.map((x,i)=>`<div class="card lv-tile${ph==='rev'&&i===0?' win':''}"><div class="lv-nm">${dot(x.p.color)}${H(x.p.name)}${ph!=='in'?`<b style="margin-left:auto;font-family:Syne;color:var(--acc)">${c[x.id]||0} voto${(c[x.id]||0)===1?'':'s'}</b>`:''}</div><div class="lv-tx">«${H(x.t)}»</div>${ph==='in'?`<div class="lv-cks">${chips(hookCheck(x.t))}</div>`:bar(Math.round((c[x.id]||0)/mx*100))}</div>`).join('')||'<p class="lead mut">Os ganchos aparecem aqui quando os grupos enviarem.</p>'}</div>`}
-  const L=OFF.gancho||(OFF.gancho={list:[],win:false});const a=L.win?[...L.list].sort((x,y)=>y.v-x.v):L.list;
-  return `<div class="lv-in"><input class="lv-inp" id="lvg" maxlength="140" placeholder="Escreve o gancho de um grupo e carrega em Enter"></div><div class="lv-tip" style="margin-top:12px">Clica num gancho para lhe dar um voto (braços no ar).</div>
-   <div class="lv-tiles" style="margin-top:16px">${a.map((x,i)=>`<div class="card lv-tile lv-click${L.win&&i===0?' win':''}" data-k="${L.list.indexOf(x)}"><div class="lv-nm">${x.v} voto${x.v===1?'':'s'}</div><div class="lv-tx">«${H(x.t)}»</div><div class="lv-cks">${chips(hookCheck(x.t))}</div></div>`).join('')}</div>`},
- wire(b){if(online())return;const i=b.querySelector('#lvg');if(i){i.onkeydown=e=>{if(e.key==='Enter'){const v=i.value.trim();if(v&&!isBad(v))OFF.gancho.list.push({t:v,v:0});i.value='';draw();setTimeout(()=>{const j=M&&M.body.querySelector('#lvg');if(j)j.focus()},0)}}}
-  b.querySelectorAll('.lv-tile.lv-click').forEach(el=>el.onclick=()=>{const x=OFF.gancho.list[+el.dataset.k];if(x){x.v++;draw()}})},
- ctl(){if(online()){const ph=act.phase;if(ph==='in')return [{t:'Abrir votação',p:1,f:()=>patch({phase:'vote'})}];if(ph==='vote')return [{t:'Revelar vencedor',p:1,f:()=>{const c={};Object.values(vt).forEach(t=>{c[t]=(c[t]||0)+1});const m={};plist().forEach(p=>m[p.id]=(c[p.id]||0)*100);award(m).then(()=>patch({phase:'rev'}))}}];return [{t:'Recomeçar',f:()=>start('gancho')}]}
-  return [{t:'Mostrar vencedor',p:1,f:()=>{OFF.gancho.win=true;draw()}},{t:'Limpar',f:()=>{OFF.gancho={list:[],win:false};draw()}}]}
-};
-
-/* quiz final e slop ou não: o mesmo motor */
-function quizView(id){return {
- body(){const QS=SETQ(id);
+/* perguntas com tempo */
+V.quiz={
+ body(){const id=M.id,QS=QSETS[id]||[];
   if(online()){
-   if(act.phase==='end')return `<div class="k" style="margin-bottom:20px">Resultado final</div>${ranking(8)}`;
+   if(act.phase==='end')return `<div class="k" style="margin-bottom:20px">Ranking</div>${ranking(8)}`;
    const Q=QS[act.idx],rv=act.phase==='rev',k=Q.o.map(()=>0);let n=0;Object.keys(ans).forEach(p=>{if(players[p]&&ans[p].c!=null){k[ans[p].c]++;n++}});
-   return `<div class="lv-qh"><span class="k">${id==='slop'?'Frase':'Pergunta'} ${act.idx+1} de ${QS.length}</span>${cnt('Respostas',n+' / '+plist().length)}</div>${rv?'':'<div class="lv-tbar"><i id="lvtb"></i></div>'}
+   return `<div class="lv-qh"><span class="k">${act.idx+1} de ${QS.length}</span>${cnt('Respostas',n+' / '+plist().length)}</div>${rv?'':'<div class="lv-tbar"><i id="lvtb"></i></div>'}
     <div class="lv-qq">${H(Q.q)}</div><div class="lv-qo n${Q.o.length}">${Q.o.map((o,i)=>`<div class="lv-o c${i}${rv?(i===Q.a?' right':' dim'):''}"><span>${H(o)}</span>${rv?`<b>${k[i]}</b>`:''}</div>`).join('')}</div>${rv?`<div class="lv-why">${H(Q.why)}</div>`:''}`}
-  const o=OFF[id]||(OFF[id]={idx:0,rev:false});const Q=QS[o.idx];
-  return `<div class="lv-qh"><span class="k">${id==='slop'?'Frase':'Pergunta'} ${o.idx+1} de ${QS.length}</span></div><div class="lv-qq">${H(Q.q)}</div><div class="lv-qo n${Q.o.length}">${Q.o.map((x,i)=>`<div class="lv-o c${i}${o.rev?(i===Q.a?' right':' dim'):''}"><span>${H(x)}</span></div>`).join('')}</div>${o.rev?`<div class="lv-why">${H(Q.why)}</div>`:''}`},
- tick(){if(!online()||act.phase!=='q'||act.id!==id)return;const b=M&&M.body.querySelector('#lvtb');const e=(now()-act.t0)/1000;if(b)b.style.width=Math.max(0,100-e/act.lim*100)+'%';
-  if(e>act.lim+.4||(submitted().length&&submitted().length>=plist().length))reveal()},
- ctl(){const QS=SETQ(id);
-  if(online()){if(act.phase==='q')return [{t:'Revelar',p:1,f:reveal}];if(act.phase==='rev')return act.idx<QS.length-1?[{t:id==='slop'?'Frase seguinte':'Pergunta seguinte',p:1,f:()=>{const i=act.idx+1;patch({idx:i,phase:'q',t0:firebase.database.ServerValue.TIMESTAMP,key:id+act.run+'_'+i})}}]:[{t:'Ver ranking',p:1,f:()=>patch({phase:'end'})}];return [{t:'Recomeçar',f:()=>start(id)}]}
-  const o=OFF[id]||(OFF[id]={idx:0,rev:false});
+  const o=off_(id);o.idx=o.idx||0;const Q=QS[o.idx];
+  return `<div class="lv-qh"><span class="k">${o.idx+1} de ${QS.length}</span></div><div class="lv-qq">${H(Q.q)}</div><div class="lv-qo n${Q.o.length}">${Q.o.map((x,i)=>`<div class="lv-o c${i}${o.rev?(i===Q.a?' right':' dim'):''}"><span>${H(x)}</span></div>`).join('')}</div>${o.rev?`<div class="lv-why">${H(Q.why)}</div>`:''}`},
+ tick(){if(!online()||act.phase!=='q'||act.id!==M.id)return;const b=M.body.querySelector('#lvtb');const e=(now()-act.t0)/1000;if(b)b.style.width=Math.max(0,100-e/act.lim*100)+'%';
+  if(e>act.lim+.4||(submitted().length&&submitted().length>=plist().length))revealQ()},
+ ctl(){const id=M.id,QS=QSETS[id]||[];
+  if(online()){if(act.phase==='q')return [{t:'Revelar',p:1,f:revealQ}];if(act.phase==='rev')return act.idx<QS.length-1?[{t:'Seguinte',p:1,f:()=>{const i=act.idx+1;patch({idx:i,phase:'q',t0:TS(),key:id+act.run+'_'+i})}}]:[{t:'Ver ranking',p:1,f:()=>patch({phase:'end'})}];return [{t:'Recomeçar',f:()=>start(id)}]}
+  const o=off_(id);o.idx=o.idx||0;
   if(!o.rev)return [{t:'Revelar',p:1,f:()=>{o.rev=true;draw()}}];
-  return o.idx<QS.length-1?[{t:'Seguinte',p:1,f:()=>{o.idx++;o.rev=false;draw()}}]:[{t:'Voltar ao início',f:()=>{OFF[id]={idx:0,rev:false};draw()}}]}
+  return o.idx<QS.length-1?[{t:'Seguinte',p:1,f:()=>{o.idx++;o.rev=false;draw()}}]:[{t:'Voltar ao início',f:()=>{OFF[id]={};draw()}}]}
 };
- function reveal(){if(act.phase!=='q'||M.revKey===act.key)return;M.revKey=act.key;const Q=SETQ(id)[act.idx],m={};plist().forEach(p=>{const a=ans[p.id];m[p.id]=a&&a.c===Q.a?Math.round(1000*(1-Math.min(1,a.t/(act.lim*1000))*.5)):0});award(m).then(()=>patch({phase:'rev'}))}}
-V.quiz=quizView('quiz');V.slop=quizView('slop');
+function revealQ(){if(act.phase!=='q'||!M||M.revKey===act.key)return;M.revKey=act.key;const Q=QSETS[act.id][act.idx],m={};plist().forEach(p=>{const a=ans[p.id];m[p.id]=a&&a.c===Q.a?Math.round(1000*(1-Math.min(1,a.t/(act.lim*1000))*.5)):0});award(m).then(()=>patch({phase:'rev'}))}
 
 /* ---------- montar, desenhar, desmontar ---------- */
 function status(){const s=M&&M.st;if(!s)return;
  if(online())s.innerHTML=`<div class="lv-qrmini">${qrSVG(joinURL(),3)}</div><div><div class="k" style="color:var(--mut)">Sala</div><div style="font:800 46px/1 Syne;letter-spacing:.08em">${C}</div><div style="font:700 20px 'DM Sans';color:var(--mut);margin-top:6px">${plist().length} ligados</div></div>`;
  else if(mode==='offline')s.innerHTML=`<span class="lv-badge off">Modo apresentador</span>`;
- else if(mode==='frame')s.innerHTML='';
  else s.innerHTML=`<span class="lv-badge">A ligar…</span>`}
-function draw(){if(!M||!M.root.isConnected)return;const v=V[M.id];
- if(mode==='frame')showFrame(M.id);
- const y=M.body.scrollTop,ae=document.activeElement,fid=ae&&M.body.contains(ae)?ae.id:null,sel=fid&&ae.selectionStart;
+function view(){return V[(ACT[M.id]||{}).type]||V.lobby}
+function draw(){if(!M||!M.root.isConnected)return;const v=view();
+ const y=M.body.scrollTop,ae=document.activeElement,inside=ae&&M.body.contains(ae),fk=inside?(ae.id?'#'+ae.id:ae.dataset&&ae.dataset.k?'[data-k="'+ae.dataset.k+'"]':null):null,sel=inside&&ae.selectionStart;
  M.body.innerHTML=v.body();v.wire&&v.wire(M.body);M.body.scrollTop=y;
- if(fid){const e=M.body.querySelector('#'+fid);if(e){e.focus();try{e.setSelectionRange(sel,sel)}catch(x){}}}
+ if(fk){const e=M.body.querySelector(fk);if(e){e.focus();try{e.setSelectionRange(sel,sel)}catch(x){}}}
  const cs=v.ctl();M.bar.innerHTML='';cs.forEach(c=>{const b=document.createElement(c.href?'a':'button');b.className='lv-b'+(c.p?' pri':'');b.textContent=c.t;if(c.href){b.href=c.href;b.target='_blank';b.rel='noopener'}else b.onclick=e=>{e.stopPropagation();c.f()};M.bar.appendChild(b)});
  status()}
 let pend=0;function refresh(){if(!M)return;if(pend)return;pend=requestAnimationFrame(()=>{pend=0;draw()})}
 function mount(root,id){
  const lv=root.querySelector('.lv');if(!lv)return;
  M={id,root,body:lv.querySelector('.lv-body'),bar:lv.querySelector('.lv-ctl'),st:root.querySelector('.lv-st')};
- if(id!=='lobby'&&V[id]&&online())follow(id);
- if(id==='lobby'&&online()&&act.id!=='lobby')start('lobby');
- connect();draw();if(mode==='frame')showFrame(id);
- const t=setInterval(()=>{if(!M||!M.root.isConnected){clearInterval(t);return}V[id].tick&&V[id].tick()},200);
- root._unmount=()=>{clearInterval(t);hideFrame();if(M&&M.root===root)M=null};
+ if(online())follow(id);
+ connect();draw();
+ const t=setInterval(()=>{if(!M||!M.root.isConnected){clearInterval(t);return}const v=view();v.tick&&v.tick()},200);
+ root._unmount=()=>{clearInterval(t);if(M&&M.root===root)M=null};
 }
-return {mount,connect,state:()=>({mode,C,act,ans,players,off,now:now(),frameOK,frameReady})};
+return {mount,connect,state:()=>({mode,C,act,ans,players,off,now:now()})};
 })();
 
 /* slide de atividade ao vivo */
@@ -4470,26 +4508,40 @@ const liveS=(id,aid,group,foot,ebt,title,sub)=>S(id,'ink',group,title,foot,`${eb
 
 liveS('live-entrar','lobby','Abertura',F0,'Ao vivo · Entrar na sala','Peguem no telemóvel','Lê o QR ou escreve o endereço e o código. Um telemóvel por pessoa.');
 liveS('live-marcas','marcas','Abertura',F0,'Ao vivo · Aquecimento','Uma marca de que gostas','Escreve até 3. Vamos voltar a elas ao longo da aula.');
-liveS('live-inquerito','inquerito','Marketing',FM1,'Ao vivo · Estudo de mercado','Inquérito à turma','3 perguntas fechadas: isto são dados primários e quantitativos, recolhidos agora.');
-liveS('live-sorteio','sorteio','Marketing',FM1,'Ao vivo · Grupos','Sorteio dos grupos','Marca, persona, conflito e canal. Serve para as atividades e para o workshop.');
-liveS('live-canais','canais','Digital',FM2,'Ao vivo · Meios','Próprio, pago ou ganho?','Arrastem cada meio para o grupo certo.');
-liveS('live-smart','smart','Digital',FM2,'Ao vivo · Objetivo','O vosso objetivo SMART','Um por grupo. A verificação dos 5 critérios é automática.');
-liveS('live-spine','spine','Histórias',F1,'Ao vivo · Story Spine','Ponham a história por ordem','8 frases baralhadas. Quem acerta mais posições ganha.');
-liveS('live-gancho','gancho','Histórias',F2,'Ao vivo · Gancho','O melhor gancho','Escrevam a frase que abre o vosso vídeo. Depois votamos.');
-liveS('live-slop','slop','IA',FA,'Ao vivo · IA','Slop ou não?','6 frases da Segunda Mão. Vazia ou com substância?');
+liveS('live-primsec','primsec','Marketing',FM1,'Praticar · Estudo de mercado','Primário ou secundário?','Arrasta cada fonte de dados para o tipo certo.');
+liveS('live-posicionar','posicionar','Marketing',FM1,'Praticar · Posicionamento','Posiciona a marca','Cada telemóvel recebe uma marca. Completa a fórmula e votamos.');
+liveS('live-persona','persona','Marketing',FM1,'Praticar · Persona','Cria a persona','Grupos de 3 ou 4, um telemóvel por grupo. A persona da marca que vos calhar.');
+liveS('live-4p','quatrop','Marketing',FM1,'Praticar · 4Ps','Que P é este?','Oito decisões da loja Segunda Mão. Arrasta cada uma para o P certo.');
+liveS('live-smart','smart','Marketing',FM1,'Praticar · Objetivos','Torna-o SMART','«Quero mais seguidores.» Reescreve-o como objetivo SMART.');
+liveS('live-canais','canais','Digital',FM2,'Praticar · Meios','Próprio, pago ou ganho?','Arrasta cada meio para o grupo certo.');
+liveS('live-metricas','metricas','Digital',FM2,'Praticar · Métricas','Útil ou vaidade?','Objetivo: vender mais na loja online. Que métricas interessam?');
+liveS('live-plano','plano','Digital',FM2,'Para o workshop · Grupos','Mini plano','Objetivo SMART, dois canais e o KPI. Guardem: é a base do workshop.');
+liveS('live-abt','abt','Histórias',F1,'Praticar · E, MAS, POR ISSO','Escreve em 3 frases','Para o produto que te calhar. Depois votamos.');
+liveS('live-spine','spine','Histórias',F1,'Praticar · Story Spine','Ordena a história','8 frases baralhadas. Quem acerta mais posições ganha.');
+liveS('live-spinew','spinew','Histórias',F1,'Praticar · Story Spine','A vossa Story Spine','Por grupo: a história da vossa marca em 8 frases. Depois votamos.');
+liveS('live-gancho','gancho','Histórias',F2,'Praticar · Ganchos','O melhor gancho','A frase que abre o vídeo da vossa marca. Depois votamos.');
+liveS('live-slop','slop','IA',FA,'Praticar · IA','Slop ou não?','6 frases da Segunda Mão. Vazia ou com substância?');
+liveS('live-rgpd','rgpd','Ética e RGPD',FE,'Praticar · RGPD e publicidade','Pode ou não pode?','6 situações. Decide depressa.');
 liveS('live-quiz','quiz','Fecho',FF,'Ao vivo · Revisão','Quiz final','10 perguntas sobre toda a aula. Quanto mais rápido, mais pontos.');
 
 Object.assign(N4,{
- 'live-entrar':'Entrada na sala (1–2 min). A apresentação cria a sala sozinha e mostra o QR e o código. Os telemóveis abrem vicentefv.github.io/aula-marketing. A partir daqui, sempre que chegares a um slide «Ao vivo», os telemóveis mudam sozinhos para essa atividade. Se aparecer «Modo apresentador», a página não conseguiu ligar-se: carrega em «Abrir o ecrã da sala» para usar os telemóveis noutro separador, ou faz as atividades no ecrã, de braço no ar.',
- 'live-marcas':'Aquecimento (2 min). Cada pessoa escreve até 3 marcas de que gosta. A nuvem cresce com as repetições. Comenta 2 ou 3 marcas e guarda-as como exemplos para o resto da aula. Modo apresentador: escreve as marcas que disserem e carrega em Enter.',
- 'live-inquerito':'Inquérito ao vivo (2 min). Liga ao slide anterior: isto são dados primários (recolhidos por nós) e quantitativos (respondem a «quantos?»). Fecha o inquérito e lê os resultados: «o que é que isto nos diz para uma loja de roupa em segunda mão?». Falta o qualitativo: pergunta a 2 pessoas porquê. Modo apresentador: conta os braços no ar e clica nas opções.',
- 'live-sorteio':'Sorteio (1 min). Escolhe o número de grupos (3 ou 4 pessoas cada) e sorteia. Cada grupo fica com marca, persona, conflito e canal até ao workshop. Os telemóveis mostram a lista; diz a cada grupo o seu número.',
- 'live-canais':'Próprio, pago ou ganho (2 min). Individual, no telemóvel. Revela e comenta os meios onde a turma mais errou (normalmente o creator pago e o post impulsionado).',
- 'live-smart':'Objetivo SMART (2 min), depois da atividade 02. Um elemento de cada grupo envia o objetivo do mini plano. A verificação é automática e simples (procura número, prazo, verbo de ação…): usa-a como ponto de partida para comentar, não como nota.',
- 'live-spine':'Story Spine (2 min), antes da atividade 03. Individual: ordenam as 8 frases. Revela e lê a história em voz alta. Modo apresentador: a turma dita a ordem e tu trocas as frases com dois cliques.',
- 'live-gancho':'Melhor gancho (3 min). Um gancho por grupo, para a sua marca. Abre a votação (ninguém vota no seu) e revela o vencedor. Comenta o porquê com a checklist: curto, curiosidade, concreto.',
- 'live-slop':'Slop ou não? (2 min). 6 frases inventadas da loja Segunda Mão. Depois de cada revelação, pergunta: que sinal é este? O teste rápido: troca o nome da loja. Se a frase continuar a funcionar, é slop.',
- 'live-quiz':'Quiz final (5 min). 10 perguntas, 20 segundos cada; respostas rápidas valem mais. No fim aparece o ranking com os pontos de todas as atividades. Modo apresentador: lê, a turma responde em voz alta, revelas.'
+ 'live-entrar':'Entrada na sala (1–2 min). A apresentação cria a sala e mostra o QR e o código. A partir daqui, sempre que chegares a um slide de atividade, os telemóveis mudam sozinhos. Se aparecer «Modo apresentador», a página não se ligou (dentro do Claude é sempre assim): usa o endereço do GitHub para ter os telemóveis.',
+ 'live-marcas':'Aquecimento (2 min). Cada pessoa escreve até 3 marcas de que gosta. A nuvem cresce com as repetições. Comenta 2 ou 3 e usa-as como exemplos ao longo da aula.',
+ 'live-primsec':'Prática (2 min), logo a seguir aos dados primários e secundários. Individual. Revela e comenta as que a turma mais trocou: normalmente a sondagem nos stories (primário, foste tu que perguntaste) e o Google Trends (secundário, já existe).',
+ 'live-posicionar':'Prática (4 min), logo a seguir à fórmula do posicionamento. Cada telemóvel recebe uma marca ao acaso. 2 min para escrever, abre a votação (ninguém vota no seu), revela. Comenta o vencedor: a diferença é concreta e é algo que a concorrência não diz?',
+ 'live-persona':'Prática (5 min), logo a seguir à Rita. Forma os grupos de 3 ou 4 (ficam até ao workshop) e pede um telemóvel por grupo. Cada telemóvel recebe uma marca: essa passa a ser a marca do grupo. 4 min para escrever, 1 para mostrar. Pergunta: o que é que a persona da marca X tem de diferente da Rita?',
+ 'live-4p':'Prática (2 min), logo a seguir aos 4Ps. Individual. As trocas mais comuns: a garantia de troca (é produto, faz parte do que vendes) e vender na Vinted (é praça, onde a pessoa compra).',
+ 'live-smart':'Prática (3 min), logo a seguir ao «Do vago ao SMART». Individual. A verificação automática é simples (procura número, prazo, verbo…): usa-a como ponto de partida. Abre a votação e revela.',
+ 'live-canais':'Prática (2 min), logo a seguir aos três meios. Individual. Revela e comenta o creator pago e o post impulsionado (pagos, mesmo parecendo conteúdo).',
+ 'live-metricas':'Prática (2 min), logo a seguir à métrica de vaidade. Individual. As impressões e as views não são inúteis, mas para «vender mais» não dizem se estás mais perto.',
+ 'live-plano':'A atividade «para guardar» (5 min). Um telemóvel por grupo, o mesmo da persona: a marca mantém-se. Objetivo SMART, dois canais com o papel de cada um e o KPI. É a base do workshop.',
+ 'live-abt':'Prática (3 min), logo a seguir ao E, MAS, POR ISSO. Individual: cada telemóvel recebe um produto. Abre a votação e revela. Comenta: o MAS tem mesmo um conflito?',
+ 'live-spine':'Prática (2 min), logo a seguir ao exemplo da Story Spine. Individual: ordenar as 8 frases. Revela e lê a história em voz alta.',
+ 'live-spinew':'Prática em grupo (8 min), com o telemóvel do grupo: a Story Spine da marca do grupo. Vai servir no workshop. Abre a votação no fim e lê a vencedora.',
+ 'live-gancho':'Prática (3 min), logo a seguir aos 5 tipos de gancho. Um gancho por grupo, para a sua marca. Abre a votação e revela. Comenta com a checklist: curto, curiosidade, concreto.',
+ 'live-slop':'Prática (2 min), logo a seguir ao que falta ao slop. Depois de cada revelação, pergunta: que sinal é este? Teste rápido: troca o nome da loja; se a frase continuar a funcionar, é slop.',
+ 'live-rgpd':'Prática (2 min), logo a seguir às regras de RGPD e publicidade. Seis situações rápidas. Lê a explicação de cada uma em voz alta.',
+ 'live-quiz':'Quiz final (5 min). 10 perguntas sobre toda a aula, 20 segundos cada; respostas rápidas valem mais. No fim aparece o ranking com os pontos de todas as atividades.'
 });
 
 /* ---- Notas novas e atualizadas ---- */
@@ -4546,13 +4598,13 @@ const N2={
 Object.assign(N2,N3,N4);
 const ORDER=[
  ['Abertura · 10 min',['cover','eu-ola','eu-percurso','eu-projetos','eu-casos','live-entrar','live-marcas','agenda','objetivos','statement-mkt']],
- ['Marketing · 36 min',['d1','o-que-e','hist-producao','hist-vendas','hist-marketing','hist-relacao','hist-digital','ben-notoriedade','ben-relacao','ben-crescimento','mr-oque','mr-secundarios','mr-primarios','mr-quanti','mr-exemplo','live-inquerito','stp-segmentar','stp-escolher','stp-posicionar','stp-formula','persona-def','persona-rita','live-sorteio','act-persona','4ps','mv-marca','mv-proposta','mv-tom','marcas-conversa','jornada','smart-letras','smart-exemplo']],
- ['Digital · 24 min',['d2','monologo','meio-proprio','meio-pago','meio-ganho','meio-ideal','live-canais','cn-site','cn-redes','cn-email','cn-anuncios','cn-creators','cn-imprensa','cn-fim','pdc-pago','pdc-dados','pdc-comunidade','pdc-fim','calendario','camp-coke','camp-redbull','camp-barbie','camp-fim','kpis','kpi-vaidade','act-plano','live-smart']],
+ ['Marketing · 36 min',['d1','o-que-e','hist-producao','hist-vendas','hist-marketing','hist-relacao','hist-digital','ben-notoriedade','ben-relacao','ben-crescimento','mr-oque','mr-secundarios','mr-primarios','mr-quanti','mr-exemplo','live-primsec','stp-segmentar','stp-escolher','stp-posicionar','stp-formula','live-posicionar','persona-def','persona-rita','live-persona','4ps','live-4p','mv-marca','mv-proposta','mv-tom','marcas-conversa','jornada','smart-letras','smart-exemplo','live-smart']],
+ ['Digital · 24 min',['d2','monologo','meio-proprio','meio-pago','meio-ganho','meio-ideal','live-canais','cn-site','cn-redes','cn-email','cn-anuncios','cn-creators','cn-imprensa','cn-fim','pdc-pago','pdc-dados','pdc-comunidade','pdc-fim','calendario','camp-coke','camp-redbull','camp-barbie','camp-fim','kpis','kpi-vaidade','live-metricas','live-plano']],
  ['Pausa · 10 min',['pausa']],
- ['Histórias · 40 min',['d3','statement','forca-atencao','forca-emocao','forca-memoria','facto-historia','ing-personagem','ing-conflito','ing-transformacao','caso-wrapped','wrapped-3','heroi-papeis','heroi-guia','abt-e','abt-mas','abt-porisso','story-spine','spine-exemplo','live-spine','act-spine','gancho-1','gancho-2','gancho-3','gancho-4','gancho-5','ganchos-fim','live-gancho']],
+ ['Histórias · 40 min',['d3','statement','forca-atencao','forca-emocao','forca-memoria','facto-historia','ing-personagem','ing-conflito','ing-transformacao','caso-wrapped','wrapped-3','heroi-papeis','heroi-guia','abt-e','abt-mas','abt-porisso','live-abt','story-spine','spine-exemplo','live-spine','live-spinew','gancho-1','gancho-2','gancho-3','gancho-4','gancho-5','ganchos-fim','live-gancho']],
  ['Da história ao canal · 10 min',['d4','canais','reels','carrossel']],
  ['IA: o bom e o slop · 15 min',['d-ia','ia-brief','ia-ab','sinal-1','sinal-2','sinal-3','sinal-4','sinal-5','sinal-6','sinal-falta','live-slop','mov-1','mov-2','mov-3','mov-4','mov-5','mov-fim','ia-check']],
- ['Ética e RGPD · 5 min',['etica','rg-consent','rg-final','rg-direitos','rg-coimas','pub-etiqueta','ia-assinala']],
+ ['Ética e RGPD · 5 min',['etica','rg-consent','rg-final','rg-direitos','rg-coimas','pub-etiqueta','ia-assinala','live-rgpd']],
  ['Workshop · 25 min',['d5','wk-regras','wk-dados','wk-entregaveis','wk-criterios','wk-palco']],
  ['Fecho · 5 min',['live-quiz','takeaways','checklist','fontes','fecho']]
 ];

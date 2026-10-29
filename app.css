@@ -159,3 +159,5 @@ textarea.ta:focus{border-color:var(--violet)}
 
 /* dentro da apresentação */
 .emb .glow{display:none}
+.fi{width:100%;background:var(--bg2);border:2px solid var(--line);border-radius:14px;padding:12px 14px;font-size:1rem;outline:none}
+.fi:focus{border-color:var(--violet)}

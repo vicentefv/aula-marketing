@@ -10,7 +10,7 @@ const SPINE_LAB=['Era uma vez…','Todos os dias…','Até que um dia…','Por c
 window.ACT={
  lobby:{type:'lobby',t:'Entrada'},
 
- marcas:{type:'cloud',t:'Marcas',q:'Escreve uma marca de que gostas (até 3).'},
+ marcas:{type:'cloud',t:'O que é marketing?',q:'O que é marketing para ti? Escreve até 3 palavras.'},
 
  primsec:{type:'sort',t:'Primário ou secundário?',q:'Arrasta cada fonte de dados para o tipo certo.',lim:60,
   buckets:[{k:'p',t:'Primário',c:G},{k:'s',t:'Secundário',c:M}],

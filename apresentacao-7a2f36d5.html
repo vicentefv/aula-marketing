@@ -2682,7 +2682,7 @@ const SPINE_LAB=['Era uma vez…','Todos os dias…','Até que um dia…','Por c
 window.ACT={
  lobby:{type:'lobby',t:'Entrada'},
 
- marcas:{type:'cloud',t:'Marcas',q:'Escreve uma marca de que gostas (até 3).'},
+ marcas:{type:'cloud',t:'O que é marketing?',q:'O que é marketing para ti? Escreve até 3 palavras.'},
 
  primsec:{type:'sort',t:'Primário ou secundário?',q:'Arrasta cada fonte de dados para o tipo certo.',lim:60,
   buckets:[{k:'p',t:'Primário',c:G},{k:'s',t:'Secundário',c:M}],
@@ -4507,7 +4507,7 @@ const liveS=(id,aid,group,foot,ebt,title,sub)=>S(id,'ink',group,title,foot,`${eb
  <div class="lv" data-a="up" data-at=".3"><div class="lv-body"></div><div class="lv-ctl"></div></div>`,{init:r=>LV.mount(r,aid)});
 
 liveS('live-entrar','lobby','Abertura',F0,'Ao vivo · Entrar na sala','Peguem no telemóvel','Lê o QR ou escreve o endereço e o código. Um telemóvel por pessoa.');
-liveS('live-marcas','marcas','Abertura',F0,'Ao vivo · Aquecimento','Uma marca de que gostas','Escreve até 3. Vamos voltar a elas ao longo da aula.');
+liveS('live-marcas','marcas','Marketing',FM1,'Antes de começar','O que é marketing para ti?','Até 3 palavras, sem pensar muito. Não há respostas erradas.');
 liveS('live-primsec','primsec','Marketing',FM1,'Praticar · Estudo de mercado','Primário ou secundário?','Arrasta cada fonte de dados para o tipo certo.');
 liveS('live-posicionar','posicionar','Marketing',FM1,'Praticar · Posicionamento','Posiciona a marca','Cada telemóvel recebe uma marca. Completa a fórmula e votamos.');
 liveS('live-persona','persona','Marketing',FM1,'Praticar · Persona','Cria a persona','Grupos de 3 ou 4, um telemóvel por grupo. A persona da marca que vos calhar.');
@@ -4526,7 +4526,7 @@ liveS('live-quiz','quiz','Fecho',FF,'Ao vivo · Revisão','Quiz final','10 pergu
 
 Object.assign(N4,{
  'live-entrar':'Entrada na sala (1–2 min). A apresentação cria a sala e mostra o QR e o código. A partir daqui, sempre que chegares a um slide de atividade, os telemóveis mudam sozinhos. Se aparecer «Modo apresentador», a página não se ligou (dentro do Claude é sempre assim): usa o endereço do GitHub para ter os telemóveis.',
- 'live-marcas':'Aquecimento (2 min). Cada pessoa escreve até 3 marcas de que gosta. A nuvem cresce com as repetições. Comenta 2 ou 3 e usa-as como exemplos ao longo da aula.',
+ 'live-marcas':'Abre o bloco de marketing (2 min). Cada pessoa escreve até 3 palavras. Lê a nuvem em voz alta: quase sempre aparecem «publicidade», «vender» e «anúncios». Usa isso como ponte para o slide seguinte: marketing não é só publicidade, é perceber quem é o cliente, criar algo para ele, comunicar e entregar.',
  'live-primsec':'Prática (2 min), logo a seguir aos dados primários e secundários. Individual. Revela e comenta as que a turma mais trocou: normalmente a sondagem nos stories (primário, foste tu que perguntaste) e o Google Trends (secundário, já existe).',
  'live-posicionar':'Prática (4 min), logo a seguir à fórmula do posicionamento. Cada telemóvel recebe uma marca ao acaso. 2 min para escrever, abre a votação (ninguém vota no seu), revela. Comenta o vencedor: a diferença é concreta e é algo que a concorrência não diz?',
  'live-persona':'Prática (5 min), logo a seguir à Rita. Forma os grupos de 3 ou 4 (ficam até ao workshop) e pede um telemóvel por grupo. Cada telemóvel recebe uma marca: essa passa a ser a marca do grupo. 4 min para escrever, 1 para mostrar. Pergunta: o que é que a persona da marca X tem de diferente da Rita?',
@@ -4597,8 +4597,8 @@ const N2={
 /* ---- Ordem final ---- */
 Object.assign(N2,N3,N4);
 const ORDER=[
- ['Abertura · 10 min',['cover','eu-ola','eu-percurso','eu-projetos','eu-casos','live-entrar','live-marcas','agenda','objetivos','statement-mkt']],
- ['Marketing · 36 min',['d1','o-que-e','hist-producao','hist-vendas','hist-marketing','hist-relacao','hist-digital','ben-notoriedade','ben-relacao','ben-crescimento','mr-oque','mr-secundarios','mr-primarios','mr-quanti','mr-exemplo','live-primsec','stp-segmentar','stp-escolher','stp-posicionar','stp-formula','live-posicionar','persona-def','persona-rita','live-persona','4ps','live-4p','mv-marca','mv-proposta','mv-tom','marcas-conversa','jornada','smart-letras','smart-exemplo','live-smart']],
+ ['Abertura · 10 min',['cover','eu-ola','eu-percurso','eu-projetos','eu-casos','live-entrar','agenda','objetivos','statement-mkt']],
+ ['Marketing · 36 min',['d1','live-marcas','o-que-e','hist-producao','hist-vendas','hist-marketing','hist-relacao','hist-digital','ben-notoriedade','ben-relacao','ben-crescimento','mr-oque','mr-secundarios','mr-primarios','mr-quanti','mr-exemplo','live-primsec','stp-segmentar','stp-escolher','stp-posicionar','stp-formula','live-posicionar','persona-def','persona-rita','live-persona','4ps','live-4p','mv-marca','mv-proposta','mv-tom','marcas-conversa','jornada','smart-letras','smart-exemplo','live-smart']],
  ['Digital · 24 min',['d2','monologo','meio-proprio','meio-pago','meio-ganho','meio-ideal','live-canais','cn-site','cn-redes','cn-email','cn-anuncios','cn-creators','cn-imprensa','cn-fim','pdc-pago','pdc-dados','pdc-comunidade','pdc-fim','calendario','camp-coke','camp-redbull','camp-barbie','camp-fim','kpis','kpi-vaidade','live-metricas','live-plano']],
  ['Pausa · 10 min',['pausa']],
  ['Histórias · 40 min',['d3','statement','forca-atencao','forca-emocao','forca-memoria','facto-historia','ing-personagem','ing-conflito','ing-transformacao','caso-wrapped','wrapped-3','heroi-papeis','heroi-guia','abt-e','abt-mas','abt-porisso','live-abt','story-spine','spine-exemplo','live-spine','live-spinew','gancho-1','gancho-2','gancho-3','gancho-4','gancho-5','ganchos-fim','live-gancho']],

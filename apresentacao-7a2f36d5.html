@@ -2936,18 +2936,31 @@ function show(i,{full=false,dir=1,cont=null}={}){
  $('#foot').textContent=s.foot||'';$('#count').textContent=String(i+1).padStart(2,'0')+' / '+SL.length;
  gsap.to('#prog',{scaleX:i/(SL.length-1),duration:.9,ease:'expo.out'});
  initTimers(root,s.id);initPickers(root);
- steps=$$('[data-step]',root);stepIdx=0;stl=null;
+ if(s.ask)markAsk(root);
+ const askEls=$$('[data-ask]',root);
+ steps=$$('[data-step]',root).filter(e=>!e.hasAttribute('data-ask'));if(askEls.length)steps.unshift({_group:askEls});stepIdx=0;stl=null;
  tl=gsap.timeline({paused:true});
  build(collect(root),tl,.15);
+ runMG($$('[data-mg]',root).filter(e=>!e.closest('[data-step]')),tl,.45);
  s.init&&s.init(root,tl);
  if(full||RM){tl.progress(1);steps.forEach((e,k)=>reveal(e,true));stepIdx=steps.length}
  try{history.replaceState(null,'','#'+(i+1))}catch(e){}
 }
 function hide(i){const s=SL[i];if(!s)return;if(s.el._unmount){try{s.el._unmount()}catch(e){}s.el._unmount=null}if(tl)tl.kill();gsap.killTweensOf(s.el.querySelectorAll('*'));s.el.style.display='none';s.el.innerHTML=''}
+const runMG=(els,tl,t)=>els.forEach(e=>{const f=window.MG&&MG[e.dataset.mg];if(f)try{f(e,tl,t)}catch(err){}});
+/* «pergunta primeiro»: só o título pequeno, o contador, a etiqueta e o título ficam; o resto aparece no 1.º clique */
+function markAsk(root){
+ const T=root.querySelector('h2.title,h2.hero');if(!T)return;
+ const keep=x=>x===T||x.classList.contains('eyebrow')||x.classList.contains('ctr')||x.classList.contains('pill');
+ const walk=par=>[...par.children].forEach(x=>{if(keep(x)||x.hasAttribute('data-step'))return;if(x.contains(T)){walk(x);return}x.setAttribute('data-step','');x.setAttribute('data-ask','')});
+ walk(root);
+}
 function reveal(el,instant){
+ if(el._group){el._group.forEach(x=>reveal(x,instant));return}
  const s=SL[cur],root=s.el;if(!el.dataset.a)el.dataset.a='up';
  const t=gsap.timeline(),els=[el,...$$('[data-a]',el).filter(e=>e.closest('[data-step]')===el)];
  build(els,t,0);
+ runMG([el,...$$('[data-mg]',el)].filter(e=>e.dataset.mg&&e.closest('[data-step]')===el),t,.3);
  if(el.dataset.link)gsap.fromTo($$(el.dataset.link,root),{scaleX:0},{scaleX:1,duration:.9,ease:E1,overwrite:true});
  if(el.classList.contains('spot')){$$('.spot',root).forEach(x=>{if(x!==el&&x._rev)gsap.to(x,{opacity:.5,duration:.6})});}
  el._rev=true;
@@ -2955,7 +2968,7 @@ function reveal(el,instant){
  if(instant)t.progress(1);stl=t;
 }
 function unreveal(){
- const el=steps[--stepIdx];if(!el)return;el._rev=false;gsap.to(el,{autoAlpha:0,duration:.25});
+ const el=steps[--stepIdx];if(!el)return;if(el._group){el._group.forEach(x=>{x._rev=false;gsap.to(x,{autoAlpha:0,duration:.25})});return}el._rev=false;gsap.to(el,{autoAlpha:0,duration:.25});
  const root=SL[cur].el;const prev=steps.slice(0,stepIdx).filter(x=>x.classList.contains('spot'));if(prev.length)gsap.to(prev[prev.length-1],{opacity:1,duration:.4});
  const s=SL[cur];s.onUnstep&&s.onUnstep(root,el,stepIdx);
 }
@@ -3028,7 +3041,7 @@ function prev(){
 
 /* ---------- sobreposições ---------- */
 const notesEl=$('#notes'),idxEl=$('#idx');
-function toggleNotes(){const on=notesEl.style.display!=='block';if(on){notesEl.innerHTML='<b>Notas do orador · '+(cur+1)+'. '+SL[cur].t+'</b>'+(SL[cur].n||NT[SL[cur].id]||'—')}notesEl.style.display=on?'block':'none'}
+function toggleNotes(){const on=notesEl.style.display!=='block';if(on){notesEl.innerHTML='<b>Notas do orador · '+(cur+1)+'. '+SL[cur].t+'</b>'+(typeof SL[cur].ask==='string'?'<p style="margin:0 0 12px;padding:10px 14px;border-left:4px solid var(--acc);background:rgba(127,127,127,.12)"><b style="display:inline">Pergunta à turma (só o título no ecrã):</b> '+SL[cur].ask+'</p>':'')+(SL[cur].n||NT[SL[cur].id]||'—')}notesEl.style.display=on?'block':'none'}
 function buildIdx(){let h='<div style="font:800 40px Syne;margin-bottom:6px">Índice</div>',g='';SL.forEach((s,i)=>{if(s.g!==g){g=s.g;h+=(i?'</div>':'')+'<h4>'+g+'</h4><div class="gr">'}h+=`<button data-i="${i}"><span>${String(i+1).padStart(2,'0')}</span>${s.t}</button>`});idxEl.innerHTML=h+'</div>';$$('button',idxEl).forEach(b=>b.onclick=()=>{idxEl.style.display='none';go(+b.dataset.i)})}
 function toggleIdx(){const on=idxEl.style.display!=='block';if(on){buildIdx();$$('button',idxEl)[cur].classList.add('cur')}idxEl.style.display=on?'block':'none'}
 function fs(){try{const d=document;if(d.fullscreenElement)d.exitFullscreen();else d.documentElement.requestFullscreen().catch(()=>{})}catch(e){}}
@@ -3072,6 +3085,95 @@ window.ENG={$,$$,rnd,confetti,beep,tick,gsap,start,go,get SC(){return SC},get OX
 const lgc=(k,h=56,st='')=>typeof LOGO!=='undefined'&&LOGO[k]?`<span class="lgc" style="${st}"><img src="${LOGO[k]}" alt="" style="height:${h}px"></span>`:'';
 
 const lgi=(k,h=48,st='')=>typeof LOGO!=='undefined'&&LOGO[k]?`<img src="${LOGO[k]}" alt="" style="height:${h}px;width:auto;display:block;flex:none;${st}">`:'';
+
+/* ===== Motion graphics: gráficos animados reutilizáveis =====
+   mg(tipo, cor, tamanho) devolve um SVG com data-mg; o motor chama MG[tipo](el, tl, t)
+   quando o slide (ou o passo) aparece. Cada um tem uma entrada e um ciclo suave em loop. */
+(function(){
+const G=window.gsap||ENG.gsap;
+const R=(n,s)=>{let x=Math.sin(n*9301+s*49297)*233280;return x-Math.floor(x)};
+const SV=(k,c,s,inner,vb='0 0 600 600')=>`<svg data-mg="${k}" viewBox="${vb}" width="${s}" height="${s}" style="overflow:visible;display:block;--mc:${c}" fill="none" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
+const B={
+ /* radar: o mercado inteiro e o grupo que escolhemos */
+ radar(c,s){let d='';for(let i=0;i<34;i++){const a=R(i,1)*6.283,r=60+R(i,2)*220,x=300+Math.cos(a)*r,y=300+Math.sin(a)*r,t=(x>330&&y<290&&r>90)?1:0;d+=`<circle class="pt${t?' tg':''}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${t?11:9}" fill="var(--mut)" opacity=".55"/>`}
+  return SV('radar',c,s,`<g class="rg">${[90,180,270].map(r=>`<circle class="ring" cx="300" cy="300" r="${r}" stroke="${c}" stroke-width="3" opacity=".35"/>`).join('')}</g>
+  <g class="sw" style="transform-origin:300px 300px"><path d="M300 300L300 30A270 270 0 0 1 491 109Z" fill="${c}" opacity=".16"/><path d="M300 300L300 30" stroke="${c}" stroke-width="4"/></g>${d}<circle cx="300" cy="300" r="12" fill="${c}"/>`)},
+ /* gráfico a crescer */
+ chart(c,s){const P='M60 470 C140 450 170 380 240 380 S330 300 380 250 S470 150 540 110';
+  return SV('chart',c,s,`${[150,260,370,480].map(y=>`<path class="gl" d="M50 ${y}H560" stroke="var(--line)" stroke-width="2"/>`).join('')}
+  <path class="ar" d="${P} L540 480 L60 480Z" fill="${c}" opacity=".14" stroke="none"/><path class="ln" d="${P}" stroke="${c}" stroke-width="12"/>
+  <circle class="pl" cx="540" cy="110" r="22" stroke="${c}" stroke-width="4"/><circle class="dt" cx="540" cy="110" r="16" fill="${c}"/>`)},
+ /* megafone: a marca a falar sozinha */
+ waves(c,s){return SV('waves',c,s,`<path class="mf" d="M90 250h70l170-90v280l-170-90H90z" stroke="${c}" stroke-width="10"/><path class="mf" d="M130 340l20 110h50l-20-110" stroke="${c}" stroke-width="10"/>
+  ${[0,1,2].map(i=>`<path class="wv" d="M${380+i*55} ${230-i*40}q${50+i*20} ${70+i*40} 0 ${140+i*80}" stroke="${c}" stroke-width="10" style="transform-origin:330px 300px"/>`).join('')}`)},
+ /* órbita de canais à volta da marca */
+ orbit(c,s,labels=['Site','Redes','Email','Anúncios']){const n=labels.length;
+  return SV('orbit',c,s,`<ellipse class="ob" cx="300" cy="300" rx="235" ry="235" stroke="var(--line)" stroke-width="3" stroke-dasharray="6 14"/>
+  <g class="rot" style="transform-origin:300px 300px">${labels.map((l,i)=>{const a=i/n*6.283-1.57,x=300+Math.cos(a)*235,y=300+Math.sin(a)*235;return `<g class="nd" transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><g class="cr"><circle r="46" fill="var(--card)" stroke="${c}" stroke-width="4"/><text text-anchor="middle" dy="8" font-family="DM Sans" font-weight="700" font-size="22" fill="var(--fg)" stroke="none">${l}</text></g></g>`}).join('')}</g>
+  <circle class="ct" cx="300" cy="300" r="80" fill="${c}"/><text class="ct" x="300" y="310" text-anchor="middle" font-family="Syne" font-weight="800" font-size="34" fill="var(--on)" stroke="none">Marca</text>`)},
+ /* conversa: marca e pessoas a responderem-se */
+ chat(c,s){const bb=[[60,110,330,'l'],[210,250,330,'r'],[60,390,260,'l']];
+  return SV('chat',c,s,`${bb.map((b,i)=>`<g class="bb" style="transform-origin:${b[3]==='l'?b[0]:b[0]+b[2]}px ${b[1]+50}px"><rect x="${b[0]}" y="${b[1]}" width="${b[2]}" height="100" rx="34" fill="${b[3]==='r'?c:'var(--card)'}" stroke="${b[3]==='r'?c:'var(--cardb)'}" stroke-width="3"/>${i<2?`<path d="M${b[0]+40} ${b[1]+42}h${b[2]-110}M${b[0]+40} ${b[1]+66}h${b[2]-170}" stroke="${b[3]==='r'?'var(--on)':'var(--mut)'}" stroke-width="10" opacity=".7"/>`:[0,1,2].map(k=>`<circle class="ty" cx="${b[0]+60+k*42}" cy="${b[1]+50}" r="11" fill="var(--mut)"/>`).join('')}</g>`).join('')}`)},
+ /* escudo: dados protegidos */
+ shield(c,s){return SV('shield',c,s,`<path class="sh" d="M300 60L490 130V290C490 400 410 490 300 540C190 490 110 400 110 290V130Z" stroke="${c}" stroke-width="12" fill="${c}" fill-opacity=".08"/>
+  <path class="ck" d="M210 300L275 365L400 230" stroke="${c}" stroke-width="16"/><rect class="sc" x="120" y="120" width="360" height="8" rx="4" fill="${c}" opacity=".5"/>`)},
+ /* texto a ser analisado: sinais de IA */
+ scan(c,s){const L=[[90,420],[90,360],[90,440],[90,300],[90,400],[90,380],[90,250]];
+  return SV('scan',c,s,`<rect x="50" y="40" width="500" height="520" rx="30" fill="var(--card)" stroke="var(--cardb)" stroke-width="3"/>
+  ${L.map((l,i)=>`<rect class="tl${[1,4].includes(i)?' fl':''}" x="${l[0]}" y="${95+i*62}" width="${l[1]}" height="18" rx="9" fill="var(--mut)" opacity=".4"/>`).join('')}
+  <rect class="bar" x="60" y="80" width="480" height="6" rx="3" fill="${c}"/>`)},
+ /* funil: de muita gente a poucos clientes */
+ funnel(c,s){const W=[480,380,280,180];
+  return SV('funnel',c,s,`${W.map((w,i)=>`<path class="fl" d="M${300-w/2} ${70+i*110}H${300+w/2}L${300+(w-100)/2} ${165+i*110}H${300-(w-100)/2}Z" fill="${c}" opacity="${.25+i*.2}" stroke="none"/>`).join('')}
+  ${[0,1,2,3,4,5].map(i=>`<circle class="pc" cx="${200+R(i,3)*200}" cy="40" r="10" fill="${c}"/>`).join('')}`)},
+ /* rede de memória: ideias ligadas */
+ net(c,s){const N=[[300,300],[150,170],[460,150],[500,380],[330,500],[120,420],[230,80]];const E=[[0,1],[0,2],[0,3],[0,4],[0,5],[1,6],[2,6],[3,4],[5,4],[1,5]];
+  return SV('net',c,s,`${E.map(e=>`<path class="ed" d="M${N[e[0]]}L${N[e[1]]}" stroke="${c}" stroke-width="4" opacity=".45"/>`).join('')}
+  ${N.map((n,i)=>`<circle class="no" cx="${n[0]}" cy="${n[1]}" r="${i?26:44}" fill="${i?'var(--card)':c}" stroke="${c}" stroke-width="5"/>`).join('')}<circle class="sp" r="10" fill="${c}"/>`)},
+ /* batimento: emoção */
+ pulse(c,s){const P='M30 300H180L215 230L255 400L300 120L345 470L385 260L410 300H570';
+  return SV('pulse',c,s,`<path d="${P}" stroke="var(--line)" stroke-width="10"/><path class="hb" d="${P}" stroke="${c}" stroke-width="12"/>`)},
+ /* telemóvel com feed a passar: atenção */
+ feed(c,s){let cards='';for(let i=0;i<8;i++)cards+=`<rect x="190" y="${70+i*130}" width="220" height="110" rx="18" fill="${i===3?c:'var(--cardb)'}" opacity="${i===3?1:.8}"/>`;
+  return SV('feed',c,s,`<defs><clipPath id="fdc"><rect x="170" y="50" width="260" height="500" rx="34"/></clipPath></defs>
+  <g clip-path="url(#fdc)"><g class="fd">${cards}</g></g><rect x="160" y="40" width="280" height="520" rx="44" stroke="var(--fg)" stroke-width="10"/><rect x="265" y="58" width="70" height="12" rx="6" fill="var(--fg)"/>`)}
+};
+window.mg=(k,c='var(--acc)',s=520,x)=>B[k](c,s,x);
+const dr=(el,tl,t,d=1.2)=>{const L=el.getTotalLength?el.getTotalLength():800;tl.fromTo(el,{strokeDasharray:L,strokeDashoffset:L},{strokeDashoffset:0,duration:d,ease:'power2.inOut'},t)};
+const q=(s,r)=>[...r.querySelectorAll(s)];
+window.MG={
+ radar(el,tl,t){tl.fromTo(q('.ring',el),{scale:0,transformOrigin:'300px 300px'},{scale:1,duration:.9,ease:'expo.out',stagger:.12},t);
+  tl.fromTo(q('.pt',el),{scale:0,transformOrigin:'center',transformBox:'fill-box'},{scale:1,duration:.5,ease:'back.out(2)',stagger:.02},t+.3);
+  tl.set(q('.tg',el),{attr:{fill:el.style.getPropertyValue('--mc')},opacity:1},t+1.2);
+  tl.fromTo(q('.sw',el),{opacity:0},{opacity:1,duration:.4},t+.6);
+  tl.call(()=>{G.to(q('.sw',el),{rotate:360,duration:5,ease:'none',repeat:-1});G.to(q('.tg',el),{scale:1.35,transformOrigin:'center',transformBox:'fill-box',duration:.8,yoyo:true,repeat:-1,ease:'sine.inOut',stagger:.1})},null,t+1.4)},
+ chart(el,tl,t){tl.fromTo(q('.gl',el),{scaleX:0,transformOrigin:'0 0'},{scaleX:1,duration:.6,stagger:.08,ease:'power2.out'},t);
+  dr(q('.ln',el)[0],tl,t+.2,1.4);tl.fromTo(q('.ar',el),{opacity:0},{opacity:.14,duration:.8},t+1);
+  tl.fromTo(q('.dt',el),{scale:0,transformOrigin:'540px 110px'},{scale:1,duration:.5,ease:'back.out(2.5)'},t+1.5);
+  tl.call(()=>G.fromTo(q('.pl',el),{scale:1,opacity:.9,transformOrigin:'540px 110px'},{scale:2.4,opacity:0,duration:1.4,repeat:-1,ease:'power1.out'}),null,t+1.8)},
+ waves(el,tl,t){q('.mf',el).forEach((p,i)=>dr(p,tl,t+i*.2,1));
+  tl.call(()=>G.fromTo(q('.wv',el),{opacity:0,scale:.7},{opacity:1,scale:1,duration:.6,ease:'power2.out',stagger:{each:.25,repeat:-1,repeatDelay:.5,yoyo:true}}),null,t+.8)},
+ orbit(el,tl,t){dr(q('.ob',el)[0],tl,t,1.2);tl.fromTo(q('.ct',el),{scale:0,transformOrigin:'300px 300px'},{scale:1,duration:.7,ease:'back.out(1.8)'},t+.2);
+  tl.fromTo(q('.cr',el),{scale:0},{scale:1,duration:.55,ease:'back.out(2)',stagger:.12},t+.6);
+  tl.call(()=>{G.to(q('.rot',el),{rotate:360,duration:40,ease:'none',repeat:-1});G.to(q('.cr',el),{rotate:-360,duration:40,ease:'none',repeat:-1})},null,t+1.2)},
+ chat(el,tl,t){tl.fromTo(q('.bb',el),{scale:0,opacity:0},{scale:1,opacity:1,duration:.6,ease:'back.out(1.8)',stagger:.45},t);
+  tl.call(()=>G.to(q('.ty',el),{y:-14,duration:.35,yoyo:true,repeat:-1,ease:'sine.inOut',stagger:.15}),null,t+1.4)},
+ shield(el,tl,t){dr(q('.sh',el)[0],tl,t,1.3);dr(q('.ck',el)[0],tl,t+1.1,.6);tl.fromTo(q('.sc',el),{opacity:0},{opacity:.5,duration:.3},t+1.4);
+  tl.call(()=>G.fromTo(q('.sc',el),{y:0},{y:330,duration:2.2,yoyo:true,repeat:-1,ease:'sine.inOut'}),null,t+1.5)},
+ scan(el,tl,t){tl.fromTo(q('.tl',el),{scaleX:0,transformOrigin:'90px 0'},{scaleX:1,duration:.5,stagger:.08,ease:'power2.out'},t);
+  tl.fromTo(q('.bar',el),{opacity:0},{opacity:1,duration:.3},t+.6);
+  tl.call(()=>{G.fromTo(q('.bar',el),{y:0},{y:430,duration:2.6,yoyo:true,repeat:-1,ease:'sine.inOut'});G.set(q('.fl',el),{attr:{fill:el.style.getPropertyValue('--mc')}});G.fromTo(q('.fl',el),{opacity:.25},{opacity:.95,duration:.5,delay:.8,yoyo:true,repeat:-1,repeatDelay:1.4})},null,t+.8)},
+ funnel(el,tl,t){tl.fromTo(q('.fl',el),{y:-60,opacity:0},{y:0,opacity:(i,e)=>e.getAttribute('opacity'),duration:.6,ease:'back.out(1.6)',stagger:.12},t);
+  tl.call(()=>q('.pc',el).forEach((p,i)=>G.fromTo(p,{y:0,opacity:1},{y:460,opacity:0,duration:2.2,ease:'power1.in',repeat:-1,delay:i*.4})),null,t+.8)},
+ net(el,tl,t){q('.ed',el).forEach((e,i)=>dr(e,tl,t+.3+i*.06,.6));tl.fromTo(q('.no',el),{scale:0,transformOrigin:'center',transformBox:'fill-box'},{scale:1,duration:.5,ease:'back.out(2)',stagger:.08},t);
+  tl.call(()=>{const N=q('.no',el).map(n=>[+n.getAttribute('cx'),+n.getAttribute('cy')]);const sp=q('.sp',el)[0];const tw=G.timeline({repeat:-1});[1,0,3,4,5,1,6,2,0].forEach(k=>tw.to(sp,{attr:{cx:N[k][0],cy:N[k][1]},duration:.55,ease:'power1.inOut'}));
+   G.to(q('.no',el).slice(1),{scale:1.15,transformOrigin:'center',transformBox:'fill-box',duration:.6,yoyo:true,repeat:-1,stagger:.2,ease:'sine.inOut'})},null,t+1.2)},
+ pulse(el,tl,t){const p=q('.hb',el)[0];dr(p,tl,t,1.2);
+  tl.call(()=>{const L=p.getTotalLength();G.fromTo(p,{strokeDasharray:`180 ${L}`,strokeDashoffset:180},{strokeDashoffset:-L,duration:1.8,ease:'none',repeat:-1})},null,t+1.3)},
+ feed(el,tl,t){tl.fromTo(el,{y:40,opacity:0},{y:0,opacity:1,duration:.8,ease:'expo.out'},t);
+  tl.call(()=>{const f=q('.fd',el);const tw=G.timeline({repeat:-1,repeatDelay:.6});tw.fromTo(f,{y:0},{y:-390,duration:1.6,ease:'power2.inOut'}).to(f,{y:-390,duration:1.4}).to(f,{scale:1.06,transformOrigin:'300px 690px',duration:.3,yoyo:true,repeat:1}).to(f,{y:0,duration:.8,ease:'power2.inOut'})},null,t+.6)}
+};
+})();
 
 /* ===== Slides ===== */
 const {gsap:G,confetti:CF,rnd:RN,tick:TK}=ENG;
@@ -3888,7 +3990,7 @@ function solo(o){
  if(lay==='C'){
   const ns=Math.min(o.ns||112,Math.floor(1400/lwd));
   const tall=(o.list||o.bullets)?1:0;const vs=tall?150:210;
-  const v=o.logos&&o.logos.some(k=>typeof LOGO!=='undefined'&&LOGO[k])?`<div style="display:flex;gap:34px;align-items:center">${o.logos.map(k=>lgi(k,Math.round(vs*.72),'border-radius:22%')).join('')}</div>`:o.icon?ico(o.icon,c,vs,5):`<div style="font:800 ${vs}px/0.9 Syne;color:${c};letter-spacing:-.04em;white-space:nowrap">${o.big}</div>`;
+  const v=o.mg?`<div style="margin:-30px 0 -20px">${mg(o.mg,c,o.ms||300)}</div>`:o.logos&&o.logos.some(k=>typeof LOGO!=='undefined'&&LOGO[k])?`<div style="display:flex;gap:34px;align-items:center">${o.logos.map(k=>lgi(k,Math.round(vs*.72),'border-radius:22%')).join('')}</div>`:o.icon?ico(o.icon,c,vs,5):`<div style="font:800 ${vs}px/0.9 Syne;color:${c};letter-spacing:-.04em;white-space:nowrap">${o.big}</div>`;
   return `${head}<div style="${abs(160,110,'width:1600px;height:850px;display:flex;flex-direction:column;align-items:center;justify-content:center')}"><div data-a="pop" data-at=".1" style="margin-bottom:26px">${v}</div>${soloText(o,c,ns,1)}</div>`;
  }
  const ns=Math.min(o.ns||116,Math.floor(900/lwd));
@@ -4012,7 +4114,7 @@ CN.forEach((c,i)=>{const ic=['site','social','mail','target','camera','star'][i]
  S('cn-'+['site','redes','email','anuncios','creators','imprensa'][i],'ink','Digital',c[0],FM2,solo({lay:'C',eb:'Digital · Cada canal tem um papel',i:i+1,n:6,pill:c[2],name:c[0],ns:c[0].length>16?96:116,line:c[1],tags:c[3].split(' · '),icon:ic,...(i===1?{logos:['tiktok_i','instagram_i','youtube_i']}:{}),col}))});
 S('cn-fim','ink','Digital','Estar onde a persona está',FM2,stmt({eb:'Digital · Cada canal tem um papel',fs:104,t:'Não é preciso estar em todo o lado: é preciso estar <span class="acc">onde a persona está</span>.',sub:'Pergunta: se tivesses de escolher só dois canais para a loja vintage, quais?'}));
 
-PDC.forEach((p,i)=>S('pdc-'+['pago','dados','comunidade'][i],'ink','Digital',p[0],FM2,solo({lay:'R',eb:'Digital · Três alavancas',i:i+1,n:3,pill:p[1],name:p[0],ns:p[0].length>16?96:116,line:p[2],bullets:p[3],icon:['target','lock','people'][i],col:p[4],ls:38})));
+PDC.forEach((p,i)=>S('pdc-'+['pago','dados','comunidade'][i],'ink','Digital',p[0],FM2,solo({lay:'R',eb:'Digital · Três alavancas',i:i+1,n:3,pill:p[1],name:p[0],ns:p[0].length>16?96:116,line:p[2],bullets:p[3],icon:['target','lock','people'][i],...(i!==1?{panel:panel(p[4],mg(['radar',0,'chat'][i],p[4],560),700)}:{}),col:p[4],ls:38})));
 S('pdc-fim','ink','Digital','Aluga atenção ou é teu',FM2,stmt({eb:'Digital · Três alavancas',fs:112,t:'O pago <span class="acc">aluga atenção</span>. Os dados e a comunidade <span class="acc">são teus</span>.'}));
 
 S('camp-coke','ink','Digital','Share a Coke',FM2,solo({lay:'L',eb:'Digital · Campanhas que marcaram',i:1,n:3,pill:'Embalagem + redes',name:'Share a Coke',line:'Austrália, 2011: nomes próprios nas garrafas. Consumo entre jovens adultos +7%; tráfego no Facebook +870%.',blogo:'coca',bh:200,big:'150',bigLabel:'nomes nas garrafas',bs:300,col:'var(--g1)',ex:['Pergunta','Qual foi o canal próprio? E o ganho?']}));
@@ -4024,7 +4126,7 @@ S('kpi-vaidade','ink','Digital','Métrica de vaidade',FM2,solo({lay:'N',eb:'Digi
 
 /* ================= HISTÓRIAS ================= */
 const FORCAS=[['Atenção','Uma situação por resolver cria curiosidade: é o «espera, como acaba?» de um vídeo em série.','parar o scroll','var(--g1)','<circle class="rip" cx="60" cy="60" r="54" fill="none" stroke="var(--g1)" stroke-width="4"/><circle class="rip" cx="60" cy="60" r="54" fill="none" stroke="var(--g1)" stroke-width="4"/><circle class="rip" cx="60" cy="60" r="54" fill="none" stroke="var(--g1)" stroke-width="4"/><circle cx="60" cy="60" r="11" fill="var(--g1)"/>'],['Emoção','Sentimos com a personagem e, por isso, ligamo-nos a quem conta a história.','criar ligação','var(--g2)',`<path class="beatH" d="${hb}" fill="var(--g2)"/>`],['Memória','Tendemos a recordar sequências com princípio, meio e fim melhor do que dados soltos.','ser recordado','var(--g3)','<g class="stk"><rect x="16" y="18" width="88" height="24" rx="9" fill="var(--g2)"/><rect x="16" y="48" width="88" height="24" rx="9" fill="var(--g6)"/><rect x="16" y="78" width="88" height="24" rx="9" fill="var(--g1)"/></g>']];
-FORCAS.forEach((f,i)=>S('forca-'+['atencao','emocao','memoria'][i],'ink','Histórias',f[0],F1,solo({lay:'B',eb:'Histórias · O cérebro gosta de histórias',i:i+1,n:3,pill:'Porque funcionam as histórias',name:f[0],line:f[1],ex:['Em conteúdo digital',f[2][0].toUpperCase()+f[2].slice(1)+'.'],col:f[3],panel:panel(f[3],`<div class="ic" data-a="pop" style="width:330px;height:330px"><svg viewBox="0 0 120 120" width="330" height="330">${f[4]}</svg></div>`)})));
+FORCAS.forEach((f,i)=>S('forca-'+['atencao','emocao','memoria'][i],'ink','Histórias',f[0],F1,solo({lay:'B',eb:'Histórias · O cérebro gosta de histórias',i:i+1,n:3,pill:'Porque funcionam as histórias',name:f[0],line:f[1],ex:['Em conteúdo digital',f[2][0].toUpperCase()+f[2].slice(1)+'.'],col:f[3],panel:panel(f[3],mg(['feed','pulse','net'][i],f[3],560),700)})));
 
 const ING=[['Personagem','Alguém com quem o público se identifica: um cliente, um creator, um fundador, até um objeto.','var(--g2)',`<g class="bob"><circle cx="60" cy="36" r="24" fill="var(--g2)"/><path d="M16 112 Q16 70 60 70 Q104 70 104 112Z" fill="var(--g2)"/></g>`,'01'],['Conflito','O que está em jogo: um obstáculo, uma dúvida, uma necessidade por resolver.','var(--g1)','<rect x="92" y="10" width="16" height="100" rx="7" fill="#6B7F73"/><rect class="slam" x="8" y="38" width="52" height="44" rx="12" fill="var(--g1)"/>','02'],['Transformação','O que mudou entre o início e o fim. É aqui que vive a mensagem da marca.','var(--g3)','','03']];
 ING.forEach((g,i)=>S('ing-'+['personagem','conflito','transformacao'][i],'ink','Histórias',g[0],F1,solo({lay:'R',eb:'Histórias · A receita base',i:i+1,n:3,pill:'Ingrediente '+g[4],name:g[0],ns:g[0].length>12?100:116,line:g[1],ex:i===2?['Sem os três','É só informação.']:(i===0?['Pensa numa série','Quem é a personagem?']:['Pensa numa série','Qual é o conflito?']),col:g[2],panel:panel(g[2],i===2?`<div class="morph" data-a="pop" style="width:240px;height:240px"></div>`:`<div class="ic" data-a="pop" style="width:330px;height:330px"><svg viewBox="0 0 120 120" width="330" height="330" style="overflow:visible">${g[3]}</svg></div>`)})));
@@ -4067,7 +4169,7 @@ S('mov-fim','ink','IA','Tu és o autor',FA,stmt({eb:'IA · Como usar bem',fs:120
 
 /* ================= ÉTICA E RGPD ================= */
 const FRG=FE+' · RGPD (UE 2016/679) · Regulamento da IA, art. 50';
-RG.forEach((r,i)=>S('rg-'+['consent','final','direitos','coimas'][i],'ink','Ética e RGPD',r[0],FRG,solo({lay:'C',eb:'Ética e RGPD · O que tens de saber',i:i+1,n:4,pill:'RGPD · '+(i+1)+' de 4',name:r[0],line:r[1],icon:i<3?['check','target','lock'][i]:undefined,big:i===3?'4%':undefined,bs:300,bigLabel:i===3?'ou 20 milhões de euros':undefined,col:['var(--g1)','var(--g2)','var(--g3)','var(--g4)'][i]})));
+RG.forEach((r,i)=>S('rg-'+['consent','final','direitos','coimas'][i],'ink','Ética e RGPD',r[0],FRG,solo({lay:'C',eb:'Ética e RGPD · O que tens de saber',i:i+1,n:4,pill:'RGPD · '+(i+1)+' de 4',name:r[0],line:r[1],icon:i<3?['check','target','lock'][i]:undefined,...(i===2?{mg:'shield',ms:290}:{}),big:i===3?'4%':undefined,bs:300,bigLabel:i===3?'ou 20 milhões de euros':undefined,col:['var(--g1)','var(--g2)','var(--g3)','var(--g4)'][i]})));
 S('pub-etiqueta','ink','Ética e RGPD','Tem de se ver que é publicidade',FRG,solo({lay:'R',eb:'Ética e RGPD · Publicidade',pill:'Publicidade',name:'Tem de se ver que é publicidade',ns:84,line:'Parceria paga com um creator? «#pub» ou «parceria paga», bem visível.',ex:['Exemplo','Não escondido no fim de 30 hashtags.'],icon:'mega',col:'var(--g1)'}));
 S('ia-assinala','ink','Ética e RGPD','Se parece real, assinala',FRG,solo({lay:'B',eb:'Ética e RGPD · Inteligência artificial',pill:'Inteligência artificial',name:'Se parece real, assinala',ns:90,line:'Imagem, vídeo ou áudio criados por IA que possam enganar têm de ser identificados (Regulamento da IA, art. 50).',ex:['Regra prática','Se não dirias às pessoas que lhes vais fazer isto, não faças.'],big:'IA',bs:300,col:'var(--g2)'}));
 
@@ -4666,5 +4768,30 @@ const FINAL=[];ORDER.forEach(([g,ids])=>ids.forEach(id=>{const s=BYID[id];if(!s)
   if(prevDark){s.th='cream';prevDark=false}
   else{s.th=act?'ember':'ink';prevDark=true}
  })})();
+/* «pergunta primeiro»: nestes slides aparece só o título; o resto entra no 1.º clique */
+const ASK={
+ 'o-que-e':'Para vocês, o que é marketing? Digam uma palavra cada um.',
+ 'ben-notoriedade':'Para que serve o marketing a uma marca? Digam a primeira marca de bebida energética que vos vem à cabeça.',
+ 'mr-oque':'Antes de lançar um produto, o que é que uma marca devia saber? Como descobria?',
+ 'mr-secundarios':'Que informação sobre o mercado já existe, sem termos de perguntar nada a ninguém?',
+ 'mr-primarios':'E quando essa informação não existe, como a vamos buscar?',
+ 'stp-segmentar':'Se abrissem uma loja de roupa online, vendiam para toda a gente? Porquê?',
+ 'persona-def':'Já ouviram falar de «persona»? O que acham que é?',
+ 'mv-marca':'O que é uma marca? É só o nome e o logótipo?',
+ 'mv-proposta':'Porque é que compram numa marca e não na do lado?',
+ 'mv-tom':'Se a Nike e o Duolingo fossem pessoas, como é que falavam?',
+ 'jornada':'Qual foi a última coisa que compraram online? Como é que chegaram até ela?',
+ 'smart-letras':'Como é que sabem se um objetivo foi cumprido ou não?',
+ 'meio-proprio':'Que canais é que uma marca controla a 100%?',
+ 'kpis':'Como é que sabem se uma publicação correu bem?',
+ 'kpi-vaidade':'Muitos likes quer dizer muitas vendas?',
+ 'forca-atencao':'Porque é que se lembram de um filme inteiro, mas não de uma lista de compras?',
+ 'ing-personagem':'O que é que uma boa história tem sempre?',
+ 'gancho-1':'O que é que vos faz parar o scroll?',
+ 'sinal-1':'Como é que se nota que um texto foi feito por IA?',
+ 'etica':'Uma marca pode usar os vossos dados como quiser?',
+ 'pub-etiqueta':'Como é que sabem quando um criador está a ser pago para falar de um produto?'
+};
+FINAL.forEach(s=>{if(ASK[s.id]&&!s.onStep)s.ask=ASK[s.id]});
 ENG.start(FINAL,window.NOTES||{});
 </script>

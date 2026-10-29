@@ -2954,7 +2954,7 @@ function show(i,{full=false,dir=1,cont=null}={}){
  initTimers(root,s.id);initPickers(root);
  if(s.ask)markAsk(root);
  const askEls=$$('[data-ask]',root);
- steps=$$('[data-step]',root).filter(e=>!e.hasAttribute('data-ask'));if(askEls.length)steps.unshift({_group:askEls});stepIdx=0;stl=null;
+ steps=$$('[data-step]',root).filter(e=>!e.hasAttribute('data-ask'));askOff=askEls.length?1:0;if(askEls.length)steps.unshift({_group:askEls});stepIdx=0;stl=null;
  tl=gsap.timeline({paused:true});
  build(collect(root),tl,.15);
  runMG($$('[data-mg]',root).filter(e=>!e.closest('[data-step]')),tl,.45);
@@ -2965,6 +2965,7 @@ function show(i,{full=false,dir=1,cont=null}={}){
 function hide(i){const s=SL[i];if(!s)return;if(s.el._unmount){try{s.el._unmount()}catch(e){}s.el._unmount=null}if(tl)tl.kill();gsap.killTweensOf(s.el.querySelectorAll('*'));s.el.style.display='none';s.el.innerHTML=''}
 const runMG=(els,tl,t)=>els.forEach(e=>{const f=window.MG&&MG[e.dataset.mg];if(f)try{f(e,tl,t)}catch(err){}});
 /* «pergunta primeiro»: só o título pequeno, o contador, a etiqueta e o título ficam; o resto aparece no 1.º clique */
+let askOff=0;
 function markAsk(root){
  const T=root.querySelector('h2.title,h2.hero');if(!T)return;
  const keep=x=>x===T||x.classList.contains('eyebrow')||x.classList.contains('ctr')||x.classList.contains('pill');
@@ -2980,13 +2981,13 @@ function reveal(el,instant){
  if(el.dataset.link)gsap.fromTo($$(el.dataset.link,root),{scaleX:0},{scaleX:1,duration:.9,ease:E1,overwrite:true});
  if(el.classList.contains('spot')){$$('.spot',root).forEach(x=>{if(x!==el&&x._rev)gsap.to(x,{opacity:.5,duration:.6})});}
  el._rev=true;
- s.onStep&&s.onStep(root,el,steps.indexOf(el),t,instant);
+ if(!el.hasAttribute('data-ask'))s.onStep&&s.onStep(root,el,steps.indexOf(el)-askOff,t,instant);
  if(instant)t.progress(1);stl=t;
 }
 function unreveal(){
  const el=steps[--stepIdx];if(!el)return;if(el._group){el._group.forEach(x=>{x._rev=false;gsap.to(x,{autoAlpha:0,duration:.25})});return}el._rev=false;gsap.to(el,{autoAlpha:0,duration:.25});
  const root=SL[cur].el;const prev=steps.slice(0,stepIdx).filter(x=>x.classList.contains('spot'));if(prev.length)gsap.to(prev[prev.length-1],{opacity:1,duration:.4});
- const s=SL[cur];s.onUnstep&&s.onUnstep(root,el,stepIdx);
+ const s=SL[cur];s.onUnstep&&s.onUnstep(root,el,stepIdx-askOff);
 }
 /* transição contínua: slides seguidos da mesma série (mesmo título pequeno e contador no topo).
    O contador e o título pequeno ficam parados; o contador desliza para a posição seguinte. */
@@ -4100,10 +4101,13 @@ S('smart-letras','ink','Marketing','Objetivos SMART',FM1,`
  <div data-a="up" data-d=".4" class="lead" style="${abs(128,890,'font-size:38px')}">Cinco perguntas para qualquer objetivo antes de começares a criar.</div>`);
 S('smart-exemplo','ink','Marketing','Do vago ao SMART',FM1+' · Exemplo fictício',`
  ${eb('Marketing · Antes de publicar, decidir')}${ti('Do vago ao SMART')}
- <div class="card" data-a="left" style="${abs(128,360,'width:620px;height:340px;background:transparent;box-shadow:none')}"><div class="k" style="color:var(--mut)">Vago</div><div style="font:600 44px/1.25 Syne;margin-top:26px;text-decoration:line-through;text-decoration-color:var(--g1);text-decoration-thickness:5px;color:var(--mut)">«Quero mais seguidores.»</div></div>
- <svg data-a="draw" width="120" height="66" viewBox="0 0 120 60" style="${abs(770,500)}" fill="none" stroke="var(--acc)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 30 H108 M84 8 L108 30 L84 52"/></svg>
- <div class="card" data-a="right" style="${abs(930,360,'width:862px;height:340px;border-color:var(--acc2)')}"><div class="k k2">SMART</div><p data-a="type" style="margin-top:22px;font:500 36px/1.35 'DM Sans'">«Levar 200 estudantes ao primeiro drop da loja, a 15 de março, com 3 vídeos por semana no TikTok e no Instagram.»</p></div>
- <div data-a="up" data-d=".4" class="lead" style="${abs(128,820,'font-size:40px;max-width:1500px')}">Como saberíamos se «mais seguidores» foi atingido? <span class="acc">Sem número nem prazo, não sabemos.</span></div>`);
+ <div class="card" data-a="left" style="${abs(128,360,'width:620px;height:340px;background:transparent;box-shadow:none')}"><div class="k" style="color:var(--mut)">Vago</div><div style="font:600 44px/1.25 Syne;margin-top:26px;transition:color .5s;text-decoration-color:var(--g1);text-decoration-thickness:5px;color:var(--mut)" id="vg">«Quero mais seguidores.»</div></div>
+ <div data-a="up" data-d=".5" class="lead" style="${abs(128,820,'font-size:40px;max-width:1500px')}">Como saberíamos se «mais seguidores» foi atingido? <span id="vga" class="acc" style="opacity:0;transition:opacity .6s">Sem número nem prazo, não sabemos.</span></div>
+ <div data-step data-a="up" style="position:absolute;left:0;top:0;width:1920px;height:1080px;pointer-events:none">
+ <svg width="120" height="66" viewBox="0 0 120 60" style="${abs(770,500)}" fill="none" stroke="var(--acc)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 30 H108 M84 8 L108 30 L84 52"/></svg>
+ <div class="card" style="${abs(930,360,'width:862px;height:340px;border-color:var(--acc2)')}"><div class="k k2">SMART</div><p style="margin-top:22px;font:500 36px/1.35 'DM Sans'">«Levar 200 estudantes ao primeiro drop da loja, a 15 de março, com 3 vídeos por semana no TikTok e no Instagram.»</p></div>
+ </div>`,
+ {onStep:(r,el,i)=>{const v=q('#vg',r);if(v)v.style.textDecorationLine='line-through';const x=q('#vga',r);if(x)x.style.opacity=1},onUnstep:(r,el,i)=>{const v=q('#vg',r);if(v)v.style.textDecorationLine='none';const x=q('#vga',r);if(x)x.style.opacity=0}});
 
 /* ================= DIGITAL ================= */
 const statS=(i,p)=>{const col=['var(--g1)','var(--g2)','var(--g3)'][i];return `${eb('Digital · O contexto · Portugal em números')}${dots(i+1,3,col)}
@@ -4204,7 +4208,7 @@ const N4={
  'mv-proposta':'Proposta de valor é a promessa concreta: o que ofereces, a quem e porque és a melhor escolha. A missão oficial da Nike é «Bring inspiration and innovation to every athlete in the world», com a nota «If you have a body, you are an athlete» (about.nike.com). Repara que alarga o público: não é só para desportistas. Pede a um aluno que diga a proposta de valor de uma marca que conheça.',
  'mv-tom':'Tom de voz é a forma de falar. Nos sliders, compara o Duolingo (bolas verdes) com a Nike (anéis): as duas têm voz forte, mas a Nike é intensa e inspiradora e o Duolingo é brincalhão. As posições são uma leitura nossa, não uma medição: pergunta à turma se concordam. Liga ao slide seguinte: Duolingo e Wendy’s têm um tom de voz inconfundível.',
  'smart-letras':'Percorre as cinco letras em voz alta: específico, mensurável, atingível, relevante, temporal. Não te demores: o exemplo no slide seguinte mostra-as em ação.',
- 'smart-exemplo':'Do objetivo vago ao SMART (exemplo fictício da loja vintage). Pergunta: como saberíamos se “mais seguidores” foi atingido? Sem número nem prazo, não há forma de avaliar. Liga a algo que conhecem: um creator que diz “quero crescer no TikTok” é vago; “chegar aos 10 mil em 3 meses” já se mede.',
+ 'smart-exemplo':'Do objetivo vago ao SMART (exemplo fictício da loja vintage). Primeiro só aparece o vago: «Quero mais seguidores.» Pergunta: como saberíamos se foi atingido? Deixa a turma responder; ao avançar, o vago fica riscado e aparece a versão SMART. Pergunta: como saberíamos se “mais seguidores” foi atingido? Sem número nem prazo, não há forma de avaliar. Liga a algo que conhecem: um creator que diz “quero crescer no TikTok” é vago; “chegar aos 10 mil em 3 meses” já se mede.',
  'dados-1':'Números do DataReportal, “Digital 2026: Portugal” (início de 2026): cerca de 9,26 milhões de utilizadores de internet, cerca de 89% da população. Confirma no relatório original antes de usares numa avaliação.',
  'dados-2':'7,59 milhões de identidades em redes sociais (72,9% da população). Atenção: identidades em redes sociais não é o mesmo que pessoas únicas.',
  'dados-3':'13,9 milhões de ligações móveis: 133% da população, ou seja, mais ligações do que pessoas (muitas pessoas têm mais do que um cartão). Pergunta final: quantas horas de ecrã tiveram ontem e em que apps? Pede para levantarem a mão por app: é onde a atenção deles está.',
@@ -4836,6 +4840,24 @@ const FINAL=[];ORDER.forEach(([g,ids])=>ids.forEach(id=>{const s=BYID[id];if(!s)
  })})();
 /* «pergunta primeiro»: nestes slides aparece só o título; o resto entra no 1.º clique */
 const ASK={
+ 'mr-quanti':'Qual é a diferença entre saber «quantos» e saber «porquê»? Que exemplo dão de cada um?',
+ 'mr-exemplo':'Se fossem a loja Segunda Mão, que três perguntas fariam aos estudantes antes de lançar a coleção?',
+ 'stp-escolher':'Dos grupos que vimos, a quem servia melhor a loja? Porquê esse e não os outros?',
+ 'stp-posicionar':'Quando pensam numa marca de ténis, que palavra vos vem à cabeça? É isso que é o posicionamento.',
+ 'persona-rita':'O que é que já conseguem adivinhar sobre a Rita? Onde a encontrariam online?',
+ '4ps':'Quais são os 4Ps do marketing? Quem se lembra de algum?',
+ 'marcas-conversa':'Que marca conhecem que fale como uma pessoa nas redes? Como é que ela fala?',
+ 'monologo':'Quando foi a última vez que responderam a uma marca? O que aconteceu?',
+ 'meio-ideal':'Se só pudessem usar um destes meios, qual escolhiam? E se pudessem usar os três?',
+ 'camp-coke':'Conhecem esta campanha? O que acham que a Coca-Cola mudou na lata?',
+ 'camp-redbull':'Que marca patrocinou o salto da estratosfera? O que é que isso tem a ver com vender bebidas?',
+ 'camp-burger':'Como é que uma marca consegue que vão ao concorrente por causa dela? Imaginem uma ideia.',
+ 'facto-historia':'Isto é um facto. Como é que o transformavam numa história?',
+ 'caso-wrapped':'Já viram o vosso Wrapped? O que fizeram a seguir?',
+ 'heroi-guia':'Numa história de marca, quem é o herói: a marca ou o cliente?',
+ 'canais':'Se tivessem esta mesma história, em que canais a contavam? Seria igual em todos?',
+ 'rg-coimas':'Quanto acham que pode custar uma infração ao RGPD? Digam um número.',
+ 'ia-assinala':'Quando é que uma imagem ou texto feito com IA deve ser assinalado?',
  'o-que-e':'O marketing é só publicidade? Deixa a turma responder antes de clicar; o clique mostra «Não» e o resto do slide.',
  'ben-notoriedade':'Para que serve o marketing a uma marca? Digam a primeira marca de bebida energética que vos vem à cabeça.',
  'mr-oque':'Antes de lançar um produto, o que é que uma marca devia saber? Como descobria?',
@@ -4858,6 +4880,6 @@ const ASK={
  'etica':'Uma marca pode usar os vossos dados como quiser?',
  'pub-etiqueta':'Como é que sabem quando um criador está a ser pago para falar de um produto?'
 };
-FINAL.forEach(s=>{if(ASK[s.id]&&!s.onStep)s.ask=ASK[s.id]});
+FINAL.forEach(s=>{if(ASK[s.id]&&(!s.onStep||s.id==='4ps'||s.id==='heroi-guia'))s.ask=ASK[s.id]});
 ENG.start(FINAL,window.NOTES||{});
 </script>

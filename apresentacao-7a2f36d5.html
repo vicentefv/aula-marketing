@@ -2929,8 +2929,9 @@ function initPickers(root){$$('.picker',root).forEach(p=>{const chips=$$('.chip'
 
 /* ---------- navegação ---------- */
 function renderSlide(i){const s=SL[i];s.el.innerHTML=s.html;s.el.className='slide th-'+(s.th==='cream'||s.th==='coral'?s.th:'ink')+' '+('t-'+s.th)}
-function show(i,{full=false,dir=1}={}){
+function show(i,{full=false,dir=1,cont=null}={}){
  const s=SL[i];renderSlide(i);const root=s.el;root.style.display='block';cur=i;
+ if(cont)contIn(root,cont);
  setTheme(s.th,full&&RM);
  $('#foot').textContent=s.foot||'';$('#count').textContent=String(i+1).padStart(2,'0')+' / '+SL.length;
  gsap.to('#prog',{scaleX:i/(SL.length-1),duration:.9,ease:'expo.out'});
@@ -2958,6 +2959,32 @@ function unreveal(){
  const root=SL[cur].el;const prev=steps.slice(0,stepIdx).filter(x=>x.classList.contains('spot'));if(prev.length)gsap.to(prev[prev.length-1],{opacity:1,duration:.4});
  const s=SL[cur];s.onUnstep&&s.onUnstep(root,el,stepIdx);
 }
+/* transição contínua: slides seguidos da mesma série (mesmo título pequeno e contador no topo).
+   O contador e o título pequeno ficam parados; o contador desliza para a posição seguinte. */
+const ctrInfo=h=>{const m=/class="ctr" data-ctr="(\d+)\/(\d+)"/.exec(h||''),e=/class="eyebrow" data-a="eb">([^<]*)</.exec(h||'');return m?{i:+m[1],n:+m[2],eb:e?e[1]:''}:null};
+function isCont(a,b){if(a<0||b<0||Math.abs(a-b)!==1)return false;const A=ctrInfo(SL[a].html),B=ctrInfo(SL[b].html);return !!(A&&B&&A.n===B.n&&A.eb===B.eb&&Math.abs(A.i-B.i)===1)}
+const CPC=['backgroundColor','borderColor','color'],CPS=['width','height','marginTop'];
+const snapCtr=el=>[el,...el.querySelectorAll('*')].map(x=>{const c=getComputedStyle(x),o={};CPC.concat(CPS).forEach(p=>o[p]=c[p]);return o});
+function contIn(root,cont){
+ const nc=$('.ctr',root),eyb=$('.eyebrow',root);if(!nc)return;
+ [nc,eyb].forEach(x=>{if(x)x.removeAttribute('data-a')});if(eyb)eyb.style.setProperty('--ew',1);
+ const els=[nc,...nc.querySelectorAll('*')];
+ els.forEach((x,k)=>{const o=cont.snap[k];if(!o)return;const st=x.getAttribute('style'),c=getComputedStyle(x),from={},to={};
+  CPC.forEach(p=>{if(o[p]!==c[p]){from[p]=o[p];to[p]=c[p]}});
+  const sized=x.tagName==='I'||/(^|;)\s*width/.test(st||'');
+  CPS.forEach(p=>{if((sized||p==='marginTop')&&o[p]!==c[p]&&o[p]!=='auto'&&c[p]!=='auto'){from[p]=o[p];to[p]=c[p]}});
+  if(Object.keys(to).length)gsap.fromTo(x,from,{...to,duration:.8,ease:'power3.inOut',onComplete:()=>{if(x.isConnected){st==null?x.removeAttribute('style'):x.setAttribute('style',st)}}})});
+ const num=$('.ctr-n',nc);if(num&&cont.num!=null&&num.textContent!==cont.num)gsap.fromTo(num,{y:22*cont.dir,opacity:0},{y:0,opacity:1,duration:.5,delay:.15,ease:'power3.out'});
+}
+function goCont(n,dir,full){
+ const old=SL[cur].el,oc=$('.ctr',old),snap=snapCtr(oc),num=($('.ctr-n',oc)||{}).textContent;
+ const outs=[...old.children].filter(x=>!x.classList.contains('ctr')&&!x.classList.contains('eyebrow'));
+ const on=$('.ctr-n',oc);
+ mtl=gsap.timeline();
+ mtl.to(outs,{autoAlpha:0,x:-80*dir,duration:.4,ease:'power2.in',stagger:.025},0);
+ if(on)mtl.to(on,{y:-22*dir,opacity:0,duration:.3,ease:'power2.in'},.1);
+ mtl.add(()=>{hide(cur);show(n,{full,dir,cont:{snap,num,dir}});tl.play()});
+}
 const TRL=['slats','iris','rows','panel','tiles','split','zoom'];
 const TR={
  slats(m,T,dir,swap){const b=$$('#wv i');$('#wv').style.display='flex';b.forEach(x=>x.style.background=T.base);const from=dir>0?'start':'end';
@@ -2979,6 +3006,7 @@ function go(n,dir){
  if(n<0||n>=SL.length||n===cur)return;
  dir=dir||(n>cur?1:-1);const full=dir<0;
  if(cur<0||RM){if(cur>=0)hide(cur);show(n,{full:RM||full});if(!RM)tl.play();return}
+ if(isCont(cur,n))return goCont(n,dir,full);
  const T=TH[SL[n].th],w=$('#wipe'),kind=TRL[n%TRL.length];
  w.style.visibility='visible';
  mtl=gsap.timeline({onComplete:()=>{w.style.visibility='hidden';$$('#wipe>div').forEach(d=>d.style.display='none');gsap.set($$('#wipe i,#wp,#wc'),{clearProps:'all'});gsap.set(slidesEl,{clearProps:'all'})}});
@@ -3816,7 +3844,7 @@ const ICO={
  chat:'<path d="M12 16h70v48H42L22 82V64H12z"/><path d="M82 34h26v48h-10v16L80 82H50"/>'
 };
 const ico=(k,c,s=330,w=4)=>`<svg data-a="draw" data-at=".5" data-dur="1" viewBox="0 0 120 120" width="${s}" height="${s}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${ICO[k]}</svg>`;
-const dots=(i,n,c)=>`<div data-a="fade" style="position:absolute;right:128px;top:100px;display:flex;gap:10px;align-items:center;height:30px"><span class="mut" style="font:700 22px 'DM Sans';letter-spacing:.14em;margin-right:10px">${i} / ${n}</span>${Array.from({length:n},(_,k)=>`<i style="display:block;width:${k+1===i?36:14}px;height:14px;border-radius:7px;background:${k+1<=i?c:'var(--line)'}"></i>`).join('')}</div>`;
+const dots=(i,n,c)=>`<div class="ctr" data-ctr="${i}/${n}" data-a="fade" style="position:absolute;right:128px;top:100px;display:flex;gap:10px;align-items:center;height:30px"><span class="mut ctr-n" style="display:inline-block;font:700 22px 'DM Sans';letter-spacing:.14em;margin-right:10px">${i} / ${n}</span>${Array.from({length:n},(_,k)=>`<i style="display:block;width:${k+1===i?36:14}px;height:14px;border-radius:7px;background:${k+1<=i?c:'var(--line)'}"></i>`).join('')}</div>`;
 const panel=(c,inner,h=700)=>`<div data-a="pop" data-at=".25" style="${abs(1130,200,`width:662px;height:${h}px;border-radius:48px;border:2px solid ${c};background:${tint(c,14)};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;overflow:hidden`)}">${inner}</div>`;
 const bigT=(t,c,s=360,lab)=>{s=Math.min(s,Math.floor(540/(String(t).length*.85)));return `<div data-a="none" style="font:800 ${s}px/0.9 Syne;color:${c};letter-spacing:-.04em;text-align:center;white-space:nowrap">${t}</div>${lab?`<div class="k" data-a="up" data-at=".7" style="color:var(--fg);font-size:26px;text-align:center">${lab}</div>`:''}`};
 
@@ -3931,13 +3959,15 @@ S('persona-rita','ink','Marketing','Exemplo: a Rita',FM1+' · Exemplo fictício'
   </div>
  </div>`);
 
-S('mv-marca','ink','Marketing','Marca',FM1+' · Exemplo fictício',solo({lay:'R',eb:'Marketing · Marca e voz',i:1,n:3,pill:'Marca',name:'Marca',line:'A ideia que fica na cabeça das pessoas: nome, valores, personalidade.',ex:['Exemplo · Segunda Mão','«Achados com história, sem culpa.»'],icon:'tag',col:'var(--g1)'}));
-S('mv-proposta','ink','Marketing','Proposta de valor',FM1+' · Exemplo fictício',solo({lay:'R',eb:'Marketing · Marca e voz',i:2,n:3,pill:'Proposta de valor',name:'Proposta de valor',ns:100,line:'O que ofereces, a quem, e porque és a melhor escolha.',ex:['Exemplo · Segunda Mão','Peças únicas e baratas, escolhidas por quem percebe.'],icon:'star',col:'var(--g2)'}));
-S('mv-tom','ink','Marketing','Tom de voz',FM1+' · Exemplo fictício',`
+/* tom de voz: [esquerda, direita, Nike (anel), Duolingo (bola)] — posições ilustrativas */
+const SLDR=[['Formal','Informal',55,92],['Sério','Divertido',18,94],['Técnico','Simples',82,90],['Sóbrio','Expressivo',84,90]];
+S('mv-marca','ink','Marketing','Marca',FM1+' · Fonte: Wikipedia, «Just Do It»',solo({lay:'R',eb:'Marketing · Marca e voz',i:1,n:3,pill:'Marca',name:'Marca',line:'A ideia que fica na cabeça das pessoas: nome, valores, personalidade.',ex:['Exemplo real · Nike','«Just Do It», desde 1988. A Nike não vende sapatilhas: vende superação. Ouves a frase e sabes de quem é.'],logo:'nike',lh:44,icon:'tag',col:'var(--g1)'}));
+S('mv-proposta','ink','Marketing','Proposta de valor',FM1+' · Fonte: about.nike.com',solo({lay:'R',eb:'Marketing · Marca e voz',i:2,n:3,pill:'Proposta de valor',name:'Proposta de valor',ns:100,line:'O que ofereces, a quem, e porque és a melhor escolha.',ex:['Exemplo real · Nike','«Inspiração e inovação para cada atleta do mundo.» E atleta, para a Nike, é qualquer pessoa com um corpo.'],logo:'nike',lh:44,icon:'star',col:'var(--g2)'}));
+S('mv-tom','ink','Marketing','Tom de voz',FM1+' · Marcas reais, posições ilustrativas',`
  ${eb('Marketing · Marca e voz')}${dots(3,3,'var(--g3)')}${ti('Tom de voz: como a marca fala','max-width:1660px;font-size:80px')}
  <div class="card" data-a="pop" style="${abs(128,330,'width:1040px;height:560px;padding:30px 44px')}">
-  ${SLD.map(s=>`<div style="margin-top:22px"><div style="display:flex;justify-content:space-between;font:700 26px 'DM Sans';color:var(--mut)"><span>${s[0]}</span><span>${s[1]}</span></div><div style="position:relative;height:10px;border-radius:5px;background:var(--cardb);margin-top:12px"><i style="position:absolute;left:${s[2]}%;top:50%;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;border:5px solid var(--fg);background:var(--card);display:block"></i><i style="position:absolute;left:${s[3]}%;top:50%;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;background:var(--acc);display:block"></i></div></div>`).join('')}
-  <div style="display:flex;gap:36px;margin-top:34px;font:700 24px 'DM Sans'"><span style="display:flex;align-items:center;gap:12px"><i style="width:26px;height:26px;border-radius:50%;background:var(--acc);display:block"></i>Segunda Mão</span><span style="display:flex;align-items:center;gap:12px"><i style="width:26px;height:26px;border-radius:50%;border:5px solid var(--fg);display:block"></i>Um banco tradicional</span></div>
+  ${SLDR.map(s=>`<div style="margin-top:22px"><div style="display:flex;justify-content:space-between;font:700 26px 'DM Sans';color:var(--mut)"><span>${s[0]}</span><span>${s[1]}</span></div><div style="position:relative;height:10px;border-radius:5px;background:var(--cardb);margin-top:12px"><i style="position:absolute;left:${s[2]}%;top:50%;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;border:5px solid var(--fg);background:var(--card);display:block"></i><i style="position:absolute;left:${s[3]}%;top:50%;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;background:var(--acc);display:block"></i></div></div>`).join('')}
+  <div style="display:flex;gap:36px;margin-top:34px;font:700 24px 'DM Sans'"><span style="display:flex;align-items:center;gap:12px"><i style="width:26px;height:26px;border-radius:50%;background:var(--acc);display:block"></i>Duolingo</span><span style="display:flex;align-items:center;gap:12px"><i style="width:26px;height:26px;border-radius:50%;border:5px solid var(--fg);display:block"></i>Nike</span></div>
  </div>
  <div style="${abs(1250,330,'width:542px')}"><h2 class="title" data-a="words" data-d=".4" style="font-size:64px;line-height:1.1;margin-top:0">Marca, proposta e tom têm de <span class="acc">dizer a mesma coisa</span>.</h2></div>`);
 
@@ -4049,9 +4079,9 @@ const N4={
  'stp-formula':'A fórmula é um molde para escreverem o posicionamento da marca que vão escolher na atividade 01. Lê o exemplo da Segunda Mão (fictício) e pede que completem a deles.',
  'persona-def':'Uma persona é o retrato do cliente ideal, construído com dados reais (conversas com clientes, inquéritos, comentários, métricas) e não com suposições. O que a define é o problema e o contexto, não a idade. Uma persona por campanha.',
  'persona-rita':'Exemplo fictício: a Rita, estudante de Design. Mostra como cada campo muda a comunicação: se decide quando vê alguém parecido com ela a usar a peça, o conteúdo certo são creators e clientes reais, não fotos de catálogo. Segue-se a atividade 01.',
- 'mv-marca':'Marca é a ideia que fica na cabeça das pessoas: nome, valores, personalidade. Exemplo fictício: «Achados com história, sem culpa.»',
- 'mv-proposta':'Proposta de valor é a promessa concreta: o que ofereces, a quem e porque és a melhor escolha. Pede a um aluno que diga a de uma marca que conheça.',
- 'mv-tom':'Tom de voz é a forma de falar. Nos sliders, compara a Segunda Mão (bolas verdes) com um banco tradicional (anéis): a mesma informação, vozes muito diferentes. Liga ao slide seguinte: Duolingo e Wendy’s têm um tom de voz inconfundível.',
+ 'mv-marca':'Marca é a ideia que fica na cabeça das pessoas: nome, valores, personalidade. Exemplo real: o «Just Do It» da Nike nasceu em 1988, na agência Wieden+Kennedy. Entre 1988 e 1998 a quota da Nike no calçado desportivo na América do Norte passou de 18% para 43% (Wikipedia, «Just Do It»). Pergunta: que palavra vos vem à cabeça quando ouvem «Nike»?',
+ 'mv-proposta':'Proposta de valor é a promessa concreta: o que ofereces, a quem e porque és a melhor escolha. A missão oficial da Nike é «Bring inspiration and innovation to every athlete in the world», com a nota «If you have a body, you are an athlete» (about.nike.com). Repara que alarga o público: não é só para desportistas. Pede a um aluno que diga a proposta de valor de uma marca que conheça.',
+ 'mv-tom':'Tom de voz é a forma de falar. Nos sliders, compara o Duolingo (bolas verdes) com a Nike (anéis): as duas têm voz forte, mas a Nike é intensa e inspiradora e o Duolingo é brincalhão. As posições são uma leitura nossa, não uma medição: pergunta à turma se concordam. Liga ao slide seguinte: Duolingo e Wendy’s têm um tom de voz inconfundível.',
  'smart-letras':'Percorre as cinco letras em voz alta: específico, mensurável, atingível, relevante, temporal. Não te demores: o exemplo no slide seguinte mostra-as em ação.',
  'smart-exemplo':'Do objetivo vago ao SMART (exemplo fictício da loja vintage). Pergunta: como saberíamos se “mais seguidores” foi atingido? Sem número nem prazo, não há forma de avaliar. Liga a algo que conhecem: um creator que diz “quero crescer no TikTok” é vago; “chegar aos 10 mil em 3 meses” já se mede.',
  'dados-1':'Números do DataReportal, “Digital 2026: Portugal” (início de 2026): cerca de 9,26 milhões de utilizadores de internet, cerca de 89% da população. Confirma no relatório original antes de usares numa avaliação.',
@@ -4117,7 +4147,7 @@ const N4={
 
 /* ===== Marketing: história, benefícios e estudos de mercado ===== */
 const ERAS=[['Produção','até 1920'],['Vendas','1920–50'],['Marketing','1950–90'],['Relação','anos 90'],['Digital','desde 2000']];
-const tline=i=>`<div data-a="fade" style="position:absolute;right:128px;top:80px;width:760px;height:80px">
+const tline=i=>`<div class="ctr" data-ctr="${i+1}/5" data-a="fade" style="position:absolute;right:128px;top:80px;width:760px;height:80px">
  <div style="position:absolute;left:15px;right:15px;top:10px;height:4px;border-radius:2px;background:var(--line)"></div>
  <div style="position:absolute;left:15px;top:10px;height:4px;border-radius:2px;width:${i/4*730}px;background:var(--acc)"></div>
  ${ERAS.map((e,k)=>`<div style="position:absolute;left:${k*182.5}px;top:0;width:30px;display:flex;flex-direction:column;align-items:center">

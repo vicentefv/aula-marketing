@@ -2760,6 +2760,11 @@ window.ACT={
  gancho:{type:'form',t:'O melhor gancho',q:'A frase que abre o vídeo da vossa marca.',lim:120,assign:'marcas',vote:true,check:'hook',
   fields:[{k:'t',l:'O gancho',ph:'Ninguém te conta isto sobre o pão de ontem…'}],show:'«{t}»'},
 
+ post:{type:'form',t:'Conta-o como história',q:'Reescreve o post que te calhou como uma pequena história.',lim:180,assign:'posts',vote:true,check:'hook',checkField:'g',
+  fields:[{k:'g',l:'1.ª linha (o gancho)',ph:'Este casaco já teve três donas.'},{k:'h',l:'O que aconteceu (quem e o que correu mal)',ph:'A última deixou-o no armário com o bolso rasgado. Cosemos o bolso.',ta:true},
+   {k:'c',l:'O convite',ph:'Qual é a peça mais antiga do teu armário?'}],
+  show:'<b>«{g}»</b><br>{h}<br>{c}'},
+
  slop:{type:'quiz',t:'Slop ou não?',lim:15},
  rgpd:{type:'quiz',t:'Pode ou não pode?',lim:15},
  quiz:{type:'quiz',t:'Quiz final',lim:20},
@@ -2770,6 +2775,7 @@ window.ACT={
 window.ACTS=Object.keys(ACT).map(id=>({id,t:ACT[id].t}));
 
 window.ASSIGN={
+ posts:['Nova coleção de inverno. 20% de desconto até domingo.','Abrimos um novo ginásio. Primeira semana grátis.','O nosso café tem agora leite de aveia.','Já podes encomendar pela app. Entregas em 30 minutos.','Novos ténis feitos com plástico reciclado.','Workshop de cerâmica no sábado. Inscrições abertas.'],
  marcas:['Loja de roupa em segunda mão','Festival de música','App de entregas de comida','Ginásio low-cost','Marca de ténis sustentáveis','Café perto da faculdade','Estúdio de pilates','Livraria independente','Loja online de plantas','App de transportes'],
  produtos:['Powerbank','Garrafa reutilizável','App para dividir contas','Auriculares sem fios','Sapatilhas de corrida','Cartão de transporte']
 };
@@ -2810,6 +2816,8 @@ window.QSETS={
   {q:'Qual destes objetivos é SMART?',o:['Ter mais seguidores','Chegar aos 5 000 seguidores no TikTok até 30 de junho','Ficar famoso','Postar muito'],a:1,why:'Tem número e prazo: dá para medir.'},
   {q:'Um vídeo teve 2 milhões de views e só 3 vendas. Aqui as views são…',o:['O melhor KPI','Uma métrica de vaidade','Um dado secundário','Um gancho'],a:1,why:'Sobem mas não dizem se o objetivo está mais perto.'},
   {q:'Na Story Spine, que frase vem logo a seguir a «Todos os dias…»?',o:['Por causa disso…','E desde então…','Até que um dia…','Até que finalmente…'],a:2,why:'A rotina quebra-se com «Até que um dia…».'},
+  {q:'Num reel, onde tem de estar o gancho?',o:['No fim, como surpresa','Nos primeiros segundos','Na legenda','Nas hashtags'],a:1,why:'Se o primeiro segundo não prender, ninguém chega à história.'},
+  {q:'Qual destas frases mostra em vez de dizer?',o:['Somos sustentáveis','A melhor qualidade do mercado','Este casaco já teve três donas','Peças únicas e com estilo'],a:2,why:'Um facto concreto mostra; um adjetivo só diz.'},
   {q:'Qual destes é um sinal de slop?',o:['Um número concreto','Uma pessoa com nome','Adjetivos sem prova («únicas», «perfeito»)','Uma opinião própria'],a:2,why:'O slop é texto correto e vazio: serve a qualquer marca.'},
   {q:'Uma creator recebeu dinheiro para mostrar um produto. O que tem de fazer?',o:['Nada, se gostar do produto','Assinalar que é publicidade, de forma visível','Pôr #pub no fim de 30 hashtags','Pedir autorização à CNPD'],a:1,why:'Tem de se ver que é publicidade: «#pub» ou «parceria paga», bem visível.'}]
 };
@@ -3058,7 +3066,10 @@ function prev(){
 
 /* ---------- sobreposições ---------- */
 const notesEl=$('#notes'),idxEl=$('#idx');
-function toggleNotes(){const on=notesEl.style.display!=='block';if(on){notesEl.innerHTML='<b>Notas do orador · '+(cur+1)+'. '+SL[cur].t+'</b>'+(typeof SL[cur].ask==='string'?'<p style="margin:0 0 12px;padding:10px 14px;border-left:4px solid var(--acc);background:rgba(127,127,127,.12)"><b style="display:inline">Pergunta à turma (só o título no ecrã):</b> '+SL[cur].ask+'</p>':'')+(SL[cur].n||NT[SL[cur].id]||'—')}notesEl.style.display=on?'block':'none'}
+/* sem referências a tempo nas notas */
+function noTime(t){t=String(t).replace(/\s*\((?:[^()]*?\d+(?:[–-]\d+)?\s*(?:min|minutos?|s|segundos)\b[^()]*|\d+:\d\d(?:[–-]\d+:\d\d)?)\)/gi,'');
+ return t.split(/(?<=[.!?])\s+/).filter(x=>!/\d+\s*(?:min\b|minutos?|segundos)|\bminutos?\b|\d+:\d\d/i.test(x)).join(' ')||'—'}
+function toggleNotes(){const on=notesEl.style.display!=='block';if(on){notesEl.innerHTML='<b>Notas do orador · '+(cur+1)+'. '+SL[cur].t+'</b>'+(typeof SL[cur].ask==='string'?'<p style="margin:0 0 12px;padding:10px 14px;border-left:4px solid var(--acc);background:rgba(127,127,127,.12)"><b style="display:inline">Pergunta à turma (só o título no ecrã):</b> '+SL[cur].ask+'</p>':'')+noTime(SL[cur].n||NT[SL[cur].id]||'—')}notesEl.style.display=on?'block':'none'}
 function buildIdx(){let h='<div style="font:800 40px Syne;margin-bottom:6px">Índice</div>',g='';SL.forEach((s,i)=>{if(s.g!==g){g=s.g;h+=(i?'</div>':'')+'<h4>'+g+'</h4><div class="gr">'}h+=`<button data-i="${i}"><span>${String(i+1).padStart(2,'0')}</span>${s.t}</button>`});idxEl.innerHTML=h+'</div>';$$('button',idxEl).forEach(b=>b.onclick=()=>{idxEl.style.display='none';go(+b.dataset.i)})}
 function toggleIdx(){const on=idxEl.style.display!=='block';if(on){buildIdx();$$('button',idxEl)[cur].classList.add('cur')}idxEl.style.display=on?'block':'none'}
 function fs(){try{const d=document;if(d.fullscreenElement)d.exitFullscreen();else d.documentElement.requestFullscreen().catch(()=>{})}catch(e){}}
@@ -3215,7 +3226,7 @@ const abs=(l,t,extra='')=>`position:absolute;left:${l}px;top:${t}px;${extra}`;
 function div(n,e,t,s,idx,fs=128){
  return `<div class="ghost" data-a="wipe" style="font-size:760px;right:10px;top:40px">${n}</div>
  <div style="${abs(128,200,'width:1320px')}">${eb(e)}<h2 class="hero" data-a="words" style="font-size:${fs}px;margin-top:34px;line-height:1.02">${t}</h2><p class="sub" data-a="up" style="margin-top:40px;max-width:1000px;font-size:40px;color:var(--fg);opacity:.85">${s}</p></div>
- <div style="${abs(128,900)}display:flex;gap:14px" data-a="kids">${['Marketing','Digital','Histórias','Canal','IA','Workshop'].map((x,i)=>`<span class="pill" style="${i===idx?'':'background:transparent;border:2px solid var(--line);color:var(--mut)'}">${x}</span>`).join('')}</div>`;
+ <div style="${abs(128,900)}display:flex;gap:14px" data-a="kids">${['Marketing','Digital','Histórias','Conteúdos','IA','Workshop'].map((x,i)=>`<span class="pill" style="${i===idx?'':'background:transparent;border:2px solid var(--line);color:var(--mut)'}">${x}</span>`).join('')}</div>`;
 }
 function act({n,meta,title,sub,steps,deb,min,right,after=''}){
  return `<div class="ghost" data-a="wipe" style="font-size:560px;right:30px;top:260px;-webkit-text-stroke:3px rgba(255,255,255,.07)">${n}</div>
@@ -3237,14 +3248,13 @@ function initChecks(root,cb){
 
 /* ================= 1 ABERTURA ================= */
 S('cover','ink','Abertura','Comunicação Digital e Marketing','',`
- ${eb('Aula de 3 horas · Estratégia, histórias e IA')}
  <div class="title" data-a="words" style="font-size:76px;margin-top:34px;font-weight:600;color:var(--fg)">Comunicação Digital e</div>
  <h1 class="hero" data-a="chars" style="font-size:182px;margin-top:6px;letter-spacing:-.04em;line-height:1;white-space:nowrap;color:var(--acc)">Marketing</h1>
- ${sb('Das marcas que conheces às campanhas que ficaram na memória: como criar conteúdos que param o scroll e que as pessoas querem partilhar.','margin-top:30px;max-width:1220px;font-size:34px')}
- <div style="${abs(128,720)}display:flex;gap:18px" data-a="kids"><span class="chip" style="display:inline-block">Marketing e digital</span><span class="chip" style="display:inline-block">Storytelling</span><span class="chip" style="display:inline-block">IA: o bom e o slop</span><span class="chip" style="display:inline-block">Workshop</span></div>
+ ${sb('Das marcas que conheces às campanhas que ficaram na memória: como contar histórias em conteúdos que param o scroll e que as pessoas querem partilhar.','margin-top:30px;max-width:1220px;font-size:34px')}
+ <div style="${abs(128,720)}display:flex;gap:18px" data-a="kids"><span class="chip" style="display:inline-block">Marketing e digital</span><span class="chip" style="display:inline-block">Storytelling</span><span class="chip" style="display:inline-block">Conteúdos com história</span><span class="chip" style="display:inline-block">IA: o bom e o slop</span><span class="chip" style="display:inline-block">Workshop</span></div>
  <div data-a="pop" style="${abs(1520,70,'width:290px;height:290px')}"><svg class="spin" viewBox="0 0 400 400" style="width:290px;height:290px;color:var(--acc2)"><defs><path id="cp" d="M200,200 m-160,0 a160,160 0 1,1 320,0 a160,160 0 1,1 -320,0"/></defs><text font-family="Syne" font-weight="800" font-size="34" fill="currentColor"><textPath href="#cp" textLength="1000" lengthAdjust="spacing">MARCAS · CAMPANHAS · CANAIS · HISTÓRIAS · </textPath></text></svg><div class="morph" style="position:absolute;left:108px;top:108px;width:74px;height:74px"></div></div>`);
 
-const AG=[['00:00','Abertura',10,'var(--fg)'],['00:10','Marketing',36,'var(--g4)'],['00:46','Digital',24,'var(--g1)'],['01:10','Pausa',10,'#6B7F73'],['01:20','Histórias: porque funcionam e como se contam',40,'var(--g6)'],['02:00','Da história ao canal',10,'var(--g2)'],['02:10','IA: o bom e o slop',15,'var(--g5)'],['02:25','Ética e RGPD',5,'var(--g4)'],['02:30','Workshop · Campanha com história',25,'var(--g3)'],['02:55','Fecho',5,'var(--fg)']];
+const AG=[['00:00','Abertura',10,'var(--fg)'],['00:10','Marketing',30,'var(--g4)'],['00:40','Digital',20,'var(--g1)'],['01:00','Pausa',10,'#6B7F73'],['01:10','Histórias: porque funcionam e como se contam',38,'var(--g6)'],['01:48','Histórias nos conteúdos',25,'var(--g2)'],['02:13','IA: o bom e o slop',12,'var(--g5)'],['02:25','Ética e RGPD',5,'var(--g4)'],['02:30','Workshop · Campanha com história',25,'var(--g3)'],['02:55','Fecho',5,'var(--fg)']];
 S('agenda','ink','Abertura','O plano',F0,`
  ${eb('O plano')}${ti('Os nossos 180 minutos')}
  <div data-a="kids" style="${abs(128,290,'width:1664px;display:flex;gap:6px;height:24px')}">${AG.map(a=>`<i style="flex:${a[2]};background:${a[3]};border-radius:14px;display:block"></i>`).join('')}</div>
@@ -3404,10 +3414,9 @@ S('ganchos','coral','Bloco 2 · 40 min','Os primeiros segundos',F2+' · Exemplos
  <div class="card" data-step data-a="pop" style="height:190px;display:flex;align-items:center;background:#06120B;border-color:#06120B;color:#EFFFF6;padding:22px 36px"><div style="font:600 31px/1.3 'DM Sans'">Se o gancho não prometer conflito ou curiosidade, deslizam para o vídeo seguinte.</div></div>
  </div>`);
 
-S('pausa','violet','Bloco 2 · 40 min','Pausa · 10 minutos','',`
+S('pausa','violet','Bloco 2 · 40 min','Pausa','',`
  ${eb('Intervalo')}
  <h2 class="hero" data-a="chars" style="font-size:200px;margin-top:30px;line-height:.95">Pausa</h2>
- <div data-a="up" class="pill" style="margin-top:14px">10 minutos</div>
  <div class="timer" data-min="10" data-a="pop" style="right:150px;top:130px;--sz:520px"></div>
  <div data-a="pop" style="${abs(128,560,'width:330px;height:330px')}"><svg viewBox="0 0 200 200" width="330" height="330" fill="none" stroke-linecap="round"><path class="steam" d="M72 66 q-12 -16 0 -32 q12 -16 0 -32" stroke="var(--fg)" stroke-width="6"/><path class="steam" style="animation-delay:.8s" d="M100 66 q-12 -16 0 -32 q12 -16 0 -32" stroke="var(--fg)" stroke-width="6"/><path class="steam" style="animation-delay:1.6s" d="M128 66 q-12 -16 0 -32 q12 -16 0 -32" stroke="var(--fg)" stroke-width="6"/><path d="M44 84 H150 V138 Q150 172 116 172 H78 Q44 172 44 138Z" fill="var(--g1)"/><path d="M150 98 H164 Q184 98 184 120 Q184 142 164 142 H150" stroke="var(--g1)" stroke-width="10"/><ellipse cx="97" cy="182" rx="76" ry="9" fill="rgba(255,255,255,.25)"/></svg></div>
  <div class="card" data-a="right" style="${abs(520,690,'width:1272px;padding:36px 44px')}"><div class="k">Desafio</div><div style="font:500 36px/1.35 'DM Sans';margin-top:14px">Pensa num TikTok, anúncio ou vídeo de que te lembras. <b>Quem era o herói?</b> Traz o exemplo para a parte das histórias.</div></div>`);
@@ -3497,11 +3506,11 @@ S('act-cliche','ember','Bloco 3 · 30 min','Atividade 04 · Bingo dos clichés',
 
 /* ================= WORKSHOP ================= */
 
-const WR=[['Estratega','Define persona, objetivo e KPI.','var(--g2)'],['Guionista','Escreve a Story Spine e o gancho.','var(--g1)'],['Visual','Desenha o storyboard ou o layout.','var(--g3)'],['Porta-voz','Apresenta a campanha em 2 minutos.','var(--g6)']];
+const WR=[['Estratega','Define persona, objetivo e KPI.','var(--g2)'],['Guionista','Escreve a Story Spine e o gancho.','var(--g1)'],['Visual','Desenha o storyboard ou o layout.','var(--g3)'],['Porta-voz','Apresenta a campanha à turma.','var(--g6)']];
 S('wk-regras','ink','Workshop · 40 min','Como funciona',FW,`
- ${eb('Atividade 04 · Workshop · 25 min')}${ti('Como funciona')}
+ ${eb('Workshop · Como funciona')}${ti('Como funciona')}
  <div data-a="kids" style="${abs(128,296,'width:1664px;display:flex;gap:8px;height:150px')}">
- ${[['Brief','Lança os dados',3,'var(--g2)','var(--on)'],['Criação','Estratégia, história e peça no canal',9,'var(--g1)','var(--on)'],['Ensaio','Ensaia o pitch',3,'var(--g3)','var(--on)'],['Palco','2 minutos por equipa, mais votação',10,'var(--g6)','#fff']].map(s=>`<div style="flex:${s[2]};min-width:${s[2]<5?215:0}px;background:${s[3]};color:${s[4]};border-radius:22px;padding:20px 18px 20px 22px;overflow:hidden;min-width:0"><div style="font:800 30px Syne">${s[0]}</div><div style="font:700 21px 'DM Sans';margin-top:6px;opacity:.85;letter-spacing:.06em;text-transform:uppercase">${s[2]} min</div>${s[2]>3?`<div style="font-size:24px;margin-top:6px">${s[1]}</div>`:''}</div>`).join('')}
+ ${[['Brief','Lança os dados',3,'var(--g2)','var(--on)'],['Criação','Estratégia, história e peça no canal',9,'var(--g1)','var(--on)'],['Ensaio','Ensaia o pitch',3,'var(--g3)','var(--on)'],['Palco','Cada equipa apresenta e as outras votam',10,'var(--g6)','#fff']].map(s=>`<div style="flex:${s[2]};min-width:${s[2]<5?215:0}px;background:${s[3]};color:${s[4]};border-radius:22px;padding:20px 18px 20px 22px;overflow:hidden;min-width:0"><div style="font:800 30px Syne">${s[0]}</div><div style="font-size:24px;margin-top:8px;line-height:1.25">${s[1]}</div></div>`).join('')}
  </div>
  <div class="k k2" data-a="up" style="${abs(128,490)}">Os quatro papéis</div>
  <div class="g4" data-a="kids" style="${abs(128,540,'right:128px')}">
@@ -3526,7 +3535,7 @@ S('wk-dados','ember','Workshop · 40 min','Lança os dados',FW+' · Marcas e per
   qq('[data-pass]',r).forEach(b=>b.onclick=()=>roll(reels[+b.dataset.pass]));
  }});
 
-const EN=[['Persona e objetivo SMART','Para quem e para quê.'],['Story Spine em 8 frases','A história da persona.'],['Gancho e peça no canal','O primeiro segundo e o rascunho.'],['KPI e tipo de meio','O que medir e onde.']];
+const EN=[['Persona e objetivo SMART','Para quem e para quê.'],['Story Spine em 8 frases','A história da persona.'],['Gancho e storyboard','O primeiro segundo e os quatro planos.'],['KPI e tipo de meio','O que medir e onde.']];
 S('wk-entregaveis','ink','Workshop · 40 min','O que entregar',FW,`
  ${eb('Workshop · Criação em 9 minutos')}${ti('O que entregar')}
  <div class="timer" data-min="9" data-a="pop" style="right:128px;top:84px;--sz:210px"></div>
@@ -3546,16 +3555,15 @@ S('wk-criterios','cream','Workshop · 40 min','Como vamos votar',FW,`
  </div>`,
  {init:(r,tl)=>{tl.fromTo(qq('.vdot',r),{scale:.6,opacity:.3},{scale:1,opacity:1,duration:.5,ease:'back.out(2)',stagger:.15},1.2);tl.call(()=>{G.to(qq('.vdot',r),{backgroundColor:'rgba(46,224,138,.22)',duration:.5,yoyo:true,repeat:-1,repeatDelay:1.2,stagger:{each:.18,repeat:-1,repeatDelay:2}})},null,2.4)}});
 
-S('wk-palco','coral','Workshop · 40 min','Palco: 2 minutos por equipa',FW,`
- ${eb('Workshop · Pitch e votação · 10 min')}${ti('Palco: 2 minutos por equipa','max-width:1400px;font-size:76px')}
- <div data-a="pop" class="hero" style="${abs(1190,440,'font-size:150px;line-height:1')}">2:00</div>
- <div style="${abs(128,396,'width:1030px;display:flex;flex-direction:column;gap:12px')}">
- ${[['A estratégia','Persona, objetivo SMART, canal e KPI.'],['A história','Story Spine em voz alta, o gancho e a peça.']].map((s,i)=>`<div class="card row" data-step data-a="left" style="padding:16px 32px;gap:28px"><div style="text-align:center;min-width:130px"><div style="font:700 54px/1 'DM Sans'">1</div><div class="k" style="font-size:18px;margin-top:4px">minuto</div></div><div><div class="t3" style="font-size:38px">${s[0]}</div><div class="txt" style="font-size:29px;margin-top:4px">${s[1]}</div></div></div>`).join('')}
+S('wk-palco','coral','Workshop · 40 min','Palco: a vez de cada equipa',FW,`
+ ${eb('Workshop · Pitch e votação')}${ti('Palco: a vez de cada equipa','max-width:1400px;font-size:76px')}
+ <div style="${abs(128,396,'width:1664px;display:flex;flex-direction:column;gap:12px')}">
+ ${[['A estratégia','Persona, objetivo SMART, canal e KPI.'],['A história','Story Spine em voz alta, o gancho e a peça.']].map((s,i)=>`<div class="card row" data-step data-a="left" style="padding:16px 32px;gap:28px"><div class="num" style="text-align:center;min-width:110px">${i+1}</div><div><div class="t3" style="font-size:38px">${s[0]}</div><div class="txt" style="font-size:29px;margin-top:4px">${s[1]}</div></div></div>`).join('')}
  </div>
  <div style="${abs(128,850)}"><div class="k" data-a="up" style="margin-bottom:16px">Feedback da turma</div><div data-a="kids" style="display:flex;gap:18px"><span class="pill" style="font-size:28px;text-transform:none;letter-spacing:0">«Gostei de…»</span><span class="pill" style="font-size:28px;text-transform:none;letter-spacing:0">«Mudava…»</span><span class="pill" style="font-size:28px;text-transform:none;letter-spacing:0">«E se…?»</span></div></div>`);
 
 /* ================= FECHO ================= */
-const TK5=['Comunicar no digital é conversar, não discursar.','Primeiro o público e o objetivo, depois o canal.','O cliente é o herói: personagem, conflito, transformação.','A IA ajuda a escrever. Quem decide o que é bom és tu.','Mede o que serve o objetivo e conta sempre com verdade.'];
+const TK5=['Comunicar no digital é conversar, não discursar.','Primeiro o público e o objetivo, depois o canal.','Cada conteúdo é uma pequena história, e o herói é o cliente.','A IA ajuda a escrever. Quem decide o que é bom és tu.','Mede o que serve o objetivo e conta sempre com verdade.'];
 S('takeaways','ink','Fecho · 5 min','Cinco ideias para levar',FF,`
  ${eb('Fecho · 5 minutos')}${ti('Cinco ideias para levar')}
  <div style="${abs(128,296,'width:1664px')}">
@@ -3678,7 +3686,7 @@ S('rgpd','cream','Ética e RGPD','Dados pessoais e regras da publicidade',FE+' �
  <div data-a="fade" class="mut" style="${abs(128,930,'font-size:25px')}">Regra prática: se não dirias às pessoas que lhes vais fazer isto, não faças.</div>`);
 
 /* ---------- IA: o bom e o slop ---------- */
-S('d-ia','violet','IA','IA: o bom e o slop','',div('05','IA · 15 minutos','IA: o bom e o <span class="acc">slop</span>','A IA não é o problema. A preguiça é.',4,124));
+S('d-ia','violet','IA','IA: o bom e o slop','',div('05','Parte 5 · IA','IA: o bom e o <span class="acc">slop</span>','A IA não é o problema. A preguiça é.',4,124));
 
 S('ia-brief','ink','IA','O pedido',FA+' · Exemplo fictício',`
  ${eb('IA · O pedido')}${ti('Mesmo pedido, dois resultados')}
@@ -3798,7 +3806,7 @@ const N3={
 S('objetivos','ink','Abertura','No fim da aula vais saber',F0,`
  ${eb('Abertura · Objetivos')}${ti('No fim da aula vais saber')}
  <div style="${abs(128,310,'width:1664px')}">
- ${[['Explicar o que é marketing e para quem comunica uma marca.','Marketing'],['Escolher canais, objetivos e indicadores.','Digital'],['Contar uma história com personagem, conflito e transformação.','Histórias'],['Usar a IA sem cair no conteúdo genérico.','IA']].map((t,i)=>`<div data-a="left" style="display:flex;align-items:center;gap:40px;height:128px;border-top:1px solid var(--line)"><svg data-a="draw" data-dur=".9" width="76" height="76" viewBox="0 0 76 76" fill="none" stroke="${['var(--g4)','var(--g1)','var(--g2)','var(--g5)'][i]}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><circle cx="38" cy="38" r="33"/><path d="M22 39 L33 50 L55 26"/></svg><div style="font:600 46px/1.15 Syne;flex:1">${t[0]}</div><span class="pill" style="font-size:20px;padding:12px 22px;background:${['var(--g4)','var(--g1)','var(--g2)','var(--g5)'][i]}">${t[1]}</span></div>`).join('')}
+ ${[['Explicar o que é marketing e para quem comunica uma marca.','Marketing'],['Escolher canais, objetivos e indicadores.','Digital'],['Contar uma história e levá-la para um post, um vídeo ou um carrossel.','Histórias'],['Usar a IA sem cair no conteúdo genérico.','IA']].map((t,i)=>`<div data-a="left" style="display:flex;align-items:center;gap:40px;height:128px;border-top:1px solid var(--line)"><svg data-a="draw" data-dur=".9" width="76" height="76" viewBox="0 0 76 76" fill="none" stroke="${['var(--g4)','var(--g1)','var(--g2)','var(--g5)'][i]}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><circle cx="38" cy="38" r="33"/><path d="M22 39 L33 50 L55 26"/></svg><div style="font:600 46px/1.15 Syne;flex:1">${t[0]}</div><span class="pill" style="font-size:20px;padding:12px 22px;background:${['var(--g4)','var(--g1)','var(--g2)','var(--g5)'][i]}">${t[1]}</span></div>`).join('')}
  </div>`);
 
 S('statement-mkt','coral','Abertura','Estratégia e história','',`
@@ -3810,7 +3818,7 @@ S('statement-mkt','coral','Abertura','Estratégia e história','',`
  </div>`);
 
 /* ---- Bloco 1 · O ecossistema digital ---- */
-S('d1','violet','Marketing','Marketing','',div('01','Marketing · 36 minutos','O que é <span class="acc">marketing</span>','Para quem criamos valor, como nos fazemos escolher e como se mede.',0,124));
+S('d1','violet','Marketing','Marketing','',div('01','Parte 1 · Marketing','O que é <span class="acc">marketing</span>','Para quem criamos valor, como nos fazemos escolher e como se mede.',0,124));
 
 const MEG='<svg width="40" height="40" viewBox="0 0 32 32" style="flex:none" fill="none" stroke="var(--mut)" stroke-width="2.6" stroke-linejoin="round"><path d="M4 13h6l13-7v20l-13-7H4z"/><path d="M8 19l2 7h4l-2-7"/></svg>';
 const BUB='<svg width="40" height="40" viewBox="0 0 32 32" style="flex:none" fill="none" stroke="var(--acc2)" stroke-width="2.6" stroke-linejoin="round"><path d="M3 5h18v12H11l-5 4v-4H3z"/><path d="M21 11h8v11h-3v4l-5-4h-7v-5"/></svg>';
@@ -3874,7 +3882,7 @@ S('act-persona','ember','Bloco 1 · Ecossistema digital','Atividade 01 · Desenh
  right:picker('Escolhe uma marca',['Loja de roupa em segunda mão','Festival de música','Ginásio low-cost','App de entregas de comida','Marca de ténis','Café perto da faculdade'],2)}));
 
 /* ---- Bloco 2 · Estratégia, canais e métricas ---- */
-S('d2','violet','Digital','Marketing digital','',div('02','Digital · 24 minutos','Marketing <span class="acc">digital</span>','Onde estão as pessoas, que papel tem cada canal e como saber se resulta.',1,124));
+S('d2','violet','Digital','Marketing digital','',div('02','Parte 2 · Digital','Marketing <span class="acc">digital</span>','Onde estão as pessoas, que papel tem cada canal e como saber se resulta.',1,124));
 
 const SM=[['S','Específico','Diz exatamente o quê.','var(--g1)'],['M','Mensurável','Tem um número.','var(--g2)'],['A','Atingível','É possível com os recursos que há.','var(--g3)'],['R','Relevante','Serve o negócio.','var(--g1)'],['T','Temporal','Tem prazo.','var(--g2)']];
 S('smart','cream','Bloco 2 · Estratégia e canais','Objetivos SMART',FM1+' · Exemplo fictício',`
@@ -3941,9 +3949,9 @@ S('marcas-conversa','ink','Bloco 1 · Ecossistema digital','Marcas que falam con
  <div data-step data-a="words" class="title" style="${abs(128,860,'font-size:50px;width:1664px')}">O que têm em comum: <span class="acc">soam a pessoas</span>, não a comunicados.</div>`);
 
 /* ---- Bloco 3/4 e Workshop: divisórias ---- */
-S('d3','violet','Histórias','Storytelling: porque funciona','',div('03','Histórias · 40 minutos','Storytelling: porque <span class="acc">funciona</span>','Atenção, emoção e memória, os ingredientes de uma história e as estruturas para a escrever.',2,118));
-S('d4','violet','Da história ao canal','Da história ao canal','',div('04','Da história ao canal · 10 minutos','Da história ao <span class="acc">canal</span>','A história é a mesma. A gramática de cada plataforma é que muda.',3,124));
-S('d5','violet','Workshop','Campanha com história','',div('06','Workshop · 25 minutos','Campanha com <span class="acc">história</span>','Equipas de 3 ou 4. Uma persona, um objetivo, uma história, um canal. Sem IA.',5,124));
+S('d3','violet','Histórias','Storytelling: porque funciona','',div('03','Parte 3 · Histórias','Storytelling: porque <span class="acc">funciona</span>','Atenção, emoção e memória, os ingredientes de uma história e as estruturas para a escrever.',2,118));
+S('d4','violet','Conteúdos','Histórias nos conteúdos','',div('04','Parte 4 · Produção de conteúdos','Histórias nos <span class="acc">conteúdos</span>','Cada publicação é uma pequena história: alguém, um problema, uma mudança.',3,124));
+S('d5','violet','Workshop','Campanha com história','',div('06','Parte 6 · Workshop','Campanha com <span class="acc">história</span>','Equipas de 3 ou 4. Uma persona, um objetivo, uma história, um canal. Sem IA.',5,124));
 
 /* ===== Slides curtos: uma ideia por slide ===== */
 const tint=(c,p=14)=>`color-mix(in srgb, ${c} ${p}%, transparent)`;
@@ -4175,7 +4183,7 @@ S('abt-porisso','ink','Histórias','POR ISSO: a ação',F1+' · Exemplo fictíci
 
 const GH=[['Pergunta','E se a roupa que deitas fora valesse 50 € na Vinted?','Abre uma dúvida que a pessoa quer ver fechada.','var(--g1)'],['Contradição','Deixei de postar todos os dias e o meu alcance duplicou.','Diz o contrário do que se espera.','var(--g2)'],['Meio da ação','«Eram 3h da manhã e o meu colega de casa estava a vender o sofá.»','Começa já no meio da cena, sem apresentações.','var(--g3)'],['Promessa','Em 30 segundos vais perceber porque não consegues fazer scroll.','Diz o que a pessoa ganha se ficar.','var(--g4)'],['Detalhe estranho','O casaco que ninguém quis por 5 € e que esgotou em duas horas.','Um pormenor que não encaixa e pede explicação.','var(--g5)']];
 GH.forEach((g,i)=>S('gancho-'+(i+1),'ink','Histórias','Gancho: '+g[0],F2+' · Exemplo fictício',quote({style:'phone',eb:'Histórias · Abrir bem',i:i+1,n:5,pill:'Gancho '+(i+1)+' de 5',name:g[0],q:g[1],line:g[2],col:g[3],qs:g[1].length>70?52:60})));
-S('ganchos-fim','ink','Histórias','Sem conflito, deslizam',F2,stmt({eb:'Histórias · Abrir bem',fs:100,t:'Se o gancho não prometer <span class="acc">conflito ou curiosidade</span>, deslizam para o vídeo seguinte.',sub:'Desafio de 1 minuto: escreve um gancho para um vídeo sobre a tua semana de aulas.'}));
+S('ganchos-fim','ink','Histórias','Sem conflito, deslizam',F2,stmt({eb:'Histórias · Abrir bem',fs:100,t:'Se o gancho não prometer <span class="acc">conflito ou curiosidade</span>, deslizam para o vídeo seguinte.',sub:'Desafio: escreve um gancho para um vídeo sobre a tua semana de aulas.'}));
 
 /* ================= IA ================= */
 const SGQ=[['«Pronto para renovar o teu guarda-roupa?»'],['«Descobre a nossa nova coleção de outono!»'],['«Acreditamos que a moda sustentável é o futuro.»'],['«Peças únicas, cheias de estilo e história.»'],['«Dá uma segunda vida à moda.»'],['«Visita-nos agora e encontra o look perfeito para ti.»']];
@@ -4532,7 +4540,7 @@ function start(id){const d=ACT[id]||{},run=uid().slice(0,4);const A={id,run,phas
 const begin=()=>{const d=ACT[M.id]||{};patch({phase:d.type==='quiz'?'q':'in',t0:TS()})};
 const limTxt=s=>{const m=Math.floor(s/60),x=s%60;return m?(m+' min'+(x?' '+x+' s':'')):x+' s'};
 function readyView(){const d=ACT[M.id]||{},n=plist().length;
- return `<div class="lv-ready"><div class="k">${d.type==='quiz'?'Primeira pergunta':'Tempo'}</div><div class="lv-rt">${limTxt(act.lim||d.lim||60)}</div>${d.type==='quiz'?'<div class="k">por pergunta</div>':''}<p class="lead">${n} ${n===1?'equipa ligada':'equipas ligadas'}. Quando estiverem prontas, carrega em Começar.</p></div>`}
+ return `<div class="lv-ready"><div class="k">${d.type==='quiz'?'Quiz':'Atividade'}</div><div class="lv-rt">Prontos?</div><p class="lead">${n} ${n===1?'equipa ligada':'equipas ligadas'}. Quando estiverem prontas, carrega em Começar.</p></div>`}
 function follow(id){if(online()&&act.id!==id)start(id)}
 
 /* ---------- peças de interface ---------- */
@@ -4739,7 +4747,7 @@ liveS('live-gancho','gancho','Histórias',F2,'Praticar · Ganchos','O melhor gan
 liveS('live-slop','slop','IA',FA,'Praticar · IA','Slop ou não?','6 frases da Segunda Mão. Vazia ou com substância?');
 liveS('live-rgpd','rgpd','Ética e RGPD',FE,'Praticar · RGPD e publicidade','Pode ou não pode?','6 situações. Decide depressa.');
 liveS('live-votacao','votacao','Workshop',FW,'Palco · Votação','Votação dos pitches','Cada equipa apresenta e as outras votam no telemóvel.');
-liveS('live-quiz','quiz','Fecho',FF,'Ao vivo · Revisão','Quiz final','10 perguntas sobre toda a aula. Quanto mais rápido, mais pontos.');
+liveS('live-quiz','quiz','Fecho',FF,'Ao vivo · Revisão','Quiz final','12 perguntas sobre toda a aula. Quanto mais rápido, mais pontos.');
 
 Object.assign(N4,{
  'live-entrar':'Entrada na sala (1–2 min). A apresentação cria a sala e mostra o QR e o código. A partir daqui, sempre que chegares a um slide de atividade, os telemóveis mudam sozinhos. Se aparecer «Modo apresentador», a página não se ligou (dentro do Claude é sempre assim): usa o endereço do GitHub para ter os telemóveis.',
@@ -4758,7 +4766,133 @@ Object.assign(N4,{
  'live-gancho':'Prática (3 min), logo a seguir aos 5 tipos de gancho. Um gancho por grupo, para a sua marca. Abre a votação e revela. Comenta com a checklist: curto, curiosidade, concreto. O tempo só começa quando carregas em «Começar».',
  'live-slop':'Prática (2 min), logo a seguir ao que falta ao slop. Depois de cada revelação, pergunta: que sinal é este? Teste rápido: troca o nome da loja; se a frase continuar a funcionar, é slop. O tempo só começa quando carregas em «Começar».',
  'live-rgpd':'Prática (2 min), logo a seguir às regras de RGPD e publicidade. Seis situações rápidas. Lê a explicação de cada uma em voz alta. O tempo só começa quando carregas em «Começar».',
- 'live-quiz':'Quiz final (5 min). 10 perguntas sobre toda a aula, 20 segundos cada; respostas rápidas valem mais. No fim aparece o ranking com os pontos de todas as atividades. O tempo só começa quando carregas em «Começar».'
+ 'live-quiz':'Quiz final (5 min). 12 perguntas sobre toda a aula, 20 segundos cada; respostas rápidas valem mais. No fim aparece o ranking com os pontos de todas as atividades. O tempo só começa quando carregas em «Começar».'
+});
+
+/* ================= HISTÓRIAS NOS CONTEÚDOS ================= */
+const FC=PN+' · Histórias nos conteúdos';
+const crP=pts=>{let d=`M${pts[0][0]} ${pts[0][1]}`;for(let i=0;i<pts.length-1;i++){const p0=pts[i-1]||pts[i],p1=pts[i],p2=pts[i+1],p3=pts[i+2]||p2;
+ d+=` C${(p1[0]+(p2[0]-p0[0])/6).toFixed(1)} ${(p1[1]+(p2[1]-p0[1])/6).toFixed(1)} ${(p2[0]-(p3[0]-p1[0])/6).toFixed(1)} ${(p2[1]-(p3[1]-p1[1])/6).toFixed(1)} ${p2[0]} ${p2[1]}`}return d};
+
+/* casaco simples para os posts */
+const JK=(c='#0A120D',w=150)=>`<svg viewBox="0 0 250 260" width="${w}" height="${w*260/250}" fill="none" stroke="${c}" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"><path d="M80 30 L112 14 Q125 30 138 14 L170 30 L215 70 L198 150 L176 140 L176 245 L74 245 L74 140 L52 150 L35 70Z"/><path d="M125 30 V245"/><path d="M92 180 H118 V214 H92Z"/><path d="M95 200 l6 -6 l6 6 l6 -6" stroke-width="5"/></svg>`;
+const postIG=(cap,bg,id='')=>`<div class="post" ${id} style="width:720px;padding:0;overflow:hidden">
+ <div style="height:270px;background:${bg};display:flex;align-items:center;justify-content:center">${JK('#0A120D',170)}</div>
+ <div style="padding:22px 34px 30px"><div style="display:flex;gap:14px;align-items:center;margin-bottom:14px"><div style="width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--g1),var(--g6))"></div><b style="font:700 26px 'DM Sans'">segundamao.vintage</b></div>${cap}</div></div>`;
+
+S('ct-antes','ink','Conteúdos','O mesmo post, duas vezes',FC+' · Exemplo fictício',`
+ ${eb('Conteúdos · Anúncio ou história?')}${ti('O mesmo post, duas vezes')}
+ <div data-a="up" style="${abs(128,290)}">${postIG(`<p style="font-size:28px;line-height:1.4;margin:0">NOVA COLEÇÃO! Casacos vintage a partir de 12 €. Qualidade garantida. Link na bio!</p><p style="font-size:24px;margin:12px 0 0;color:#2a6fd6">#vintage #moda #sustentavel</p>`,'#E9E4D8')}</div>
+ <div data-step data-a="up" style="${abs(0,0,'width:1920px;height:1080px;pointer-events:none')}">
+  <div style="${abs(1072,290)}">${postIG(`<p style="font-size:28px;line-height:1.4;margin:0"><b>Este casaco já teve três donas.</b> A primeira comprou-o em Paris, em 1987. A última deixou-o no fundo do armário com o bolso rasgado. Cosemos o bolso. Agora procura a quarta.</p>`,'#BFF2D6')}</div>
+  <div class="pill" style="${abs(150,312,'background:#fff;color:#0A120D;border:2px solid #0A120D')}">Anúncio</div>
+  <div class="pill" style="${abs(1094,312)}">História</div>
+ </div>`);
+
+const MS=[['Somos sustentáveis.','Este casaco já teve três donas. Tu podes ser a quarta.'],['O nosso café é o melhor da zona.','Às 7h já há fila de estudantes à porta, de apontamentos na mão.'],['Entregas super rápidas.','Encomendaste às 20h12. Às 20h39 tocou a campainha.']];
+S('ct-mostra','ink','Conteúdos','Mostra, não digas',FC+' · Exemplos fictícios',`
+ ${eb('Conteúdos · A regra de ouro')}${ti('Mostra, não digas')}
+ <div data-a="fade" style="${abs(128,290,'width:1664px;display:grid;grid-template-columns:560px 90px 1fr;font:700 24px/1 \'DM Sans\';letter-spacing:.16em;text-transform:uppercase;color:var(--mut)')}"><span>Dizer</span><span></span><span style="color:var(--acc)">Mostrar</span></div>
+ ${MS.map((m,i)=>`<div style="${abs(128,340+i*200,'width:1664px;height:180px;border-top:1px solid var(--line)')}">
+  <div data-step data-a="left" class="ms-d" style="${abs(0,0,'width:560px;height:180px;display:flex;align-items:center;font:600 40px/1.2 Syne;color:var(--mut);text-decoration:line-through;text-decoration-thickness:4px')}">${m[0]}</div>
+  <div data-step data-a="right" style="${abs(560,0,'width:1104px;height:180px;display:flex;align-items:center;gap:40px')}"><svg width="60" height="40" viewBox="0 0 60 40" fill="none" stroke="var(--acc)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M4 20 H52 M38 6 L54 20 L38 34"/></svg><div style="font:600 42px/1.25 Syne">${m[1]}</div></div>
+ </div>`).join('')}`);
+
+const FMT=[['Bastidores','Como se faz o que vendes.','<rect x="14" y="48" width="92" height="58" rx="8"/><path d="M14 48 L20 22 L104 34 L100 48"/><path d="M42 26 L36 46 M68 30 L62 46"/>','var(--g1)'],
+ ['Antes e depois','A transformação à vista.','<circle cx="30" cy="60" r="20" stroke-dasharray="7 8"/><path d="M56 60 H76 M66 50 L77 60 L66 70"/><circle cx="96" cy="60" r="20"/>','var(--g2)'],
+ ['O cliente herói','Quem compra conta a história.','<circle cx="56" cy="42" r="18"/><path d="M20 104 Q20 70 56 70 Q92 70 92 104"/><path d="M96 12 L100 22 L110 23 L102 30 L105 40 L96 34 L87 40 L90 30 L82 23 L92 22Z"/>','var(--g3)'],
+ ['O erro','O que correu mal e o que mudou.','<path d="M60 14 L108 100 H12Z"/><path d="M60 46 V70 M60 84 V86"/>','var(--g6)'],
+ ['Um dia na vida','A rotina, até algo a quebrar.','<circle cx="60" cy="60" r="44"/><path d="M60 32 V60 L80 72"/>','var(--g4)'],
+ ['A série','Episódios que deixam uma pergunta no ar.','<rect x="8" y="34" width="30" height="52" rx="6"/><rect x="45" y="34" width="30" height="52" rx="6"/><rect x="82" y="34" width="30" height="52" rx="6"/><path d="M18 52 L29 60 L18 68Z M55 52 L66 60 L55 68Z"/><path d="M93 56 Q97 48 101 56 Q101 62 97 64 V68 M97 76 V77"/>','var(--g5)']];
+S('ct-formatos','ink','Conteúdos','Seis histórias que funcionam nas redes',FC,`
+ ${eb('Conteúdos · Formatos com história')}${ti('Seis histórias que funcionam nas redes')}
+ <div data-a="kids" style="${abs(128,300,'width:1664px;display:grid;grid-template-columns:repeat(3,1fr);gap:26px')}">
+ ${FMT.map((f,i)=>`<div class="card row" style="height:290px;gap:30px;padding:30px 36px"><svg class="bob" style="animation-delay:${i*.4}s;flex:none" viewBox="0 0 120 120" width="110" height="110" fill="none" stroke="${f[3]}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">${f[2]}</svg><div><div class="t3" style="font-size:42px">${f[0]}</div><div class="txt mut" style="font-size:28px;margin-top:10px">${f[1]}</div></div></div>`).join('')}
+ </div>`);
+
+const DUO=[['11 fev. 2025','Rutura','A Duolingo anuncia que o Duo, a mascote, morreu.','var(--g6)'],['17 fev.','Convite','Para o trazer de volta: 50 mil milhões de XP, ganhos a fazer lições.','var(--g2)'],['24 fev.','Transformação','O Duo regressa.','var(--g1)']];
+S('ct-duo','ink','Conteúdos','A mascote que morreu',FC+' · Fonte: NPR, 13 e 26 de fevereiro de 2025',`
+ ${eb('Conteúdos · Caso real · Duolingo')}${ti('A mascote que morreu')}
+ <div data-a="pop" style="${abs(128,300,'width:560px;height:250px;display:flex;align-items:center;justify-content:center')}" class="card">${lgc('duolingo',110)||'<div class="t3">Duolingo</div>'}</div>
+ <div style="${abs(800,300,'width:992px')}">
+ ${DUO.map((d,i)=>`<div data-step data-a="left" style="display:grid;grid-template-columns:210px 1fr;gap:30px;height:190px;border-top:1px solid var(--line);padding-top:26px"><div style="font:700 30px 'DM Sans';color:var(--mut)">${d[0]}</div><div><div class="k" style="color:${d[3]}">${d[1]}</div><div style="font:600 40px/1.2 Syne;margin-top:14px">${d[2]}</div></div></div>`).join('')}
+ </div>
+ <div data-step data-a="pop" style="${abs(128,590,'width:560px')}"><div class="k">O resultado</div><div style="font:800 96px/1 Syne;color:var(--acc);margin-top:16px;letter-spacing:-.03em">50,9 mil<br>milhões</div><div class="txt mut" style="margin-top:12px;font-size:30px">de XP feitos pelos utilizadores</div></div>`);
+
+const SER=[['Seg','Reel','Gancho','Encontrámos 30 casacos num sótão em Braga.','var(--g2)'],['Ter','Stories','Bastidores','A lavar e a coser, um a um.','var(--g4)'],['Qua','Carrossel','Rutura','Metade tinha traça. Quantos se salvam?','var(--g6)'],['Qui','Reel','Clímax','Salvámos 18. Sábado às 10h, na loja.','var(--g1)'],['Sex','Stories','Comunidade','Mostrem-nos o vosso casaco preferido.','var(--g3)']];
+const SERX=[166,499,832,1165,1498],SERY=[380,320,250,90,200];
+const SERP=crP([[0,420],...SERX.map((x,i)=>[x,SERY[i]]),[1664,230]]);
+S('ct-serie','ink','Conteúdos','Uma semana, uma história',FC+' · Exemplo fictício',`
+ ${eb('Conteúdos · Planear em episódios')}${ti('Uma semana, uma história')}
+ <div style="${abs(128,280,'width:1664px;height:720px')}">
+  <svg viewBox="0 0 1664 440" width="1664" height="440" style="position:absolute;left:0;top:0;overflow:visible"><defs><linearGradient id="sg" x1="0" x2="1"><stop offset="0" stop-color="var(--g2)"/><stop offset=".65" stop-color="var(--g1)"/><stop offset="1" stop-color="var(--g3)"/></linearGradient></defs>
+  <path id="scv" d="${SERP}" fill="none" stroke="url(#sg)" stroke-width="8" stroke-linecap="round"/></svg>
+  ${SER.map((s,i)=>`<div data-step data-a="up" style="${abs(0,0,'width:1664px;height:720px;pointer-events:none')}">
+   <div style="${abs(SERX[i]-2,SERY[i]+18,`width:0;height:${458-SERY[i]}px;border-left:3px dashed var(--line)`)}"></div>
+   <div style="${abs(SERX[i]-16,SERY[i]-16,`width:32px;height:32px;border-radius:50%;background:${s[4]};box-shadow:0 0 0 8px color-mix(in srgb,${s[4]} 25%,transparent)`)}"></div>
+   <div class="card" style="${abs(SERX[i]-150,466,'width:300px;height:216px;padding:20px 24px')}"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font:800 34px Syne">${s[0]}</b><span style="font:700 18px 'DM Sans';letter-spacing:.1em;text-transform:uppercase;color:var(--mut)">${s[1]}</span></div><div class="k" style="color:${s[4]};margin-top:16px;font-size:20px">${s[2]}</div><div style="font:500 25px/1.3 'DM Sans';margin-top:10px">${s[3]}</div></div>
+  </div>`).join('')}
+ </div>`,
+ {init:(r,tl)=>{const p=q('#scv',r);if(!p)return;const L=p.getTotalLength();tl.fromTo(p,{strokeDasharray:L,strokeDashoffset:L},{strokeDashoffset:0,duration:2,ease:'power2.inOut'},.5)}});
+
+/* storyboard em quatro planos */
+const SB=[['Gancho','0–2 s','Este casaco já teve 3 donas','Grande plano do casaco',`<g transform="translate(55 90) scale(.56)">${'<path d="M80 30 L112 14 Q125 30 138 14 L170 30 L215 70 L198 150 L176 140 L176 245 L74 245 L74 140 L52 150 L35 70Z"/><path d="M125 30 V245"/><path d="M92 180 H118 V214 H92Z"/><path d="M95 200 l6 -6 l6 6 l6 -6"/>'}</g>`,'var(--g1)'],
+ ['Tensão','2–12 s','A última deixou-o assim','Mãos a coser o bolso','<circle cx="125" cy="200" r="58"/><path d="M80 260 L185 140"/><circle cx="182" cy="144" r="5"/><path d="M182 144 Q215 190 170 230 Q130 262 150 300" stroke-dasharray="8 8"/>','var(--g6)'],
+ ['Recompensa','12–18 s','Agora procura a 4.ª dona','Alguém a vesti-lo, plano geral','<circle cx="125" cy="118" r="30"/><path d="M80 170 L105 155 Q125 168 145 155 L170 170 L190 230 L172 236 L170 310 L80 310 L78 236 L60 230Z"/><path d="M125 168 V310"/>','var(--g3)'],
+ ['Convite','18–20 s','Sábado, 10h, na loja','Cartão final com a morada','<path d="M125 120 C95 120 80 142 80 165 C80 200 125 245 125 245 C125 245 170 200 170 165 C170 142 155 120 125 120Z"/><circle cx="125" cy="166" r="16"/><path d="M70 285 H180 M90 315 H160"/>','var(--g2)']];
+S('ct-story','ink','Conteúdos','Do guião ao storyboard',FC+' · Exemplo fictício',`
+ ${eb('Conteúdos · Vídeo curto · Segunda Mão')}${ti('Do guião ao storyboard')}
+ <div style="${abs(128,280,'width:1664px;display:grid;grid-template-columns:repeat(4,1fr);gap:40px')}">
+ ${SB.map(s=>`<div data-step data-a="up" style="display:flex;flex-direction:column;align-items:center">
+  <div style="display:flex;justify-content:space-between;width:300px;align-items:baseline;white-space:nowrap"><span class="k" style="color:${s[5]};font-size:21px">${s[0]}</span><span style="font:700 21px 'DM Sans';color:var(--mut)">${s[1]}</span></div>
+  <div style="position:relative;width:250px;height:420px;margin-top:14px;border-radius:26px;border:3px solid ${s[5]};background:color-mix(in srgb,${s[5]} 10%,transparent);overflow:hidden">
+   <div style="${abs(16,18,'right:16px;background:#fff;color:#0A120D;border-radius:10px;padding:8px 10px;font:700 19px/1.25 \'DM Sans\';text-align:center')}">${s[2]}</div>
+   <svg viewBox="0 0 250 420" width="250" height="420" style="position:absolute;inset:0" fill="none" stroke="var(--fg)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">${s[4]}</svg>
+  </div>
+  <div class="mut" style="font-size:26px;margin-top:18px;text-align:center;width:300px">${s[3]}</div>
+ </div>`).join('')}
+ </div>`);
+
+const LG=[['Gancho','A única linha que se vê antes do «mais».','var(--g1)'],['Conflito','Algo corre mal.','var(--g6)'],['Viragem','O que mudou.','var(--g3)'],['Convite','Uma pergunta fácil de responder.','var(--g2)']];
+const LGT=['Encontrámos 30 casacos num sótão em Braga.','Estavam lá desde 1987. Metade tinha traça.','Passámos uma semana a lavar e a coser. Salvámos 18.','Sábado, às 10h, estão na loja. Qual escolhias?'];
+S('ct-legenda','ink','Conteúdos','A legenda também conta',FC+' · Exemplo fictício',`
+ ${eb('Conteúdos · Instagram e TikTok')}${ti('A legenda também conta')}
+ <div class="post" data-a="pop" style="${abs(128,290,'width:860px;padding:36px 44px')}">
+  <div style="display:flex;gap:14px;align-items:center;margin-bottom:22px"><div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--g1),var(--g6))"></div><b style="font:700 28px 'DM Sans'">segundamao.vintage</b></div>
+  ${LGT.map((t,i)=>`${i===1?'<div style="display:flex;align-items:center;gap:14px;margin:4px 0 16px;color:#8a948e;font:600 22px \'DM Sans\'"><span>… mais</span><i style="flex:1;border-top:2px dashed #c9cfcb"></i></div>':''}<p id="lg${i}" style="font-size:32px;line-height:1.38;margin:0 0 14px;border-radius:10px;padding:4px 10px;margin-left:-10px;${i===0?'font-weight:700':''}">${t}</p>`).join('')}
+ </div>
+ <div style="${abs(1080,300,'width:712px;display:flex;flex-direction:column;gap:20px')}">
+ ${LG.map((l,i)=>`<div class="card row" data-step data-a="right" style="padding:22px 30px;gap:24px;border-left:8px solid ${l[2]}"><div class="num" style="color:${l[2]}">${i+1}</div><div><div class="k" style="color:${l[2]}">${l[0]}</div><div class="txt" style="font-size:28px;margin-top:8px">${l[1]}</div></div></div>`).join('')}
+ </div>`,
+ {onStep:(r,el,i,t)=>{if(i<0||i>3)return;const c=getComputedStyle(r).getPropertyValue(['--g1','--g6','--g3','--g2'][i]).trim()||'#2EE08A';qq('[id^=lg]',r).forEach((p,k)=>G.to(p,{backgroundColor:k===i?c+'55':'rgba(0,0,0,0)',duration:.5}))},
+  onUnstep:(r,el,i)=>{const c=['--g1','--g6','--g3','--g2'].map(v=>getComputedStyle(r).getPropertyValue(v).trim());qq('[id^=lg]',r).forEach((p,k)=>G.to(p,{backgroundColor:k===i-1?c[k]+'55':'rgba(0,0,0,0)',duration:.3}))}});
+
+const Q3=[['Quem é o herói?','<circle cx="60" cy="40" r="20"/><path d="M22 106 Q22 70 60 70 Q98 70 98 106"/>','var(--g1)'],['O que está em jogo?','<path d="M68 10 L34 64 H58 L50 110 L88 50 H62Z"/>','var(--g6)'],['O que muda no fim?','<circle cx="34" cy="60" r="20" stroke-dasharray="7 8"/><path d="M58 60 H76 M68 50 L78 60 L68 70"/><circle cx="96" cy="60" r="18"/>','var(--g3)']];
+S('ct-fim','ink','Conteúdos','Antes de gravar, três perguntas',FC,`
+ ${eb('Conteúdos · Para levar')}${ti('Antes de gravar, três perguntas')}
+ <div style="${abs(128,330,'width:1664px;display:grid;grid-template-columns:repeat(3,1fr);gap:40px')}">
+ ${Q3.map((x,i)=>`<div data-step data-a="pop" style="text-align:center"><svg class="bob" style="animation-delay:${i*.5}s" viewBox="0 0 120 120" width="200" height="200" fill="none" stroke="${x[2]}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">${x[1]}</svg><div style="font:700 50px/1.15 Syne;margin-top:30px">${x[0]}</div></div>`).join('')}
+ </div>
+ <div data-step data-a="words" class="title" style="${abs(128,820,'font-size:52px;width:1664px;text-align:center')}">Sem respostas, é um anúncio. <span class="acc">Com respostas, é uma história.</span></div>`);
+
+liveS('live-post','post','Conteúdos',FC,'Praticar · Conteúdos','Conta-o como história','Cada telemóvel recebe um post «anúncio». Reescreve-o como história. Depois votamos.');
+
+Object.assign(N4,{
+ 'd1':'Início do Marketing: o que é e a sua história, benefícios, estudos de mercado, segmentar, escolher e posicionar, persona, 4Ps, marca, proposta e tom, jornada e SMART, com as práticas no telemóvel pelo meio. Vai rápido nos exemplos: o storytelling precisa do tempo.',
+ 'd2':'Início do Digital: do monólogo à conversa, meios próprios, pagos e ganhos, canais, pago vs. próprio, plano de conteúdos, campanhas, métricas e mini plano.',
+ 'd3':'Início das Histórias: porque funcionam, do facto à história, ingredientes, Spotify Wrapped, herói e guia, E, MAS, POR ISSO, Story Spine e arco, ganchos e práticas. A seguir, as histórias passam para os conteúdos.',
+ 'd4':'Início de Histórias nos conteúdos, o coração prático da aula: anúncio vs. história, mostrar e não dizer, seis formatos, caso Duolingo, uma semana em episódios, canais, reels e storyboard, carrossel e legenda, prática no telemóvel e as três perguntas.',
+ 'd-ia':'Início do bloco de IA: o pedido, os dois textos e a votação, os seis sinais, prática, os cinco movimentos e a checklist.',
+ 'd5':'Início do workshop: brief, criação, ensaio e palco. Os grupos já existem desde as práticas anteriores.',
+ 'ct-antes':'Mostra só o post da esquerda e pergunta: «Isto fazia-vos parar?». Depois avança para o da direita. É o mesmo casaco, o mesmo preço, a mesma loja. A diferença é que o segundo tem alguém, um problema e uma mudança. É a ideia de toda esta parte: cada publicação é uma pequena história.',
+ 'ct-mostra':'Em cada linha, mostra primeiro o «dizer» e pede à turma que o transforme em algo que se veja ou se imagine. Só depois revela o «mostrar». A regra: troca adjetivos («sustentável», «o melhor», «rápido») por um facto concreto, um número ou uma cena.',
+ 'ct-formatos':'Seis formatos que as marcas usam todas as semanas, e todos são histórias: bastidores (como se faz), antes e depois (a transformação), o cliente herói (testemunhos e conteúdo dos clientes), o erro (vulnerabilidade gera confiança), um dia na vida (rotina e rutura) e a série (episódios com uma pergunta no ar). Pergunta que tipo é que eles veem até ao fim.',
+ 'ct-duo':'Caso real. A 11 de fevereiro de 2025, a Duolingo anunciou a «morte» do Duo, a sua mascote. A 17, explicou como trazê-lo de volta: os utilizadores tinham de juntar 50 mil milhões de XP, que se ganham a fazer lições. A 24 publicou o vídeo do regresso e, no dia seguinte, admitiu que tinha sido encenado. Os utilizadores juntaram cerca de 50,9 mil milhões de XP (NPR, 26/02/2025). Liga com os ingredientes: personagem (a mascote), conflito (a morte), transformação (o regresso). E com os meios ganhos: as pessoas fizeram parte da história. Pergunta antes de revelar: «Porque é que uma marca havia de matar a própria mascote?»',
+ 'ct-serie':'O plano de conteúdos da parte Digital, agora com uma história por cima. Cada dia é um episódio e a semana segue o arco: gancho, bastidores, rutura, clímax e a comunidade a continuar a história. Mostra que o formato muda (reel, stories, carrossel) mas a história é uma só. Pergunta: «O que publicavam na segunda para quererem ver a quinta?»',
+ 'ct-story':'Antes de gravar, desenha-se. Quatro planos, um por batida do vídeo curto: gancho (0 a 2 s), tensão (até 12 s), recompensa e convite. Em cima de cada plano está o texto que aparece no ecrã, porque muita gente vê sem som. No workshop, o grupo visual vai fazer isto em papel.',
+ 'ct-legenda':'A legenda também segue a história. No Instagram só se vê a primeira linha antes do «… mais», por isso tem de ser o gancho. Depois o conflito, a viragem e um convite fácil de responder (uma pergunta, não «visita o site»). Cada clique ilumina uma parte.',
+ 'live-post':'Prática individual. Cada telemóvel recebe um post escrito como anúncio e reescreve-o como história: uma primeira linha que prenda, o que aconteceu e um convite. Abre a votação e lê em voz alta os dois mais votados. Pergunta: o que é que o melhor mostra em vez de dizer?',
+ 'ct-fim':'Três perguntas para fazer antes de gravar ou escrever qualquer conteúdo. Se não há herói, conflito ou mudança, o post é um anúncio. Estas perguntas voltam no workshop.'
 });
 
 /* ---- Notas novas e atualizadas ---- */
@@ -4815,16 +4949,16 @@ const N2={
 /* ---- Ordem final ---- */
 Object.assign(N2,N3,N4);
 const ORDER=[
- ['Abertura · 10 min',['cover','eu-ola','eu-percurso','eu-projetos','eu-casos','live-entrar','live-marcas','agenda','objetivos','statement-mkt']],
- ['Marketing · 36 min',['d1','o-que-e','hist-producao','hist-vendas','hist-marketing','hist-relacao','hist-digital','ben-notoriedade','ben-relacao','ben-crescimento','mr-oque','mr-secundarios','mr-primarios','mr-quanti','mr-exemplo','live-primsec','stp-segmentar','stp-escolher','stp-posicionar','stp-formula','live-posicionar','persona-def','persona-rita','live-persona','4ps','live-4p','mv-marca','mv-proposta','mv-tom','marcas-conversa','jornada','smart-letras','smart-exemplo','live-smart']],
- ['Digital · 24 min',['d2','monologo','meio-proprio','meio-pago','meio-ganho','meio-ideal','live-canais','cn-site','cn-redes','cn-email','cn-anuncios','cn-creators','cn-imprensa','cn-fim','pdc-pago','pdc-dados','pdc-comunidade','pdc-fim','calendario','camp-coke','camp-redbull','camp-burger','camp-fim','kpis','kpi-vaidade','live-metricas','live-plano']],
- ['Pausa · 10 min',['pausa']],
- ['Histórias · 40 min',['d3','statement','forca-atencao','forca-emocao','forca-memoria','facto-historia','ing-personagem','ing-conflito','ing-transformacao','caso-wrapped','wrapped-3','heroi-papeis','heroi-guia','abt-e','abt-mas','abt-porisso','live-abt','story-spine','arco','spine-exemplo','live-spine','live-spinew','gancho-1','gancho-2','gancho-3','gancho-4','gancho-5','ganchos-fim','live-gancho']],
- ['Da história ao canal · 10 min',['d4','canais','reels','carrossel']],
- ['IA: o bom e o slop · 15 min',['d-ia','ia-brief','ia-ab','sinal-1','sinal-2','sinal-3','sinal-4','sinal-5','sinal-6','sinal-falta','live-slop','mov-1','mov-2','mov-3','mov-4','mov-5','mov-fim','ia-check']],
- ['Ética e RGPD · 5 min',['etica','rg-consent','rg-final','rg-direitos','rg-coimas','pub-etiqueta','ia-assinala','live-rgpd']],
- ['Workshop · 25 min',['d5','wk-regras','wk-dados','wk-entregaveis','wk-criterios','wk-palco','live-votacao']],
- ['Fecho · 5 min',['live-quiz','takeaways','checklist','fecho']]
+ ['Abertura',['cover','eu-ola','eu-percurso','eu-projetos','eu-casos','objetivos','statement-mkt','live-entrar','live-marcas']],
+ ['Marketing',['d1','o-que-e','hist-producao','hist-vendas','hist-marketing','hist-relacao','hist-digital','ben-notoriedade','ben-relacao','ben-crescimento','mr-oque','mr-secundarios','mr-primarios','mr-quanti','mr-exemplo','live-primsec','stp-segmentar','stp-escolher','stp-posicionar','stp-formula','live-posicionar','persona-def','persona-rita','live-persona','4ps','live-4p','mv-marca','mv-proposta','mv-tom','marcas-conversa','jornada','smart-letras','smart-exemplo','live-smart']],
+ ['Digital',['d2','monologo','meio-proprio','meio-pago','meio-ganho','meio-ideal','live-canais','cn-site','cn-redes','cn-email','cn-anuncios','cn-creators','cn-imprensa','cn-fim','pdc-pago','pdc-dados','pdc-comunidade','pdc-fim','calendario','camp-coke','camp-redbull','camp-burger','camp-fim','kpis','kpi-vaidade','live-metricas','live-plano']],
+ ['Pausa',['pausa']],
+ ['Histórias',['d3','statement','forca-atencao','forca-emocao','forca-memoria','facto-historia','ing-personagem','ing-conflito','ing-transformacao','caso-wrapped','wrapped-3','heroi-papeis','heroi-guia','abt-e','abt-mas','abt-porisso','live-abt','story-spine','arco','spine-exemplo','live-spine','live-spinew','gancho-1','gancho-2','gancho-3','gancho-4','gancho-5','ganchos-fim','live-gancho']],
+ ['Histórias nos conteúdos',['d4','ct-antes','ct-mostra','ct-formatos','ct-duo','ct-serie','canais','reels','ct-story','carrossel','ct-legenda','live-post','ct-fim']],
+ ['IA: o bom e o slop',['d-ia','ia-brief','ia-ab','sinal-1','sinal-2','sinal-3','sinal-4','sinal-5','sinal-6','sinal-falta','live-slop','mov-1','mov-2','mov-3','mov-4','mov-5','mov-fim','ia-check']],
+ ['Ética e RGPD',['etica','rg-consent','rg-final','rg-direitos','rg-coimas','pub-etiqueta','ia-assinala','live-rgpd']],
+ ['Workshop',['d5','wk-regras','wk-dados','wk-entregaveis','wk-criterios','wk-palco','live-votacao']],
+ ['Fecho',['live-quiz','takeaways','checklist','fecho']]
 ];
 
 const BYID={};SLIDES.forEach(s=>BYID[s.id]=s);
@@ -4855,6 +4989,8 @@ const ASK={
  'facto-historia':'Isto é um facto. Como é que o transformavam numa história?',
  'caso-wrapped':'Já viram o vosso Wrapped? O que fizeram a seguir?',
  'heroi-guia':'Numa história de marca, quem é o herói: a marca ou o cliente?',
+ 'ct-formatos':'Que vídeos de marcas é que vocês veem até ao fim? Porquê?',
+ 'ct-duo':'Porque é que uma marca havia de «matar» a própria mascote?',
  'canais':'Se tivessem esta mesma história, em que canais a contavam? Seria igual em todos?',
  'rg-coimas':'Quanto acham que pode custar uma infração ao RGPD? Digam um número.',
  'ia-assinala':'Quando é que uma imagem ou texto feito com IA deve ser assinalado?',

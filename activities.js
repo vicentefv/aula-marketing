@@ -71,6 +71,11 @@ window.ACT={
  gancho:{type:'form',t:'O melhor gancho',q:'A frase que abre o vídeo da vossa marca.',lim:120,assign:'marcas',vote:true,check:'hook',
   fields:[{k:'t',l:'O gancho',ph:'Ninguém te conta isto sobre o pão de ontem…'}],show:'«{t}»'},
 
+ post:{type:'form',t:'Conta-o como história',q:'Reescreve o post que te calhou como uma pequena história.',lim:180,assign:'posts',vote:true,check:'hook',checkField:'g',
+  fields:[{k:'g',l:'1.ª linha (o gancho)',ph:'Este casaco já teve três donas.'},{k:'h',l:'O que aconteceu (quem e o que correu mal)',ph:'A última deixou-o no armário com o bolso rasgado. Cosemos o bolso.',ta:true},
+   {k:'c',l:'O convite',ph:'Qual é a peça mais antiga do teu armário?'}],
+  show:'<b>«{g}»</b><br>{h}<br>{c}'},
+
  slop:{type:'quiz',t:'Slop ou não?',lim:15},
  rgpd:{type:'quiz',t:'Pode ou não pode?',lim:15},
  quiz:{type:'quiz',t:'Quiz final',lim:20},
@@ -81,6 +86,7 @@ window.ACT={
 window.ACTS=Object.keys(ACT).map(id=>({id,t:ACT[id].t}));
 
 window.ASSIGN={
+ posts:['Nova coleção de inverno. 20% de desconto até domingo.','Abrimos um novo ginásio. Primeira semana grátis.','O nosso café tem agora leite de aveia.','Já podes encomendar pela app. Entregas em 30 minutos.','Novos ténis feitos com plástico reciclado.','Workshop de cerâmica no sábado. Inscrições abertas.'],
  marcas:['Loja de roupa em segunda mão','Festival de música','App de entregas de comida','Ginásio low-cost','Marca de ténis sustentáveis','Café perto da faculdade','Estúdio de pilates','Livraria independente','Loja online de plantas','App de transportes'],
  produtos:['Powerbank','Garrafa reutilizável','App para dividir contas','Auriculares sem fios','Sapatilhas de corrida','Cartão de transporte']
 };
@@ -121,6 +127,8 @@ window.QSETS={
   {q:'Qual destes objetivos é SMART?',o:['Ter mais seguidores','Chegar aos 5 000 seguidores no TikTok até 30 de junho','Ficar famoso','Postar muito'],a:1,why:'Tem número e prazo: dá para medir.'},
   {q:'Um vídeo teve 2 milhões de views e só 3 vendas. Aqui as views são…',o:['O melhor KPI','Uma métrica de vaidade','Um dado secundário','Um gancho'],a:1,why:'Sobem mas não dizem se o objetivo está mais perto.'},
   {q:'Na Story Spine, que frase vem logo a seguir a «Todos os dias…»?',o:['Por causa disso…','E desde então…','Até que um dia…','Até que finalmente…'],a:2,why:'A rotina quebra-se com «Até que um dia…».'},
+  {q:'Num reel, onde tem de estar o gancho?',o:['No fim, como surpresa','Nos primeiros segundos','Na legenda','Nas hashtags'],a:1,why:'Se o primeiro segundo não prender, ninguém chega à história.'},
+  {q:'Qual destas frases mostra em vez de dizer?',o:['Somos sustentáveis','A melhor qualidade do mercado','Este casaco já teve três donas','Peças únicas e com estilo'],a:2,why:'Um facto concreto mostra; um adjetivo só diz.'},
   {q:'Qual destes é um sinal de slop?',o:['Um número concreto','Uma pessoa com nome','Adjetivos sem prova («únicas», «perfeito»)','Uma opinião própria'],a:2,why:'O slop é texto correto e vazio: serve a qualquer marca.'},
   {q:'Uma creator recebeu dinheiro para mostrar um produto. O que tem de fazer?',o:['Nada, se gostar do produto','Assinalar que é publicidade, de forma visível','Pôr #pub no fim de 30 hashtags','Pedir autorização à CNPD'],a:1,why:'Tem de se ver que é publicidade: «#pub» ou «parceria paga», bem visível.'}]
 };

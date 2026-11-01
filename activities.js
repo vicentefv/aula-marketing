@@ -69,7 +69,7 @@ window.ACT={
   show:'<b>{A}</b><br>'+SPINE_LAB.map((l,i)=>l+' {s'+i+'}').join('<br>')},
 
  gancho:{type:'form',t:'O melhor gancho',q:'A frase que abre o vídeo da vossa marca.',lim:120,assign:'marcas',vote:true,check:'hook',
-  fields:[{k:'t',l:'O gancho',ph:'Ninguém te conta isto sobre o pão de ontem…'}],show:'«{t}»'},
+  fields:[{k:'t',l:'O gancho',ph:'Ninguém te conta isto sobre o pão de ontem…'}],show:'<b>{A}</b><br>«{t}»'},
 
  post:{type:'form',t:'Conta-o como história',q:'Reescreve o post que te calhou como uma pequena história.',lim:180,assign:'posts',vote:true,check:'hook',checkField:'g',
   fields:[{k:'g',l:'1.ª linha (o gancho)',ph:'Este Game Boy já teve três donos.'},{k:'h',l:'O que aconteceu (quem e o que correu mal)',ph:'O último deixou-o numa gaveta com um botão partido. Trocámos o botão.',ta:true},
@@ -129,7 +129,7 @@ window.QSETS={
   {q:'Na Story Spine, que frase vem logo a seguir a «Todos os dias…»?',o:['Por causa disso…','E desde então…','Até que um dia…','Até que finalmente…'],a:2,why:'A rotina quebra-se com «Até que um dia…».'},
   {q:'Num reel, onde tem de estar o gancho?',o:['No fim, como surpresa','Nos primeiros segundos','Na legenda','Nas hashtags'],a:1,why:'Se o primeiro segundo não prender, ninguém chega à história.'},
   {q:'Qual destas frases mostra em vez de dizer?',o:['Somos sustentáveis','A melhor qualidade do mercado','Este Game Boy já teve três donos','Jogos únicos e com estilo'],a:2,why:'Um facto concreto mostra; um adjetivo só diz.'},
-  {q:'Qual destes é um sinal de slop?',o:['Um número concreto','Uma pessoa com nome','Adjetivos sem prova («únicas», «perfeito»)','Uma opinião própria'],a:2,why:'O slop é texto correto e vazio: serve a qualquer marca.'},
+  {q:'No Instagram, que parte da legenda se vê antes do «… mais»?',o:['A primeira linha','A última linha','As hashtags','O convite'],a:0,why:'Por isso a primeira linha tem de ser o gancho.'},
   {q:'Uma creator recebeu dinheiro para mostrar um produto. O que tem de fazer?',o:['Nada, se gostar do produto','Assinalar que é publicidade, de forma visível','Pôr #pub no fim de 30 hashtags','Pedir autorização à CNPD'],a:1,why:'Tem de se ver que é publicidade: «#pub» ou «parceria paga», bem visível.'}]
 };
 

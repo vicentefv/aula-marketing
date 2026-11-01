@@ -23,7 +23,7 @@ STORE.onConn(ok=>{const c=$('#cn');if(c)c.classList.toggle('off',!ok)});
 async function boot(){
  top();
  let exists=null;try{exists=await STORE.get(P+'/created')}catch(e){}
- if(!exists){setMain('<div class="center"><h2>Sala não encontrada</h2><p class="sub">Confirma o código '+esc(C)+' com o professor.</p><a class="btn" href="index.html">Voltar</a></div>');return}
+ if(!exists){setMain('<div class="center"><h2>Sala não encontrada</h2><p class="sub">Confirma o código '+esc(C)+' no ecrã da sala.</p><a class="btn" href="index.html">Voltar</a></div>');return}
  if(pid){const p=await STORE.get(P+'/players/'+pid);if(p){start();return}pid=null}
  joinForm();
 }
@@ -47,9 +47,10 @@ function subAns(){
  unVt=STORE.on(P+'/vt/'+curKey+'/'+pid,v=>{myVote=v;update()});
 }
 const T=()=>(ACT[act.id]||ACT.lobby).type;
-function render(){clearInterval(timer);sig=act.key+'|'+act.phase;if(act.phase==='ready'&&(D().lim)){setMain(head()+'<div class="center rise"><div class="bigdot" style="background:'+(me?me.color:'var(--violet)')+'"></div><h2>Prepara-te</h2><p class="sub">Começa quando o professor carregar em Começar.</p></div>');return}const f=VIEWS[T()]||VIEWS.lobby;f.render();update(true)}
+function render(){clearInterval(timer);sig=act.key+'|'+act.phase;if(act.phase==='ready'&&(D().lim)){setMain(head()+'<div class="center rise"><div class="bigdot" style="background:'+(me?me.color:'var(--violet)')+'"></div><h2>Prepara-te</h2><p class="sub">A atividade começa daqui a pouco. Olha para o ecrã.</p></div>');return}const f=VIEWS[T()]||VIEWS.lobby;f.render();update(true)}
 function update(force){if(act.phase==='ready')return;const f=VIEWS[T()]||VIEWS.lobby;if(f.update)f.update(force)}
-const startTimer=(el,lim)=>{const f=()=>{const e=(STORE.now()-act.t0)/1000;const x=Math.max(0,1-e/lim);const b=$(el);if(b)b.style.transform='scaleX('+x+')';return e<lim};f();timer=setInterval(()=>{if(!f())clearInterval(timer)},150)};
+/* quando o tempo acaba, envia o que a pessoa tiver escrito ou ordenado */
+const startTimer=(el,lim,onEnd)=>{const f=()=>{const e=(STORE.now()-act.t0)/1000;const x=Math.max(0,1-e/lim);const b=$(el);if(b)b.style.transform='scaleX('+x+')';return e<lim};f();timer=setInterval(()=>{if(!f()){clearInterval(timer);if(onEnd)try{onEnd()}catch(x){}}},150)};
 const elapsed=()=>(STORE.now()-act.t0)/1000;
 const D=()=>ACT[act.id]||{};
 const myPts=()=>(me&&me.pts&&me.pts[curKey])||0;
@@ -83,7 +84,7 @@ form:{render(){const d=D(),A=assignFor(act.id,pid),mine=(ans[pid]&&ans[pid].f)||
    main.querySelectorAll('[data-k]').forEach(el=>{el.value=(local.f&&local.f[el.dataset.k])!=null?local.f[el.dataset.k]:(mine[el.dataset.k]||'');el.oninput=()=>{local.f=local.f||{};local.f[el.dataset.k]=el.value;chk()}});
    const read=()=>{const o={};main.querySelectorAll('[data-k]').forEach(el=>{const v=el.value.trim();if(v)o[el.dataset.k]=v.slice(0,240)});return o};
    const chk=()=>{const c=formChecks(act.id,read());$('#ck').innerHTML=c?chipH(c):''};chk();
-   startTimer('#tb',act.lim||120);
+   startTimer('#tb',act.lim||120,()=>{const o=read();if(Object.keys(o).length&&!Object.values(o).some(isBad))STORE.set(P+'/ans/'+curKey+'/'+pid,{f:o,a:A});main.querySelectorAll('[data-k]').forEach(e=>e.disabled=true);const b=$('#sd');if(b)b.disabled=true;const m=$('#ms');if(m)m.textContent=Object.keys(o).length?'Acabou o tempo. A tua resposta foi enviada.':'Acabou o tempo.'});
    $('#sd').onclick=()=>{const o=read();if(!Object.keys(o).length){$('#ms').textContent='Escreve pelo menos um campo.';return}if(Object.values(o).some(isBad)){$('#ms').textContent='Há palavras não permitidas. Reformula o texto.';vib(40);return}STORE.set(P+'/ans/'+curKey+'/'+pid,{f:o,a:A});vib(20)};
   }else if(act.phase==='vote'){
    setMain(head()+'<h2>Vota no melhor</h2><p class="sub">Não podes votar no teu.</p><div id="vl" style="display:flex;flex-direction:column;gap:10px;margin-top:10px"></div>');
@@ -91,7 +92,7 @@ form:{render(){const d=D(),A=assignFor(act.id,pid),mine=(ans[pid]&&ans[pid].f)||
   }else{
    setMain(head()+'<div class="verdict ok pop"><b>'+(myPts()?'+'+myPts()+' pontos':'Enviado')+'</b><div style="margin-top:6px" class="sub">Vê o resultado no ecrã.</div></div>'+(ans[pid]?'<div class="card" style="margin-top:12px">'+formText(act.id,ans[pid].f,ans[pid].a)+'</div>':''))}},
  update(){const d=D();
-  if(act.phase==='in'){const m=$('#ms');if(m)m.textContent=ans[pid]?'Enviado. Podes melhorar e reenviar até fechar.':''}
+  if(act.phase==='in'){const m=$('#ms'),over=act.lim&&(STORE.now()-act.t0)/1000>=act.lim;if(m)m.textContent=over?(ans[pid]?'Acabou o tempo. A tua resposta foi enviada.':'Acabou o tempo.'):ans[pid]?'Enviado. Podes melhorar e reenviar até fechar.':''}
   if(act.phase==='vote'){const vl=$('#vl');if(!vl)return;const s=Object.keys(ans).filter(k=>k!==pid&&ans[k]&&ans[k].f&&players[k]);
    const h=s.map(k=>'<button class="vote'+(myVote===k?' sel':'')+'" data-p="'+k+'">'+formText(act.id,ans[k].f,ans[k].a)+'</button>').join('')||'<p class="sub">Ainda não há respostas para votar.</p>';
    if(vl.dataset.h!==h){vl.dataset.h=h;vl.innerHTML=h}}}},
@@ -101,10 +102,10 @@ order:{render(){
    setMain(head()+'<div class="verdict ok pop"><b>'+ok+' / '+SPINE.length+'</b><div style="margin-top:6px">posições certas · +'+myPts()+' pontos</div></div><p class="prog">A história certa está no ecrã.</p>');return}
   local.order=local.order||(ans[pid]&&ans[pid].o?ans[pid].o.split(',').map(Number):shuf(SPINE.length,hash(pid+C+'s')));
   setMain(head()+'<div class="tbar"><i id="tb"></i></div><h2 style="font-size:clamp(22px,6vw,30px)">Põe a história por ordem</h2><p class="sub">Arrasta pelo ícone ⋮⋮ à esquerda.</p><div class="sortl" id="sl">'+local.order.map(i=>'<div class="si" data-i="'+i+'"><span class="h">⋮⋮</span><span>'+esc(SPINE[i])+'</span></div>').join('')+'</div><button class="btn" id="sd">Enviar ordem</button><p class="sub" id="ms"></p>');
-  startTimer('#tb',act.lim||100);
+  startTimer('#tb',act.lim||100,()=>{local.order=[...$('#sl').children].map(n=>+n.dataset.i);STORE.set(P+'/ans/'+curKey+'/'+pid,{o:local.order.join(',')});const b=$('#sd');if(b)b.disabled=true;const m=$('#ms');if(m)m.textContent='Acabou o tempo. A tua ordem foi enviada.'});
   sortable($('#sl'),()=>{local.order=[...$('#sl').children].map(n=>+n.dataset.i)});
   $('#sd').onclick=()=>{local.order=[...$('#sl').children].map(n=>+n.dataset.i);STORE.set(P+'/ans/'+curKey+'/'+pid,{o:local.order.join(',')});vib(25)}},
- update(){const m=$('#ms');if(m&&act.phase==='in')m.textContent=ans[pid]?'Enviado. Podes reordenar e reenviar até acabar o tempo.':''}},
+ update(){const m=$('#ms');if(m&&act.phase==='in')m.textContent=act.lim&&(STORE.now()-act.t0)/1000>=act.lim?'Acabou o tempo. A tua ordem foi enviada.':ans[pid]?'Enviado. Podes reordenar e reenviar até acabar o tempo.':''}},
 
 rate:{render(){const d=D(),N=d.crit.length,cur=act.cur,tm=cur&&players[cur];
   const msg=(h,s)=>setMain(head()+'<div class="center rise"><div class="bigdot" style="background:'+(tm?tm.color:(me?me.color:'var(--violet)'))+'"></div><h2>'+h+'</h2>'+(s?'<p class="sub">'+s+'</p>':'')+'</div>');

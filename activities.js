@@ -37,8 +37,8 @@ window.ACT={
    {t:'Garantia de troca durante 30 dias',b:'pr'},{t:'Vender também pelo OLX',b:'pa'},
    {t:'Pagar a um streamer para jogar na Twitch',b:'pm'},{t:'Jogos entre 5 € e 60 €',b:'pc'}]},
 
- smart:{type:'form',t:'Torna-o SMART',q:'Transforma «Quero mais seguidores» num objetivo SMART.',lim:120,vote:true,check:'smart',
-  fields:[{k:'t',l:'O objetivo SMART',ph:'Chegar aos 2 000 seguidores no TikTok até 31 de janeiro, com 3 vídeos por semana',ta:true}],show:'{t}'},
+ smart:{type:'form',t:'Torna-o SMART',q:'Transforma «Quero que a Save Point fique conhecida no campus» num objetivo SMART.',lim:150,vote:true,check:'smart',
+  fields:[{k:'t',l:'O objetivo SMART',ph:'300 estudantes … até …',ta:true}],show:'{t}'},
 
  canais:{type:'sort',t:'Próprio, pago ou ganho?',q:'Arrasta cada meio para o grupo certo.',lim:75,
   buckets:[{k:'own',t:'Próprio',c:G},{k:'paid',t:'Pago',c:L},{k:'earned',t:'Ganho',c:M}],
@@ -55,7 +55,7 @@ window.ACT={
  plano:{type:'form',t:'Mini plano',q:'Um telemóvel por grupo, para a vossa marca. Guardem: é a base do workshop.',lim:300,assign:'marcas',group:true,check:'smart',checkField:'obj',
   fields:[{k:'obj',l:'Objetivo SMART',ph:'Vender 40 jogos online até ao fim do mês',ta:true},{k:'c1',l:'Canal 1 e o papel dele',ph:'TikTok: dar a conhecer a loja'},
    {k:'c2',l:'Canal 2 e o papel dele',ph:'Newsletter: avisar dos jogos novos'},{k:'kpi',l:'KPI a acompanhar',ph:'compras vindas do TikTok'}],
-  show:'<b>{A}</b><br>Objetivo: {obj}<br>{c1}<br>{c2}<br>KPI: {kpi}'},
+  show:'<b>{A}</b><br>Objetivo: {obj}<br>Canal 1: {c1}<br>Canal 2: {c2}<br>KPI: {kpi}'},
 
  abt:{type:'form',t:'Escreve em 3 frases',q:'E… MAS… POR ISSO… para o produto que te calhou.',lim:150,assign:'produtos',vote:true,
   fields:[{k:'e',l:'E… (a situação)',ph:'Todos os dias carrego o telemóvel antes de sair'},{k:'mas',l:'MAS… (o conflito)',ph:'às 16h já estou sem bateria e sem mapa'},

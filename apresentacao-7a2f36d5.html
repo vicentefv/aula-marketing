@@ -2704,7 +2704,7 @@ window.ACT={
  primsec:{type:'sort',t:'Primário ou secundário?',q:'Arrasta cada fonte de dados para o tipo certo.',lim:60,
   buckets:[{k:'p',t:'Primário',c:G},{k:'s',t:'Secundário',c:M}],
   items:[{t:'Censos do INE sobre a população de Lisboa',b:'s'},{t:'Inquérito feito por ti a 30 estudantes do campus',b:'p'},
-   {t:'Pesquisas por «roupa vintage» no Google Trends',b:'s'},{t:'Entrevista a 5 clientes da loja',b:'p'},
+   {t:'Pesquisas por «jogos retro» no Google Trends',b:'s'},{t:'Entrevista a 5 clientes da loja',b:'p'},
    {t:'Relatório DataReportal sobre redes sociais em Portugal',b:'s'},{t:'Observar durante 1 hora quem entra na loja',b:'p'},
    {t:'Estatísticas da Pordata sobre rendimentos',b:'s'},{t:'Sondagem nos stories da marca',b:'p'}]},
 
@@ -2714,17 +2714,17 @@ window.ACT={
   show:'Para {pub} que {nec}, {A} é {cat} que {dif}.'},
 
  persona:{type:'form',t:'Cria a persona',q:'Um telemóvel por grupo. A persona da marca que vos calhou.',lim:300,assign:'marcas',group:true,
-  fields:[{k:'nome',l:'Nome e idade',ph:'Rita, 21 anos'},{k:'dia',l:'Como é o dia dela?',ph:'estuda de manhã, trabalha num café à tarde'},
-   {k:'obj',l:'O que quer conseguir?',ph:'poupar para ir de Erasmus'},{k:'fru',l:'O que a frustra?',ph:'perder tempo à procura de coisas baratas'},
+  fields:[{k:'nome',l:'Nome e idade',ph:'Tiago, 22 anos'},{k:'dia',l:'Como é o dia desta pessoa?',ph:'estuda de manhã, trabalha num café à tarde'},
+   {k:'obj',l:'O que quer conseguir?',ph:'poupar para ir de Erasmus'},{k:'fru',l:'O que lhe causa frustração?',ph:'perder tempo à procura de coisas baratas'},
    {k:'onl',l:'Onde passa tempo online e em quem confia?',ph:'TikTok; confia em amigos e em creators pequenos'}],
-  show:'<b>{nome}</b> · {A}<br>Dia: {dia}<br>Quer: {obj}<br>Frustra-a: {fru}<br>Online: {onl}'},
+  show:'<b>{nome}</b> · {A}<br>Dia: {dia}<br>Quer: {obj}<br>Frustração: {fru}<br>Online: {onl}'},
 
- quatrop:{type:'sort',t:'Que P é este?',q:'Loja Segunda Mão: arrasta cada decisão para o P certo.',lim:75,
+ quatrop:{type:'sort',t:'Que P é este?',q:'Loja Save Point: arrasta cada decisão para o P certo.',lim:75,
   buckets:[{k:'pr',t:'Produto',c:G},{k:'pc',t:'Preço',c:L},{k:'pa',t:'Praça',c:M},{k:'pm',t:'Promoção',c:P}],
-  items:[{t:'Vender peças vintage escolhidas uma a uma',b:'pr'},{t:'Desconto de 20% para estudantes',b:'pc'},
-   {t:'Abrir um pop-up no campus ao sábado',b:'pa'},{t:'Publicar 3 TikToks por semana',b:'pm'},
-   {t:'Garantia de troca durante 30 dias',b:'pr'},{t:'Vender também pela Vinted',b:'pa'},
-   {t:'Pagar a uma creator para mostrar a coleção',b:'pm'},{t:'Peças entre 8 € e 40 €',b:'pc'}]},
+  items:[{t:'Vender jogos usados testados um a um',b:'pr'},{t:'Desconto de 20% para estudantes',b:'pc'},
+   {t:'Abrir um balcão no campus ao sábado',b:'pa'},{t:'Publicar 3 TikToks por semana',b:'pm'},
+   {t:'Garantia de troca durante 30 dias',b:'pr'},{t:'Vender também pelo OLX',b:'pa'},
+   {t:'Pagar a um streamer para jogar na Twitch',b:'pm'},{t:'Jogos entre 5 € e 60 €',b:'pc'}]},
 
  smart:{type:'form',t:'Torna-o SMART',q:'Transforma «Quero mais seguidores» num objetivo SMART.',lim:120,vote:true,check:'smart',
   fields:[{k:'t',l:'O objetivo SMART',ph:'Chegar aos 2 000 seguidores no TikTok até 31 de janeiro, com 3 vídeos por semana',ta:true}],show:'{t}'},
@@ -2742,8 +2742,8 @@ window.ACT={
    {t:'Clientes que voltam a comprar',b:'u'},{t:'Impressões de um anúncio',b:'v'}]},
 
  plano:{type:'form',t:'Mini plano',q:'Um telemóvel por grupo, para a vossa marca. Guardem: é a base do workshop.',lim:300,assign:'marcas',group:true,check:'smart',checkField:'obj',
-  fields:[{k:'obj',l:'Objetivo SMART',ph:'Vender 40 peças online até ao fim do mês',ta:true},{k:'c1',l:'Canal 1 e o papel dele',ph:'TikTok: dar a conhecer a loja'},
-   {k:'c2',l:'Canal 2 e o papel dele',ph:'Newsletter: avisar das peças novas'},{k:'kpi',l:'KPI a acompanhar',ph:'compras vindas do TikTok'}],
+  fields:[{k:'obj',l:'Objetivo SMART',ph:'Vender 40 jogos online até ao fim do mês',ta:true},{k:'c1',l:'Canal 1 e o papel dele',ph:'TikTok: dar a conhecer a loja'},
+   {k:'c2',l:'Canal 2 e o papel dele',ph:'Newsletter: avisar dos jogos novos'},{k:'kpi',l:'KPI a acompanhar',ph:'compras vindas do TikTok'}],
   show:'<b>{A}</b><br>Objetivo: {obj}<br>{c1}<br>{c2}<br>KPI: {kpi}'},
 
  abt:{type:'form',t:'Escreve em 3 frases',q:'E… MAS… POR ISSO… para o produto que te calhou.',lim:150,assign:'produtos',vote:true,
@@ -2761,8 +2761,8 @@ window.ACT={
   fields:[{k:'t',l:'O gancho',ph:'Ninguém te conta isto sobre o pão de ontem…'}],show:'«{t}»'},
 
  post:{type:'form',t:'Conta-o como história',q:'Reescreve o post que te calhou como uma pequena história.',lim:180,assign:'posts',vote:true,check:'hook',checkField:'g',
-  fields:[{k:'g',l:'1.ª linha (o gancho)',ph:'Este casaco já teve três donas.'},{k:'h',l:'O que aconteceu (quem e o que correu mal)',ph:'A última deixou-o no armário com o bolso rasgado. Cosemos o bolso.',ta:true},
-   {k:'c',l:'O convite',ph:'Qual é a peça mais antiga do teu armário?'}],
+  fields:[{k:'g',l:'1.ª linha (o gancho)',ph:'Este Game Boy já teve três donos.'},{k:'h',l:'O que aconteceu (quem e o que correu mal)',ph:'O último deixou-o numa gaveta com um botão partido. Trocámos o botão.',ta:true},
+   {k:'c',l:'O convite',ph:'Qual foi o teu primeiro jogo?'}],
   show:'<b>«{g}»</b><br>{h}<br>{c}'},
 
  slop:{type:'quiz',t:'Slop ou não?',lim:15},
@@ -2776,7 +2776,7 @@ window.ACTS=Object.keys(ACT).map(id=>({id,t:ACT[id].t}));
 
 window.ASSIGN={
  posts:['Nova coleção de inverno. 20% de desconto até domingo.','Abrimos um novo ginásio. Primeira semana grátis.','O nosso café tem agora leite de aveia.','Já podes encomendar pela app. Entregas em 30 minutos.','Novos ténis feitos com plástico reciclado.','Workshop de cerâmica no sábado. Inscrições abertas.'],
- marcas:['Loja de roupa em segunda mão','Festival de música','App de entregas de comida','Ginásio low-cost','Marca de ténis sustentáveis','Café perto da faculdade','Estúdio de pilates','Livraria independente','Loja online de plantas','App de transportes'],
+ marcas:['Loja de bicicletas','Festival de música','App de entregas de comida','Ginásio low-cost','Marca de ténis sustentáveis','Café perto da faculdade','Estúdio de pilates','Livraria independente','Loja online de plantas','App de transportes'],
  produtos:['Powerbank','Garrafa reutilizável','App para dividir contas','Auriculares sem fios','Sapatilhas de corrida','Cartão de transporte']
 };
 
@@ -2794,12 +2794,12 @@ window.SPINE=[
 const SG=['Slop','Tem substância'],PN=['Pode','Não pode'];
 window.QSETS={
  slop:[
-  {q:'«Pronta para elevar o teu estilo a outro nível?»',o:SG,a:0,why:'Abertura vazia: serve a qualquer marca do mundo.'},
-  {q:'«O casaco da foto chegou ontem de Braga: 12 €, botões originais e um rasgão no bolso que te mostramos no vídeo.»',o:SG,a:1,why:'Tem lugar, número e um defeito admitido. Só esta loja podia ter escrito isto.'},
-  {q:'«Acreditamos que a moda sustentável é o futuro.»',o:SG,a:0,why:'Valores de cartaz, sem prova nem opinião própria.'},
-  {q:'«Peças únicas, cheias de estilo e história.»',o:SG,a:0,why:'Adjetivos sem prova. Que peças? Que história?'},
-  {q:'«A Marta trouxe 30 peças da avó. Sábado às 10h estão todas na loja, a 5 € cada.»',o:SG,a:1,why:'Uma pessoa, um número, um dia e uma hora.'},
-  {q:'«Visita-nos e descobre o look perfeito para ti!»',o:SG,a:0,why:'Fecho genérico: sem dia, sem hora, sem motivo. Troca o nome da loja e continua a funcionar.'}],
+  {q:'«Pronto para levar o teu jogo a outro nível?»',o:SG,a:0,why:'Abertura vazia: serve a qualquer marca do mundo.'},
+  {q:'«O Game Boy da foto chegou ontem de Braga: 45 €, botões originais e um risco no ecrã que te mostramos no vídeo.»',o:SG,a:1,why:'Tem lugar, número e um defeito admitido. Só esta loja podia ter escrito isto.'},
+  {q:'«Acreditamos que jogar é muito mais do que um passatempo.»',o:SG,a:0,why:'Valores de cartaz, sem prova nem opinião própria.'},
+  {q:'«Jogos únicos, cheios de nostalgia e emoção.»',o:SG,a:0,why:'Adjetivos sem prova. Que jogos? Que emoção?'},
+  {q:'«O Rui trouxe 30 jogos da coleção do tio. Sábado às 18h estão todos na loja, a 5 € cada.»',o:SG,a:1,why:'Uma pessoa, um número, um dia e uma hora.'},
+  {q:'«Visita-nos e descobre o jogo perfeito para ti!»',o:SG,a:0,why:'Fecho genérico: sem dia, sem hora, sem motivo. Troca o nome da loja e continua a funcionar.'}],
  rgpd:[
   {q:'Enviar a newsletter a quem deixou o email só para participar num passatempo.',o:PN,a:1,why:'Finalidade: os dados só servem para aquilo que disseste. Para a newsletter, pede consentimento à parte.'},
   {q:'Pôr a caixa «Aceito receber novidades» já marcada no formulário.',o:PN,a:1,why:'O consentimento tem de ser ativo. Caixas já marcadas não valem.'},
@@ -2817,7 +2817,7 @@ window.QSETS={
   {q:'Um vídeo teve 2 milhões de views e só 3 vendas. Aqui as views são…',o:['O melhor KPI','Uma métrica de vaidade','Um dado secundário','Um gancho'],a:1,why:'Sobem mas não dizem se o objetivo está mais perto.'},
   {q:'Na Story Spine, que frase vem logo a seguir a «Todos os dias…»?',o:['Por causa disso…','E desde então…','Até que um dia…','Até que finalmente…'],a:2,why:'A rotina quebra-se com «Até que um dia…».'},
   {q:'Num reel, onde tem de estar o gancho?',o:['No fim, como surpresa','Nos primeiros segundos','Na legenda','Nas hashtags'],a:1,why:'Se o primeiro segundo não prender, ninguém chega à história.'},
-  {q:'Qual destas frases mostra em vez de dizer?',o:['Somos sustentáveis','A melhor qualidade do mercado','Este casaco já teve três donas','Peças únicas e com estilo'],a:2,why:'Um facto concreto mostra; um adjetivo só diz.'},
+  {q:'Qual destas frases mostra em vez de dizer?',o:['Somos sustentáveis','A melhor qualidade do mercado','Este Game Boy já teve três donos','Jogos únicos e com estilo'],a:2,why:'Um facto concreto mostra; um adjetivo só diz.'},
   {q:'Qual destes é um sinal de slop?',o:['Um número concreto','Uma pessoa com nome','Adjetivos sem prova («únicas», «perfeito»)','Uma opinião própria'],a:2,why:'O slop é texto correto e vazio: serve a qualquer marca.'},
   {q:'Uma creator recebeu dinheiro para mostrar um produto. O que tem de fazer?',o:['Nada, se gostar do produto','Assinalar que é publicidade, de forma visível','Pôr #pub no fim de 30 hashtags','Pedir autorização à CNPD'],a:1,why:'Tem de se ver que é publicidade: «#pub» ou «parceria paga», bem visível.'}]
 };
@@ -2826,7 +2826,11 @@ window.QSETS={
 const hsh=s=>{let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0};
 /* as marcas da turma (nuvem do início) passam a ser as marcas sorteadas nas atividades */
 window.POOL=window.POOL||null;
-window.poolFrom=w=>{const c={};Object.values(w||{}).forEach(x=>{const t=String(x).trim();const k=t.toLowerCase();if(k){c[k]=c[k]||{t,n:0};c[k].n++}});return Object.values(c).sort((a,b)=>b.n-a.n).slice(0,12).map(x=>x.t)};
+/* a mesma marca escrita de formas diferentes (Nike, nike, NIKE, Coca-Cola, coca cola) conta como uma só */
+window.bkey=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'');
+window.bpretty=v=>{let best='',n=-1;Object.keys(v).forEach(t=>{const sc=v[t]*10+(/[A-Z]/.test(t)?1:0);if(sc>n){n=sc;best=t}});return best};
+window.bmerge=list=>{const c={};list.forEach(x=>{const t=String(x).trim().replace(/\s+/g,' ');const k=bkey(t);if(!k)return;c[k]=c[k]||{v:{},n:0};c[k].n++;c[k].v[t]=(c[k].v[t]||0)+1});Object.values(c).forEach(o=>o.t=bpretty(o.v));return c};
+window.poolFrom=w=>Object.values(bmerge(Object.values(w||{}))).sort((a,b)=>b.n-a.n).slice(0,12).map(x=>x.t);
 window.assignList=a=>a==='marcas'&&Array.isArray(POOL)&&POOL.length>=3?POOL:ASSIGN[a];
 window.assignFor=(id,pid)=>{const a=ACT[id]&&ACT[id].assign;if(!a)return '';const L=assignList(a);return L[hsh(pid+a)%L.length]};
 window.formText=(id,f,A)=>{const d=ACT[id];const e=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -3219,7 +3223,7 @@ const XI='<svg width="34" height="34" viewBox="0 0 36 36" style="flex:none"><pat
 const CI='<svg width="34" height="34" viewBox="0 0 36 36" style="flex:none"><path d="M6 19L14 27L30 8" stroke="var(--acc2)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
 const SLIDES=[];
 const S=(id,th,g,t,foot,html,x={})=>SLIDES.push({id,th,g,t,foot,html,...x});
-const PN='Comunicação Digital e Marketing';const F0=PN+' · Abertura',FM1=PN+' · Marketing',FM2=PN+' · Digital',F1=PN+' · Histórias',F2=F1,F3=PN+' · Da história ao canal',FA=PN+' · IA',FE=PN+' · Ética e RGPD',FW=PN+' · Workshop',FF=PN+' · Fecho';
+const PN='Comunicação Digital e Marketing';const F0=PN+' · Abertura',FM1=PN+' · Marketing',FM2=PN+' · Digital',F1=PN+' · Histórias',F2=F1,F3=PN+' · Histórias nos conteúdos',FA=PN+' · IA',FE=PN+' · Ética e RGPD',FW=PN+' · Workshop',FF=PN+' · Fecho';
 const abs=(l,t,extra='')=>`position:absolute;left:${l}px;top:${t}px;${extra}`;
 
 /* ---------- helpers de layout ---------- */
@@ -3350,9 +3354,9 @@ S('story-spine','ink','Bloco 2 · 40 min','A Story Spine em 8 frases','Fonte: St
  <div data-a="up" class="mut" style="${abs(128,938,'font-size:26px')}">Uma estrutura de improviso, conhecida como a «estrutura Pixar». Serve para qualquer formato.</div>`,
  {onUnstep:(r,el,i)=>G.to(q('#sf'+i,r),{scaleX:0,duration:.3})});
 
-const EX=[['Era uma vez…','uma loja vintage em Coimbra, cheia de peças únicas.'],['Todos os dias…','estudantes passavam à procura de um achado barato.'],['Até que um dia…','abriu uma loja de fast fashion com t-shirts a 5 €.'],['Por causa disso…','as vendas caíram e as peças ficaram nos cabides.'],['Por causa disso…','a dona começou a mostrar no TikTok a história de cada peça.'],['Por causa disso…','os clientes passaram a trazer as suas peças para trocar.'],['Até que finalmente…','a loja virou o ponto de encontro das trocas de sábado.'],['E desde então…','«Veste uma história» é a assinatura da loja.']];
+const EX=[['Era uma vez…','uma loja de jogos em Coimbra, cheia de clássicos.'],['Todos os dias…','estudantes passavam à procura de um jogo barato.'],['Até que um dia…','as lojas online começaram a vender tudo mais barato.'],['Por causa disso…','as vendas caíram e os jogos ficaram nas prateleiras.'],['Por causa disso…','o dono começou a fazer torneios na loja e a mostrá-los no TikTok.'],['Por causa disso…','os clientes passaram a trazer amigos e jogos para trocar.'],['Até que finalmente…','a loja virou o ponto de encontro das sextas à noite.'],['E desde então…','«Aqui ninguém joga sozinho» é a assinatura da loja.']];
 S('spine-exemplo','cream','Bloco 2 · 40 min','Story Spine em ação',F2+' · Exemplo fictício',`
- ${eb('Histórias · Exemplo · Segunda Mão, loja vintage')}${ti('Story Spine em ação')}
+ ${eb('Histórias · Exemplo · Save Point, loja de jogos')}${ti('Story Spine em ação')}
  <div style="${abs(128,296,'width:1664px')}">${EX.map((e,i)=>`<div class="spot" data-step data-a="fade" style="display:grid;grid-template-columns:430px 1fr;align-items:center;height:76px;border-top:1px solid var(--cardb)"><span style="font:700 ${(i===4||i===5)?'26px':'34px'} Syne;color:${i===2?'var(--acc)':'var(--acc2)'};${(i===4||i===5)?'opacity:.55':''}">${(i===4||i===5)?'↳ '+e[0]:e[0]}</span><span data-a="type" style="font-size:33px">${e[1]}</span></div>`).join('')}</div>`);
 
 S('act-spine','ember','Bloco 2 · 40 min','Atividade 03 · A minha Story Spine',F2,act({n:'03',meta:'10 min · nos mesmos grupos',title:'A minha Story Spine',sub:'Escreve as 8 frases para a marca e a persona do teu grupo.',min:10,
@@ -3406,7 +3410,7 @@ S('arco','ink','Bloco 2 · 40 min','O arco emocional',F2,`
  },
  onUnstep:(r,el,i)=>{const a=r._arc;const l=i>0?a.pts[i-1].l:0;a.cur=l;const pt=a.p.getPointAtLength(l);q('#cd',r).setAttribute('cx',pt.x);q('#cd',r).setAttribute('cy',pt.y);q('#cd2',r).setAttribute('cx',pt.x);q('#cd2',r).setAttribute('cy',pt.y);q('#clr',r).setAttribute('width',pt.x);a.p.style.strokeDashoffset=a.L-l;G.to(q('#mks',r).children[i],{scale:0,duration:.2})}});
 
-const GAN=[['Pergunta','E se a roupa que deitas fora valesse 50 € na Vinted?'],['Contradição','Deixei de postar todos os dias e o meu alcance duplicou.'],['Meio da ação','«Eram 3h da manhã e o meu colega de casa estava a vender o sofá.»'],['Promessa','Em 30 segundos vais perceber porque não consegues fazer scroll.'],['Detalhe estranho','O casaco que ninguém quis por 5 € e que esgotou em duas horas.']];
+const GAN=[['Pergunta','E se aquele jogo esquecido na gaveta valesse 50 € no OLX?'],['Contradição','Deixei de postar todos os dias e o meu alcance duplicou.'],['Meio da ação','«Eram 3h da manhã e o meu colega de casa estava a vender o sofá.»'],['Promessa','Em 30 segundos vais perceber porque não consegues fazer scroll.'],['Detalhe estranho','O jogo que ninguém quis por 5 € e que esgotou em duas horas.']];
 S('ganchos','coral','Bloco 2 · 40 min','Os primeiros segundos',F2+' · Exemplos fictícios',`
  ${eb('Histórias · Abrir bem')}${ti('Os primeiros segundos')}
  <div style="${abs(128,296,'right:128px;display:grid;grid-template-columns:1fr 1fr;gap:22px')}">
@@ -3425,7 +3429,7 @@ S('pausa','violet','Bloco 2 · 40 min','Pausa','',`
 
 const CH=[['TikTok / Reels','Primeiro segundo e primeira frase','Gancho, tensão, recompensa'],['Carrossel','A capa','Uma ideia por slide, com viragem'],['Stories','O primeiro frame','Sequência curta com pergunta ou enquete'],['Newsletter','Assunto e 1.ª linha','Cena, ideia central, convite'],['YouTube / podcast','Primeiros 30 segundos','Várias subidas e uma resolução']];
 S('canais','ink','Bloco 3 · 30 min','Mesma história, cinco canais',F3,`
- ${eb('Da história ao canal · Panorama')}${ti('Mesma história, cinco canais')}
+ ${eb('Conteúdos · Panorama')}${ti('Mesma história, cinco canais')}
  <div class="tbl" data-a="kids" style="${abs(128,296,'right:128px')}">
  <div class="tr" style="grid-template-columns:480px 1fr 1fr"><span>Canal</span><span>Onde está o gancho</span><span>Estrutura</span></div>
  ${CH.map((c,i)=>`<div class="tr" style="grid-template-columns:480px 1fr 1fr;min-height:92px"><span style="font:700 40px Syne;display:flex;align-items:center;gap:20px">${(()=>{const L=[['tiktok_i','instagram_i'],['instagram_i'],['instagram_i'],[],['youtube_i']][i].map(k=>lgi(k,52)).join('');return L?`<span style="display:flex;gap:10px;min-width:114px">${L}</span>`:`<span style="display:flex;min-width:114px;padding-left:18px"><i style="width:16px;height:16px;border-radius:50%;background:${['var(--g1)','var(--g2)','var(--g3)','var(--g6)','var(--g4)'][i]};display:block"></i></span>`})()}${c[0]}</span><span style="color:var(--acc)">${c[1]}</span><span>${c[2]}</span></div>`).join('')}
@@ -3435,7 +3439,7 @@ S('canais','ink','Bloco 3 · 30 min','Mesma história, cinco canais',F3,`
 const BT=[['Gancho','A primeira imagem e a primeira frase têm de prender antes do swipe.'],['Tensão','Algo corre mal ou falta resolver: quer-se saber mais.'],['Recompensa','A virada, o plot twist, a transformação.'],['Convite','Uma ação simples: guardar, comentar ou enviar a um amigo.']];
 const BC=['var(--g1)','var(--g6)','var(--g3)','var(--fg)'],BH=[62,250,104,58],BX=['var(--on)','#fff','var(--on)','var(--on)'];
 S('reels','ink','Bloco 3 · 30 min','Vídeo curto: quatro batidas',F3,`
- ${eb('Da história ao canal · Reels e TikTok')}${ti('Vídeo curto: <br>quatro batidas','max-width:1100px')}
+ ${eb('Conteúdos · Reels e TikTok')}${ti('Vídeo curto: <br>quatro batidas','max-width:1100px')}
  <div style="${abs(128,396,'width:1060px;display:flex;flex-direction:column;gap:14px')}">
  ${BT.map((b,i)=>`<div class="card row" data-step data-a="left" style="padding:16px 30px;gap:26px;border-left:8px solid ${BC[i]}"><div class="num" style="color:${BC[i]}">${i+1}</div><div><div class="k" style="color:${BC[i]}">${b[0]}</div><div class="txt" style="font-size:29px;margin-top:6px">${b[1]}</div></div></div>`).join('')}
  </div>
@@ -3447,7 +3451,7 @@ S('reels','ink','Bloco 3 · 30 min','Vídeo curto: quatro batidas',F3,`
 
 const CA=[['Capa','Promete conflito'],['Problema','Mostra o problema'],['Viragem','Muda o rumo'],['Solução','Mostra a mudança'],['Convite','Pede uma ação']];
 S('carrossel','cream','Bloco 3 · 30 min','Carrossel em cinco slides',F3,`
- ${eb('Da história ao canal · Instagram e LinkedIn')}${ti('Carrossel em cinco slides')}
+ ${eb('Conteúdos · Instagram e LinkedIn')}${ti('Carrossel em cinco slides')}
  <div style="${abs(128,310,'width:1664px;display:flex;gap:26px')}">
  ${CA.map((c,i)=>`<div class="card" data-step data-a="right" style="width:312px;height:420px;display:flex;flex-direction:column;justify-content:space-between;${i===2?'background:var(--acc2);border-color:transparent;color:#fff':''}"><div style="font:700 130px/0.9 'DM Sans';-webkit-text-stroke:2px ${i===2?'#fff':'var(--acc2)'};color:transparent">${i+1}</div><div><div class="t3" style="font-size:44px">${c[0]}</div><div class="txt" style="margin-top:12px;font-size:28px;${i===2?'color:#fff':'color:var(--mut)'}">${c[1]}</div></div></div>`).join('')}
  </div>
@@ -3518,7 +3522,7 @@ S('wk-regras','ink','Workshop · 40 min','Como funciona',FW,`
  </div>
  <div data-a="up" class="lead mut" style="${abs(128,860,'right:128px;font-size:34px')}">Em equipas de 3, o estratega e o guionista juntam-se. Sem IA no workshop: é o vosso olhar que estamos a treinar.</div>`);
 
-const DC=[['Marca',['Loja de roupa em segunda mão','Festival de música','App de entregas de comida','Ténis sustentáveis','Café perto da faculdade','Estúdio de pilates']],['Persona (herói)',['Caloiro/a na cidade nova','Estudante Erasmus','Estudante-trabalhador','Criador de conteúdo iniciante','Primeiro emprego','Reformada ativa']],['Conflito',['Falta de tempo','Medo de ficar de fora','Desconfiança','Dinheiro apertado','Solidão','Excesso de opções']],['Canal',['TikTok','Reel no Instagram','Carrossel','Stories','Podcast / YouTube','Newsletter']]];
+const DC=[['Marca',['Loja de bicicletas','Festival de música','App de entregas de comida','Ténis sustentáveis','Café perto da faculdade','Estúdio de pilates']],['Persona (herói)',['Caloiro/a na cidade nova','Estudante Erasmus','Estudante-trabalhador','Criador de conteúdo iniciante','Primeiro emprego','Reformada ativa']],['Conflito',['Falta de tempo','Medo de ficar de fora','Desconfiança','Dinheiro apertado','Solidão','Excesso de opções']],['Canal',['TikTok','Reel no Instagram','Carrossel','Stories','Podcast / YouTube','Newsletter']]];
 S('wk-dados','ember','Workshop · 40 min','Lança os dados',FW+' · Marcas e personagens fictícias',`
  ${eb('Workshop · Brief em 3 minutos')}${ti('Lança os dados')}
  <div class="timer" data-min="3" data-a="pop" style="right:128px;top:84px;--sz:210px"></div>
@@ -3589,7 +3593,7 @@ S('fontes','ink','Fecho · 5 min','Fontes e leituras','Fontes consultadas em out
  ${eb('Fecho · Para saber mais')}${ti('Fontes e leituras')}
  <div data-a="kids" style="${abs(128,290,'right:128px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px')}">
  ${SRC.map(s=>`<div class="card" style="height:212px;padding:20px 26px"><div class="k" style="font-size:18px;line-height:1.25;letter-spacing:.1em">${s[0]}</div><div style="font:700 25px/1.2 Syne;margin-top:10px">${s[1]}</div></div>`).join('')}
- <div class="card" style="height:212px;padding:20px 26px;border-style:dashed;background:transparent"><div class="txt mut" style="font-size:21px;line-height:1.3">Os exemplos marcados como fictícios foram criados para esta aula: a loja Segunda Mão, a persona Rita e as marcas do workshop são inventadas, tal como os dois textos do bloco de IA.</div></div>
+ <div class="card" style="height:212px;padding:20px 26px;border-style:dashed;background:transparent"><div class="txt mut" style="font-size:21px;line-height:1.3">Os exemplos marcados como fictícios foram criados para esta aula: a loja Save Point, a persona Rita e as marcas do workshop são inventadas, tal como os dois textos do bloco de IA.</div></div>
  </div>`);
 
 S('fecho','coral','Fecho · 5 min','Obrigado','',`
@@ -3619,15 +3623,15 @@ S('o-que-e','ink','Marketing','O que é marketing',FM1,`
  </div>
  <div data-step data-a="words" class="title" style="${abs(990,850,'font-size:46px;width:802px')}">Quem só vê a ponta <span class="acc">só vê anúncios</span>.</div>`);
 
-const STP=[['Segmentar','Dividir o mercado em grupos com necessidades parecidas.','Quem compra roupa online · estudantes com pouco orçamento · quem procura peças de marca','var(--g4)',420],['Escolher o público-alvo','O grupo que decides servir bem, e só esse.','Estudantes que gostam de moda e não querem gastar muito','var(--g1)',350],['Posicionar','O lugar que a marca ocupa na cabeça desse público, face às outras.','«A loja onde encontras peças que mais ninguém tem, a preço de estudante.»','var(--g3)',300]];
+const STP=[['Segmentar','Dividir o mercado em grupos com necessidades parecidas.','Quem joga no telemóvel · estudantes com pouco orçamento · colecionadores de jogos retro','var(--g4)',420],['Escolher o público-alvo','O grupo que decides servir bem, e só esse.','Estudantes que jogam muito e não querem gastar muito','var(--g1)',350],['Posicionar','O lugar que a marca ocupa na cabeça desse público, face às outras.','«A loja onde encontras o jogo que já ninguém vende, a preço de estudante.»','var(--g3)',300]];
 S('stp','cream','Marketing','Segmentar, escolher e posicionar',FM1+' · Exemplo fictício',`
  ${eb('Marketing · Para quem falamos')}${ti('Segmentar, escolher e posicionar')}
  <div style="${abs(128,286,'width:1664px;display:flex;flex-direction:column;gap:16px')}">
- ${STP.map((s,i)=>`<div data-step data-a="left" style="display:grid;grid-template-columns:420px 560px 1fr;gap:40px;align-items:center;height:184px"><div style="display:flex;justify-content:center"><div style="width:${s[4]}px;height:150px;background:${s[3]};color:var(--on);border-radius:22px;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 18px;font:800 ${i===1?29:i===2?32:34}px/1.1 Syne">${s[0]}</div></div><div class="txt" style="font-size:30px;font-weight:500">${s[1]}</div><div class="card" style="padding:20px 28px;height:150px;display:flex;flex-direction:column;justify-content:center"><div class="k k2" style="font-size:18px">Exemplo · Segunda Mão</div><div class="txt mut" style="font-size:26px;margin-top:8px;line-height:1.3">${s[2]}</div></div></div>`).join('')}
+ ${STP.map((s,i)=>`<div data-step data-a="left" style="display:grid;grid-template-columns:420px 560px 1fr;gap:40px;align-items:center;height:184px"><div style="display:flex;justify-content:center"><div style="width:${s[4]}px;height:150px;background:${s[3]};color:var(--on);border-radius:22px;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 18px;font:800 ${i===1?29:i===2?32:34}px/1.1 Syne">${s[0]}</div></div><div class="txt" style="font-size:30px;font-weight:500">${s[1]}</div><div class="card" style="padding:20px 28px;height:150px;display:flex;flex-direction:column;justify-content:center"><div class="k k2" style="font-size:18px">Exemplo · Save Point</div><div class="txt mut" style="font-size:26px;margin-top:8px;line-height:1.3">${s[2]}</div></div></div>`).join('')}
  </div>
  <div class="card row" data-step data-a="up" style="${abs(128,880,'width:1664px;padding:22px 36px;gap:28px;border-color:var(--acc)')}"><div class="k">Fórmula</div><div class="txt" style="font-size:29px">Para <b>[público]</b> que <b>[necessidade]</b>, <b>[marca]</b> é <b>[categoria]</b> que <b>[diferença]</b>.</div></div>`);
 
-const P4=[['P','Produto','O que vendes e que problema resolve.','Peças vintage escolhidas uma a uma.','Cliente','C'],['P','Preço','Quanto custa e o que o preço diz sobre ti.','Entre 8 € e 40 €, sem surpresas.','Custo','C'],['P','Praça','Onde e como a pessoa compra.','Loja online e um pop-up ao sábado.','Conveniência','C'],['P','Promoção','Como a pessoa fica a saber que existes.','TikTok, Instagram e newsletter.','Comunicação','C']];
+const P4=[['P','Produto','O que vendes e que problema resolve.','Jogos novos e usados, testados um a um.','Cliente','C'],['P','Preço','Quanto custa e o que o preço diz sobre ti.','Entre 5 € e 60 €, com retoma de usados.','Custo','C'],['P','Praça','Onde e como a pessoa compra.','Loja online e loja física em Coimbra.','Conveniência','C'],['P','Promoção','Como a pessoa fica a saber que existes.','TikTok, Discord e newsletter.','Comunicação','C']];
 S('4ps','ink','Marketing','Os 4Ps',FM1+' · Exemplo fictício',`
  ${eb('Marketing · As quatro decisões')}${ti('Os 4Ps')}
  <div class="g2" data-a="kids" style="${abs(128,286,'right:128px;gap:22px 28px')}">
@@ -3644,13 +3648,13 @@ const SLD=[['Formal','Informal',16,88],['Sério','Divertido',12,82],['Técnico',
 S('marca-voz','cream','Marketing','Marca, proposta de valor e tom de voz',FM1+' · Exemplo fictício',`
  ${eb('Marketing · Marca e voz')}${ti('Marca, proposta de valor e tom de voz','max-width:1660px;font-size:66px')}
  <div style="${abs(128,296,'width:640px;display:flex;flex-direction:column;gap:24px')}" data-a="kids">
-  <div class="card" style="height:250px;padding:28px 34px"><div class="k">Marca</div><div class="txt" style="font-size:27px;margin-top:10px;line-height:1.3">A ideia que fica na cabeça das pessoas: nome, valores, personalidade.</div><div class="txt mut" style="font-size:24px;margin-top:10px">«Achados com história, sem culpa.»</div></div>
-  <div class="card" style="height:250px;padding:28px 34px"><div class="k k2">Proposta de valor</div><div class="txt" style="font-size:27px;margin-top:10px;line-height:1.3">O que ofereces, a quem, e porque és a melhor escolha.</div><div class="txt mut" style="font-size:24px;margin-top:10px">Peças únicas e baratas, escolhidas por quem percebe.</div></div>
+  <div class="card" style="height:250px;padding:28px 34px"><div class="k">Marca</div><div class="txt" style="font-size:27px;margin-top:10px;line-height:1.3">A ideia que fica na cabeça das pessoas: nome, valores, personalidade.</div><div class="txt mut" style="font-size:24px;margin-top:10px">«Aqui ninguém joga sozinho.»</div></div>
+  <div class="card" style="height:250px;padding:28px 34px"><div class="k k2">Proposta de valor</div><div class="txt" style="font-size:27px;margin-top:10px;line-height:1.3">O que ofereces, a quem, e porque és a melhor escolha.</div><div class="txt mut" style="font-size:24px;margin-top:10px">Jogos usados testados e baratos, escolhidos por quem joga.</div></div>
  </div>
  <div class="card" data-a="right" style="${abs(800,296,'width:992px;height:524px;padding:30px 44px')}">
   <div class="k">Tom de voz: como a marca fala</div>
   ${SLD.map(s=>`<div style="margin-top:24px"><div style="display:flex;justify-content:space-between;font:700 25px 'DM Sans';color:var(--mut)"><span>${s[0]}</span><span>${s[1]}</span></div><div style="position:relative;height:10px;border-radius:5px;background:var(--cardb);margin-top:12px"><i style="position:absolute;left:${s[2]}%;top:50%;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;border:5px solid var(--fg);background:var(--card);display:block"></i><i style="position:absolute;left:${s[3]}%;top:50%;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;background:var(--acc);display:block"></i></div></div>`).join('')}
-  <div style="display:flex;gap:36px;margin-top:30px;font:700 23px 'DM Sans'"><span style="display:flex;align-items:center;gap:12px"><i style="width:26px;height:26px;border-radius:50%;background:var(--acc);display:block"></i>Segunda Mão</span><span style="display:flex;align-items:center;gap:12px"><i style="width:26px;height:26px;border-radius:50%;border:5px solid var(--fg);display:block"></i>Um banco tradicional</span></div>
+  <div style="display:flex;gap:36px;margin-top:30px;font:700 23px 'DM Sans'"><span style="display:flex;align-items:center;gap:12px"><i style="width:26px;height:26px;border-radius:50%;background:var(--acc);display:block"></i>Save Point</span><span style="display:flex;align-items:center;gap:12px"><i style="width:26px;height:26px;border-radius:50%;border:5px solid var(--fg);display:block"></i>Um banco tradicional</span></div>
  </div>
  <div data-step data-a="words" class="title" style="${abs(128,870,'font-size:48px;width:1664px')}">Marca, proposta e tom têm de <span class="acc">dizer a mesma coisa</span>.</div>`);
 
@@ -3667,7 +3671,7 @@ S('pago-dados-comunidade','cream','Digital','Pago, dados próprios e comunidade'
 S('abt','ink','Histórias','E, mas, por isso','Modelo ABT (And, But, Therefore), de Randy Olson · Exemplo fictício',`
  ${eb('Histórias · A estrutura mais curta')}${ti('E, MAS, POR ISSO')}
  <div style="${abs(128,290,'width:1664px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:28px')}">
- ${[['E','Situação','A Segunda Mão tem 63 peças únicas e uma comunidade que adora um achado.','var(--g4)'],['MAS','Conflito','As melhores peças desaparecem em duas horas e quase ninguém chega a tempo.','var(--g3)'],['POR ISSO','Ação','Abrimos a coleção sempre ao sábado, às 18h, com aviso na newsletter.','var(--g1)']].map((s,i)=>`<div class="card" data-step data-a="${['left','up','right'][i]}" style="height:430px;padding:34px 38px;border-top:10px solid ${s[3]};display:flex;flex-direction:column"><div style="font:800 ${i===2?84:104}px/1 Syne;color:${s[3]}">${s[0]}</div><div class="k" style="margin-top:12px;color:var(--mut)">${s[1]}</div><div class="txt" style="font-size:31px;margin-top:20px;line-height:1.3">${s[2]}</div></div>`).join('')}
+ ${[['E','Situação','A Save Point tem 80 jogos retro e uma comunidade que adora uma raridade.','var(--g4)'],['MAS','Conflito','Os jogos mais raros desaparecem em duas horas e quase ninguém chega a tempo.','var(--g3)'],['POR ISSO','Ação','Pomos as novidades à venda sempre ao sábado, às 18h, com aviso na newsletter.','var(--g1)']].map((s,i)=>`<div class="card" data-step data-a="${['left','up','right'][i]}" style="height:430px;padding:34px 38px;border-top:10px solid ${s[3]};display:flex;flex-direction:column"><div style="font:800 ${i===2?84:104}px/1 Syne;color:${s[3]}">${s[0]}</div><div class="k" style="margin-top:12px;color:var(--mut)">${s[1]}</div><div class="txt" style="font-size:31px;margin-top:20px;line-height:1.3">${s[2]}</div></div>`).join('')}
  </div>
  <div data-step data-a="words" class="title" style="${abs(128,790,'font-size:54px;width:1664px')}">Sem o <span class="acc">MAS</span> não há tensão. Sem tensão, não há história.</div>
  <div data-a="fade" class="mut" style="${abs(128,930,'font-size:26px')}">Experimenta com a tua marca: escreve uma frase para cada palavra.</div>`);
@@ -3690,7 +3694,7 @@ S('d-ia','violet','IA','IA: o bom e o slop','',div('05','Parte 5 · IA','IA: o b
 
 S('ia-brief','ink','IA','O pedido',FA+' · Exemplo fictício',`
  ${eb('IA · O pedido')}${ti('Mesmo pedido, dois resultados')}
- <div class="card" data-a="left" style="${abs(128,300,'width:1220px;padding:38px 48px;border-left:10px solid var(--acc)')}"><div class="k">Pedido</div><div style="font:500 40px/1.35 'DM Sans';margin-top:16px">«Escreve um gancho e uma legenda de Instagram para o lançamento da coleção de outono da Segunda Mão, uma loja de roupa em segunda mão.»</div></div>
+ <div class="card" data-a="left" style="${abs(128,300,'width:1220px;padding:38px 48px;border-left:10px solid var(--acc)')}"><div class="k">Pedido</div><div style="font:500 40px/1.35 'DM Sans';margin-top:16px">«Escreve um gancho e uma legenda de Instagram para o lançamento da semana retro da Save Point, uma loja de jogos.»</div></div>
  <svg data-a="draw" width="700" height="80" viewBox="0 0 700 80" fill="none" stroke="var(--acc)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" style="${abs(388,584)}"><path d="M350 4 V24 M350 24 C350 52 38 40 38 70 M350 24 C350 52 662 40 662 70"/><path d="M26 58 L38 72 L50 58 M650 58 L662 72 L674 58"/></svg>
  <div data-a="kids" style="${abs(128,660,'width:1220px;display:grid;grid-template-columns:1fr 1fr;gap:28px')}">
   ${['A','B'].map(l=>`<div class="card row" style="height:150px;padding:0 40px;gap:30px"><div style="font:800 100px/1 Syne;color:var(--acc)">${l}</div><div class="txt mut" style="font-size:30px">Texto ${l}</div></div>`).join('')}
@@ -3699,10 +3703,10 @@ S('ia-brief','ink','IA','O pedido',FA+' · Exemplo fictício',`
  <div data-step data-a="words" class="title" style="${abs(128,870,'font-size:50px;width:1664px')}">Um tem matéria real. O outro é <span class="acc">slop</span>. Qual é qual?</div>`);
 
 /* os dois textos: marcas s = sinais de slop, g = o que o bom tem */
-const IA_SLOP_H='<mark class="s" data-n="1">Pronto para renovar o teu guarda-roupa?</mark>';
-const IA_SLOP_T='✨ <mark class="s" data-n="2">Descobre a nossa nova coleção de outono!</mark> 🍂 Na Segunda Mão, <mark class="s" data-n="3">acreditamos que a moda sustentável é o futuro</mark>. <mark class="s" data-n="4">Peças únicas, cheias de estilo e história</mark> esperam por ti. <mark class="s" data-n="5">Dá uma segunda vida à moda</mark> e faz a diferença pelo planeta! 🌍 <mark class="s" data-n="6">Visita-nos agora e encontra o look perfeito para ti.</mark> #modasustentavel #segundamao #vintage #outono #estilo';
-const IA_BOM_H='Esta camisa de flanela já aqueceu alguém durante <mark class="g">onze invernos</mark>.';
-const IA_BOM_T='Chegou à loja na terça, com um bolso descosido e cheiro a armário do avô de alguém. <mark class="g">A Marta coseu-o: demorou vinte minutos e falou sozinha o tempo todo.</mark> Agora está lavada, passada e custa <mark class="g">14 €</mark>, menos do que o café e o bolo que vais pedir esta tarde. <mark class="g">Não, não vais encontrar aqui a t-shirt de 5 € que desfaz na segunda lavagem.</mark> Vais encontrar 63 peças que já provaram durar. <mark class="g">Sábado, às 18h</mark>, abrimos a coleção de outono. Quem chegar primeiro escolhe primeiro.';
+const IA_SLOP_H='<mark class="s" data-n="1">Pronto para levar o teu jogo a outro nível?</mark>';
+const IA_SLOP_T='✨ <mark class="s" data-n="2">Descobre a nossa nova semana retro!</mark> 🎮 Na Save Point, <mark class="s" data-n="3">acreditamos que jogar é muito mais do que um passatempo</mark>. <mark class="s" data-n="4">Jogos únicos, cheios de nostalgia e emoção</mark> esperam por ti. <mark class="s" data-n="5">Revive os clássicos</mark> e faz parte da comunidade! 🕹️ <mark class="s" data-n="6">Visita-nos agora e encontra o jogo perfeito para ti.</mark> #gaming #savepoint #retro #jogos #nostalgia';
+const IA_BOM_H='Este Game Boy de 1998 já passou por <mark class="g">três donos</mark>.';;
+const IA_BOM_T='Este Game Boy de 1998 chegou à loja na terça, numa caixa de sapatos, com um botão partido e pó de uma arrecadação qualquer. <mark class="g">O Rui abriu-o e trocou o botão: levou uma tarde e falou sozinho o tempo todo.</mark> Agora liga à primeira e custa <mark class="g">45 €</mark>, menos do que um jogo novo. <mark class="g">Não, não vais encontrar aqui a consola «retro» de 20 € com 400 jogos copiados que avaria ao fim de uma semana.</mark> Vais encontrar 80 jogos que já provaram durar. <mark class="g">Sábado, às 18h</mark>, abrimos a semana retro. Quem chegar primeiro escolhe primeiro.';
 const IA_SWAP=Math.random()<.5; /* sorteado ao abrir: verdadeiro = o texto A é o bom */
 const IA_A=IA_SWAP?{h:IA_BOM_H,t:IA_BOM_T,bom:1}:{h:IA_SLOP_H,t:IA_SLOP_T,bom:0};
 const IA_B=IA_SWAP?{h:IA_SLOP_H,t:IA_SLOP_T,bom:0}:{h:IA_BOM_H,t:IA_BOM_T,bom:1};
@@ -3740,7 +3744,7 @@ S('ia-sinais','cream','IA','Seis sinais de slop',FA+' · Exemplo fictício',`
  {onStep:(r,el,i)=>{const m=q('mark[data-n="'+(i+1)+'"]',r);if(m)m.classList.add('on')},
   onUnstep:(r,el,i)=>{const m=q('mark[data-n="'+(i+1)+'"]',r);if(m)m.classList.remove('on')}});
 
-const MV=[['Dá contexto real','Quem és, para quem falas, em que tom. Cola exemplos de textos teus.','«Somos uma loja de roupa em segunda mão e falamos como uma amiga com piada.»'],['Traz matéria tua','O que só tu tens: pessoas, números, bastidores, opiniões.','A Marta, o bolso descosido, os 14 €.'],['Pede várias versões','Cinco aberturas diferentes. Escolhe uma ou mistura.','«Dá-me 5 ganchos, um deles polémico.»'],['Edita à mão','Corta o que podia ser de qualquer marca. Lê em voz alta.','Apagar «peças únicas, cheias de estilo».'],['Verifica os factos','Nomes, datas, números e promessas. A IA inventa com confiança.','Confirmar o preço e o horário.']];
+const MV=[['Dá contexto real','Quem és, para quem falas, em que tom. Cola exemplos de textos teus.','«Somos uma loja de jogos em Coimbra e falamos como um amigo que joga contigo.»'],['Traz matéria tua','O que só tu tens: pessoas, números, bastidores, opiniões.','O Rui, o botão trocado, os 45 €.'],['Pede várias versões','Cinco aberturas diferentes. Escolhe uma ou mistura.','«Dá-me 5 ganchos, um deles polémico.»'],['Edita à mão','Corta o que podia ser de qualquer marca. Lê em voz alta.','Apagar «jogos únicos, cheios de nostalgia».'],['Verifica os factos','Nomes, datas, números e promessas. A IA inventa com confiança.','Confirmar o preço e o horário.']];
 S('ia-metodo','ink','IA','Cinco movimentos',FA,`
  ${eb('IA · Como usar bem')}${ti('Cinco movimentos anti-slop')}
  <div data-a="kids" style="${abs(128,296,'width:1664px;display:grid;grid-template-columns:repeat(5,1fr);gap:18px')}">
@@ -3768,14 +3772,14 @@ const N3={
  'objetivos':'Lê os quatro objetivos, um por bloco. Pergunta rápida à turma: qual destes vos parece mais difícil hoje? Volta a esta resposta no fecho.',
  'd1':'Início do Marketing (0:10). 30 minutos: o que é marketing (3), segmentar e posicionar (3), persona (2) e atividade 01 (8), 4Ps (3), marca e tom de voz (3), marcas que falam contigo (2), funil e jornada (3) e SMART (2).',
  'o-que-e':'Pergunta de entrada: o que é marketing? Quase todos dirão publicidade. Mostra o icebergue: a publicidade é só a parte visível; por baixo está o trabalho de perceber as pessoas, desenhar a oferta, definir o preço e o sítio onde se vende. Os quatro verbos à direita (criar, comunicar, entregar, trocar) seguem a definição clássica de marketing. Fecha com a frase: quem só vê a ponta só vê anúncios.',
- 'stp':'Revela uma linha de cada vez. Segmentar: dividir o mercado em grupos com necessidades parecidas. Escolher: decidir a quem vais servir bem (não dá para agradar a todos). Posicionar: o lugar que ocupas na cabeça desse público. O exemplo da Segunda Mão é fictício. A fórmula final dá-lhes um molde para escreverem o posicionamento da marca que vão escolher na atividade 01. A segmentação aqui é por necessidades e comportamentos, não só por idade.',
+ 'stp':'Revela uma linha de cada vez. Segmentar: dividir o mercado em grupos com necessidades parecidas. Escolher: decidir a quem vais servir bem (não dá para agradar a todos). Posicionar: o lugar que ocupas na cabeça desse público. O exemplo da Save Point é fictício. A fórmula final dá-lhes um molde para escreverem o posicionamento da marca que vão escolher na atividade 01. A segmentação aqui é por necessidades e comportamentos, não só por idade.',
  'persona':'Exemplo fictício: a Rita, estudante de Design. Depois de escolher o público-alvo, a persona dá-lhe cara e rotina. Explica que a persona deve vir de dados reais (conversas com clientes, inquéritos, comentários, métricas) e não de suposições. Mostra como cada campo muda a comunicação: se decide quando vê alguém parecido com ela a usar a peça, o conteúdo certo são creators e clientes reais, não fotos de catálogo. O que define a persona é o problema e o contexto, não a idade.',
  'act-persona':'Atividade 01 (8 min). Forma já os grupos de 3–4 pessoas, que se mantêm até ao workshop. 1 min de instruções, 5 min de trabalho, 2 min de partilha com 2 grupos. Sem IA. Se um grupo ficar preso, pede-lhe que pense numa pessoa real que conhecem e que compra aquela marca.',
- '4ps':'Mostra os 4Ps com o exemplo fictício da Segunda Mão: produto, preço, praça (onde se compra) e promoção (como se comunica). Acaba de falar de todos antes de avançares. Ao avançar, aparece o 4C de cada P: o mesmo visto pelo cliente (Lauterborn): cliente, custo, conveniência, comunicação. Pergunta: se o preço sobe, o que tem de mudar nos outros três? A seguir, os 7Ps (pessoas, processos e evidência física) aplicam-se a serviços. Não te demores: o objetivo é que saibam que existem e para que servem.',
- 'marca-voz':'Marca é a ideia que fica na cabeça; proposta de valor é a promessa concreta; tom de voz é a forma de falar. Nos sliders, compara a Segunda Mão (bolas verdes) com um banco tradicional (anéis): a mesma informação, vozes muito diferentes. Pede a dois alunos que digam onde poriam uma marca que conhecem. Liga ao slide seguinte: Duolingo e Wendy’s têm um tom de voz inconfundível.',
+ '4ps':'Mostra os 4Ps com o exemplo fictício da Save Point: produto, preço, praça (onde se compra) e promoção (como se comunica). Acaba de falar de todos antes de avançares. Ao avançar, aparece o 4C de cada P: o mesmo visto pelo cliente (Lauterborn): cliente, custo, conveniência, comunicação. Pergunta: se o preço sobe, o que tem de mudar nos outros três? A seguir, os 7Ps (pessoas, processos e evidência física) aplicam-se a serviços. Não te demores: o objetivo é que saibam que existem e para que servem.',
+ 'marca-voz':'Marca é a ideia que fica na cabeça; proposta de valor é a promessa concreta; tom de voz é a forma de falar. Nos sliders, compara a Save Point (bolas verdes) com um banco tradicional (anéis): a mesma informação, vozes muito diferentes. Pede a dois alunos que digam onde poriam uma marca que conhecem. Liga ao slide seguinte: Duolingo e Wendy’s têm um tom de voz inconfundível.',
  'marcas-conversa':'Dois exemplos de marcas que falam como pessoas e que o público jovem segue. Duolingo: a mascote Duo, a coruja verde, é a cara da marca no TikTok, com memes e piadas sobre quem falta às lições (mais de 18 milhões de seguidores, segundo a CreatorDB em setembro de 2026). Em fevereiro de 2025 a marca anunciou a «morte» do Duo; no dia seguinte, os downloads no Android subiram 38% e as pesquisas 58% (Similarweb, citado pelo TechCrunch). Wendy’s: respostas humorísticas no X desde 2017; o National Roast Day existe desde 2018 e, em 2023, o #NationalRoastDay teve mais de 116 milhões de visualizações no TikTok (dado divulgado pela plataforma e reproduzido pela Mediashower; confirma antes de citar como número oficial). Terceiro cartão: dá 30 segundos para 2 ou 3 alunos dizerem uma marca que seguem porque “fala como um amigo”, e o que faz de diferente. Escreve as respostas no quadro: vais reutilizá-las nos meios ganhos e na persona. Pergunta extra: qual destas marcas já vos respondeu ou gozou convosco?',
  'jornada':'Uma etapa de cada vez. É o funil visto como jornada: da descoberta à recomendação. Para cada etapa, pergunta: do que é que a pessoa precisa aqui? Pede à turma que pense na última compra importante (ténis, telemóvel, bilhete de festival) e em onde descobriram, onde compararam e o que os convenceu. Sublinha que não há um conteúdo para tudo: um TikTok funciona para descoberta, mas quem já está a decidir quer reviews e informação clara. Este modelo volta no slide das métricas.',
- 'smart':'Explica as cinco letras e depois mostra a transformação do objetivo vago no objetivo SMART (exemplo fictício da loja vintage). Pergunta: como saberíamos se “mais seguidores” foi atingido? Sem número nem prazo, não há forma de avaliar. Liga a algo que conhecem: um creator que diz “quero crescer no TikTok” é vago; “chegar aos 10 mil em 3 meses” já se pode medir.',
+ 'smart':'Explica as cinco letras e depois mostra a transformação do objetivo vago no objetivo SMART (exemplo fictício da loja de jogos). Pergunta: como saberíamos se “mais seguidores” foi atingido? Sem número nem prazo, não há forma de avaliar. Liga a algo que conhecem: um creator que diz “quero crescer no TikTok” é vago; “chegar aos 10 mil em 3 meses” já se pode medir.',
  'd2':'Início do Digital (0:40). 30 minutos: do monólogo à conversa (2), Portugal em números (2), meios próprios, pagos e ganhos (3), canais (3), pago, dados e comunidade (3), plano de conteúdos (3), campanhas reais (3), métricas (3) e atividade 02 (8).',
  'monologo':'Revela uma linha de cada vez. Pergunta: que marcas conhecem que falam “com” e não “para”? A frase final resume o bloco: a marca deixa de falar para e passa a falar com.',
  'pago-dados-comunidade':'Três alavancas que se complementam. Pago: chegas a quem não te conhece, mas só enquanto pagas. Dados próprios: email, compras e respostas que as pessoas te dão com consentimento; são teus e não dependem de um algoritmo. Comunidade: social listening é ver o que dizem de ti mesmo quando não te marcam; numa crise, responde depressa, com voz humana, e se erraste reconhece, corrige e explica. A frase final liga ao slide dos meios próprios, pagos e ganhos.',
@@ -3789,7 +3793,7 @@ const N3={
  'ia-brief':'Explica o pedido e define “slop”: conteúdo feito em série, sem cuidado, que podia ser de qualquer marca. Vão ver dois textos para o mesmo pedido, A e B, sem dizer qual é qual. Os dois textos são exemplos escritos para a aula: o genérico imita o que um modelo devolve quando recebe só o pedido; o outro leva matéria real (pessoa, números, opinião). Se quiseres, antes da aula gera tu o teu “slop” e troca o texto.',
  'ia-ab':'Os lados A e B são sorteados quando abres a apresentação (recarrega a página para trocar). Dá 1 minuto a ler em silêncio e abre a votação com a mão no ar; conta e regista nos botões (shift+clique tira um voto). Pergunta a 2 ou 3 alunos porquê, sem corrigir. Carrega em seguida para as pistas (procura abertura, adjetivos, números, opinião) e, quando houver debate, carrega outra vez para revelar qual é o bom e qual é o slop. Os números marcados no slop são os seis sinais do slide seguinte.',
  'ia-sinais':'Revela um sinal de cada vez; o trecho destacado no texto acende com o número. Insiste: nenhum destes sinais é um erro de português. É texto correto e vazio. O que falta é uma pessoa, um número, um lugar e uma opinião. Pergunta: troquem o nome da loja por outro nome qualquer. Alguma frase deixa de fazer sentido? Se não, é slop.',
- 'ia-metodo':'Os cinco movimentos para usar IA sem cair no genérico. 1) Contexto real: quem és, para quem, em que tom, com exemplos teus. 2) Matéria tua: a Marta, os 14 €, o bolso descosido: é o que a IA não tem. 3) Várias versões: pede cinco e escolhe ou mistura. 4) Edita à mão: corta tudo o que podia ser de qualquer marca. 5) Verifica os factos: nomes, datas, números e promessas. Frase final: tu és o autor, a IA é o assistente. Se tiveres um exemplo teu de antes e depois, mostra-o aqui.',
+ 'ia-metodo':'Os cinco movimentos para usar IA sem cair no genérico. 1) Contexto real: quem és, para quem, em que tom, com exemplos teus. 2) Matéria tua: o Rui, os 45 €, o botão trocado: é o que a IA não tem. 3) Várias versões: pede cinco e escolhe ou mistura. 4) Edita à mão: corta tudo o que podia ser de qualquer marca. 5) Verifica os factos: nomes, datas, números e promessas. Frase final: tu és o autor, a IA é o assistente. Se tiveres um exemplo teu de antes e depois, mostra-o aqui.',
  'ia-check':'Três perguntas para guardar antes de publicar com IA: é verdade (nomes, datas, números e factos verificados)? Soa a mim (lido em voz alta, parece meu ou podia ser de qualquer marca)? Disse que é IA (se parece real e foi feito com IA, assinala)? Liga à ética que vem a seguir.',
  'etica':'Momento curto (2 min) mas importante. Quando uma história é inventada ou encenada, a audiência tem de poder saber. Com a IA generativa é mais fácil do que nunca produzir “testemunhos” e “cenas reais” falsas; recorda a turma de que a confiança é o ativo mais difícil de reconstruir.',
  'rgpd':'Ética e RGPD (3 min). Consentimento livre, informado, específico e claro; usar os dados só para a finalidade comunicada; direitos de acesso, retificação e apagamento; coimas até 20 milhões de euros ou 4% do volume de negócios mundial, o que for mais alto (RGPD, art. 83). Publicidade: parcerias pagas com creators têm de estar identificadas (#pub ou “parceria paga”). IA: o Regulamento da IA da UE (art. 50) exige que conteúdo gerado por IA que possa enganar, como deepfakes, seja identificado; as regras aplicam-se desde 2 de agosto de 2026. Confirma o estado atual antes de citares em contexto avaliativo.',
@@ -3872,14 +3876,14 @@ S('persona','ink','Bloco 1 · Ecossistema digital','Público e persona',FM1+' ·
  <div class="mail" data-a="pop" style="${abs(1100,290,'width:692px;padding:36px 42px')}">
   <div style="display:flex;gap:24px;align-items:center"><div style="width:96px;height:96px;border-radius:50%;background:linear-gradient(135deg,var(--g1),var(--g6));flex:none"></div><div><div style="font:800 44px/1.05 Syne">Rita, 21</div><div style="font-size:26px;color:#6B7F73;margin-top:6px">Estudante de Design · Porto</div></div></div>
   <div data-a="kids" style="margin-top:26px;display:flex;flex-direction:column;gap:16px">
-  ${[['Objetivo','Vestir-se com estilo sem gastar o orçamento do mês.'],['Frustração','Perde horas a fazer scroll na Vinted entre anúncios todos iguais.'],['Onde está online','TikTok, Instagram e Vinted, onde vê outfits e preços.'],['Decide quando','vê alguém parecido com ela a usar a peça.']].map(f=>`<div style="border-top:1px solid #D9E5DC;padding-top:14px"><div class="lab" style="font-size:19px">${f[0]}</div><div style="font:500 28px/1.3 'DM Sans';margin-top:6px">${f[1]}</div></div>`).join('')}
+  ${[['Objetivo','Jogar os lançamentos sem gastar o orçamento do mês.'],['Frustração','Perde horas a comparar preços entre sites e anúncios no OLX.'],['Onde está online','TikTok, Twitch e Discord, onde vê reviews e jogadas.'],['Decide quando','vê alguém parecido com ela a usar a peça.']].map(f=>`<div style="border-top:1px solid #D9E5DC;padding-top:14px"><div class="lab" style="font-size:19px">${f[0]}</div><div style="font:500 28px/1.3 'DM Sans';margin-top:6px">${f[1]}</div></div>`).join('')}
   </div>
  </div>`);
 
 S('act-persona','ember','Bloco 1 · Ecossistema digital','Atividade 01 · Desenha a tua persona',FM1,act({n:'01',meta:'8 min · em grupos de 3 ou 4',title:'Desenha a persona',sub:'Escolhe uma marca do dia a dia e descobre para quem está a falar.',min:8,
  steps:['Escolhe ou sorteia uma marca.','Dá nome, idade e rotina à persona.','Escreve o objetivo e a maior frustração dela.','Indica onde passa tempo online e em quem confia.'],
  deb:'Que conteúdo a faria parar o scroll?',
- right:picker('Escolhe uma marca',['Loja de roupa em segunda mão','Festival de música','Ginásio low-cost','App de entregas de comida','Marca de ténis','Café perto da faculdade'],2)}));
+ right:picker('Escolhe uma marca',['Loja de bicicletas','Festival de música','Ginásio low-cost','App de entregas de comida','Marca de ténis','Café perto da faculdade'],2)}));
 
 /* ---- Bloco 2 · Estratégia, canais e métricas ---- */
 S('d2','violet','Digital','Marketing digital','',div('02','Parte 2 · Digital','Marketing <span class="acc">digital</span>','Onde estão as pessoas, que papel tem cada canal e como saber se resulta.',1,124));
@@ -3904,7 +3908,7 @@ S('canais-mkt','ink','Bloco 2 · Estratégia e canais','Cada canal tem um papel'
  <div data-a="up" class="lead" style="${abs(128,870,'font-size:38px')}">Não é preciso estar em todo o lado: é preciso estar <span class="acc">onde a persona está</span>.</div>`);
 
 const PL=[['Educar','Ensinar algo útil.','var(--g2)','var(--on)'],['Inspirar','Mostrar pessoas e bastidores.','var(--g1)','var(--on)'],['Entreter','Momentos leves e partilháveis.','var(--g3)','var(--on)'],['Converter','Levar à ação: comprar, visitar.','var(--fg)','var(--on)']];
-const CAL=[[0,0,'Carrossel','Como saber se um casaco é mesmo vintage'],[2,1,'Reel','Um dia com a dona da loja'],[4,2,'Story','Adivinha o preço: sondagem'],[5,3,'Post','Drop de sábado: peças novas às 18h'],[6,1,'Newsletter','Os melhores achados da semana']];
+const CAL=[[0,0,'Carrossel','Como saber se um jogo usado está bom'],[2,1,'Reel','Um dia com o dono da loja'],[4,2,'Story','Adivinha o preço: sondagem'],[5,3,'Post','Sábado às 18h: chegam jogos novos'],[6,1,'Newsletter','Os melhores achados da semana']];
 S('campanhas-reais','ink','Bloco 2 · Estratégia e canais','Campanhas que marcaram',FM2,`
  ${eb('Digital · Campanhas reais')}${ti('Campanhas que marcaram')}
  <div class="g3" style="${abs(128,296,'right:128px')}">
@@ -3915,7 +3919,7 @@ S('campanhas-reais','ink','Bloco 2 · Estratégia e canais','Campanhas que marca
  <div data-step data-a="words" class="title" style="${abs(128,880,'font-size:46px;width:1664px')}">Em todas, a marca <span class="acc">deu às pessoas algo para fazer ou partilhar</span>.</div>`);
 
 S('calendario','cream','Bloco 2 · Estratégia e canais','Um plano de conteúdos',FM2+' · Exemplo fictício',`
- ${eb('Digital · Exemplo · Segunda Mão, loja vintage')}${ti('Um plano de conteúdos')}
+ ${eb('Digital · Exemplo · Save Point, loja de jogos')}${ti('Um plano de conteúdos')}
  <div data-a="kids" style="${abs(128,290,'width:1664px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px')}">
  ${PL.map(p=>`<div class="card row" style="padding:16px 24px;gap:18px;height:104px"><i style="width:22px;height:22px;border-radius:50%;background:${p[2]};flex:none;display:block"></i><div><div class="t3" style="font-size:32px">${p[0]}</div><div class="txt mut" style="font-size:22px;margin-top:2px;line-height:1.25">${p[1]}</div></div></div>`).join('')}
  </div>
@@ -4044,7 +4048,7 @@ const quote=o=>{const c=o.col||'var(--g1)';
   <div style="position:absolute;left:24px;right:24px;top:26px;height:6px;border-radius:3px;background:rgba(255,255,255,.25)"><i style="display:block;height:100%;width:18%;border-radius:3px;background:#fff"></i></div>
   <div style="position:absolute;left:34px;right:96px;top:300px;font:800 ${o.qs>54?40:44}px/1.15 Syne;color:#fff;text-shadow:0 4px 18px rgba(0,0,0,.45)">${o.q}</div>
   <div style="position:absolute;right:22px;bottom:150px;display:flex;flex-direction:column;gap:30px;align-items:center">${['M12 21s-8-5.5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.5-8 11-8 11z','M4 5h16v11H9l-5 4z','M4 12l16-8-6 16-2-6z'].map(d=>`<svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"><path d="${d}"/></svg>`).join('')}</div>
-  <div style="position:absolute;left:34px;bottom:60px;display:flex;gap:14px;align-items:center;color:#fff;font:700 24px 'DM Sans'"><i style="display:block;width:46px;height:46px;border-radius:50%;background:${c}"></i>@segundamao</div>
+  <div style="position:absolute;left:34px;bottom:60px;display:flex;gap:14px;align-items:center;color:#fff;font:700 24px 'DM Sans'"><i style="display:block;width:46px;height:46px;border-radius:50%;background:${c}"></i>@savepoint.jogos</div>
  </div>`}
  if(o.style==='post'){
   return `${eb(o.eb)}${dots(o.i,o.n,c)}
@@ -4054,9 +4058,9 @@ const quote=o=>{const c=o.col||'var(--g1)';
   <p class="lead" data-a="up" data-at=".8" style="margin-top:34px;font-size:40px">${o.line}</p>
  </div>
  <div class="card" data-a="pop" data-at=".4" style="${abs(1020,210,'width:772px;padding:0;border-radius:40px;overflow:hidden')}">
-  <div style="display:flex;align-items:center;gap:18px;padding:26px 32px"><i style="display:block;width:64px;height:64px;border-radius:50%;background:${c}"></i><div><div style="font:700 28px 'DM Sans'">segundamao</div><div class="mut" style="font-size:22px">Publicação</div></div><span class="mut" style="margin-left:auto;font:700 30px 'DM Sans'">···</span></div>
+  <div style="display:flex;align-items:center;gap:18px;padding:26px 32px"><i style="display:block;width:64px;height:64px;border-radius:50%;background:${c}"></i><div><div style="font:700 28px 'DM Sans'">savepoint.jogos</div><div class="mut" style="font-size:22px">Publicação</div></div><span class="mut" style="margin-left:auto;font:700 30px 'DM Sans'">···</span></div>
   <div style="height:250px;background:repeating-linear-gradient(135deg,${tint(c,22)} 0 22px,${tint(c,10)} 22px 44px);display:flex;align-items:center;justify-content:center"><span class="k" style="color:var(--mut)">Imagem genérica</span></div>
-  <div style="padding:30px 34px 34px"><p style="font:600 40px/1.25 'DM Sans'"><b style="font-weight:800">segundamao</b> <span style="background:${tint(c,30)};border-radius:8px;padding:0 6px">${o.q.replace(/^«|»$/g,'')}</span></p>
+  <div style="padding:30px 34px 34px"><p style="font:600 40px/1.25 'DM Sans'"><b style="font-weight:800">savepoint.jogos</b> <span style="background:${tint(c,30)};border-radius:8px;padding:0 6px">${o.q.replace(/^«|»$/g,'')}</span></p>
   <div class="mut" style="margin-top:22px;font:700 24px 'DM Sans';display:flex;gap:30px"><span>♡ 3</span><span>0 comentários</span><span>há 2 dias</span></div></div>
  </div>`}
  return `${eb(o.eb)}${dots(o.i,o.n,c)}
@@ -4068,24 +4072,24 @@ const quote=o=>{const c=o.col||'var(--g1)';
  </div>`};
 
 /* ================= MARKETING ================= */
-S('stp-segmentar','ink','Marketing','Segmentar',FM1+' · Exemplo fictício',solo({lay:'N',eb:'Marketing · Para quem falamos',i:1,n:3,pill:'Passo 1 de 3',name:'Segmentar',line:'Dividir o mercado em grupos com necessidades parecidas.',ex:['Exemplo · Segunda Mão','Quem compra roupa online · estudantes com pouco orçamento · quem procura peças de marca'],big:'1',col:'var(--g4)'}));
-S('stp-escolher','ink','Marketing','Escolher o público-alvo',FM1+' · Exemplo fictício',solo({lay:'N',eb:'Marketing · Para quem falamos',i:2,n:3,pill:'Passo 2 de 3',name:'Escolher o público-alvo',ns:100,line:'O grupo que decides servir bem, e só esse.',ex:['Exemplo · Segunda Mão','Estudantes que gostam de moda e não querem gastar muito'],big:'2',col:'var(--g1)'}));
-S('stp-posicionar','ink','Marketing','Posicionar',FM1+' · Exemplo fictício',solo({lay:'N',eb:'Marketing · Para quem falamos',i:3,n:3,pill:'Passo 3 de 3',name:'Posicionar',line:'O lugar que a marca ocupa na cabeça desse público, face às outras.',ex:['Exemplo · Segunda Mão','«A loja onde encontras peças que mais ninguém tem, a preço de estudante.»'],big:'3',col:'var(--g3)'}));
+S('stp-segmentar','ink','Marketing','Segmentar',FM1+' · Exemplo fictício',solo({lay:'N',eb:'Marketing · Para quem falamos',i:1,n:3,pill:'Passo 1 de 3',name:'Segmentar',line:'Dividir o mercado em grupos com necessidades parecidas.',ex:['Exemplo · Save Point','Quem joga no telemóvel · estudantes com pouco orçamento · colecionadores de jogos retro'],big:'1',col:'var(--g4)'}));
+S('stp-escolher','ink','Marketing','Escolher o público-alvo',FM1+' · Exemplo fictício',solo({lay:'N',eb:'Marketing · Para quem falamos',i:2,n:3,pill:'Passo 2 de 3',name:'Escolher o público-alvo',ns:100,line:'O grupo que decides servir bem, e só esse.',ex:['Exemplo · Save Point','Estudantes que jogam muito e não querem gastar muito'],big:'2',col:'var(--g1)'}));
+S('stp-posicionar','ink','Marketing','Posicionar',FM1+' · Exemplo fictício',solo({lay:'N',eb:'Marketing · Para quem falamos',i:3,n:3,pill:'Passo 3 de 3',name:'Posicionar',line:'O lugar que a marca ocupa na cabeça desse público, face às outras.',ex:['Exemplo · Save Point','«A loja onde encontras o jogo que já ninguém vende, a preço de estudante.»'],big:'3',col:'var(--g3)'}));
 S('stp-formula','ink','Marketing','A fórmula do posicionamento',FM1+' · Exemplo fictício',`
  ${eb('Marketing · Para quem falamos')}${ti('A fórmula do posicionamento')}
  <div class="card" data-a="pop" style="${abs(128,320,'width:1664px;padding:52px 64px;border-color:var(--acc)')}"><p style="font:600 54px/1.35 'DM Sans'">Para <b class="acc">[público]</b> que <b class="acc">[necessidade]</b>, <b class="acc">[marca]</b> é <b class="acc">[categoria]</b> que <b class="acc">[diferença]</b>.</p></div>
- <div class="card" data-a="up" data-d=".3" style="${abs(128,620,'width:1664px;padding:40px 64px;border-left:12px solid var(--acc2)')}"><div class="k k2">Exemplo · Segunda Mão</div><p style="font:500 38px/1.4 'DM Sans';margin-top:16px">Para <b>estudantes que gostam de moda e não querem gastar muito</b>, a Segunda Mão é <b>a loja vintage</b> onde encontras <b>peças que mais ninguém tem, a preço de estudante</b>.</p></div>
+ <div class="card" data-a="up" data-d=".3" style="${abs(128,620,'width:1664px;padding:40px 64px;border-left:12px solid var(--acc2)')}"><div class="k k2">Exemplo · Save Point</div><p style="font:500 38px/1.4 'DM Sans';margin-top:16px">Para <b>estudantes que jogam muito e não querem gastar muito</b>, a Save Point é <b>a loja de jogos</b> onde encontras <b>o jogo que já ninguém vende, a preço de estudante</b>.</p></div>
  <div data-a="fade" class="mut" style="${abs(128,930,'font-size:26px')}">Escreve a tua para a marca da atividade 01.</div>`);
 
 S('persona-def','ink','Marketing','O que é uma persona',FM1,solo({lay:'C',eb:'Marketing · Para quem falamos',pill:'Persona',name:'Público e persona',ns:96,ls:36,line:'Uma persona é o retrato do cliente ideal, construído com dados reais: conversas, inquéritos, métricas.',list:['Começa pelo problema, não só pela idade.','Descobre onde passa tempo e em quem confia (amigos, creators, reviews).','Uma persona por campanha: quem fala para todos não fala com ninguém.'],icon:'person',col:'var(--g1)'}));
 S('persona-rita','ink','Marketing','Exemplo: a Rita',FM1+' · Exemplo fictício',`
  ${eb('Marketing · Exemplo de persona')}${ti('A Rita, 21 anos')}
  ${sb('Exemplo fictício. Repara no que define a Rita: o problema e o contexto dela, não só a idade.','max-width:760px;font-size:36px')}
- <div class="card" data-a="up" data-d=".3" style="${abs(128,560,'width:760px;padding:30px 38px;border-left:8px solid var(--acc)')}"><div class="k">Se decide quando vê alguém parecido com ela…</div><div class="txt" style="font-size:32px;margin-top:12px">…o conteúdo certo são creators e clientes reais, não fotos de catálogo.</div></div>
+ <div class="card" data-a="up" data-d=".3" style="${abs(128,560,'width:760px;padding:30px 38px;border-left:8px solid var(--acc)')}"><div class="k">Se decide quando vê alguém parecido com ela…</div><div class="txt" style="font-size:32px;margin-top:12px">…o conteúdo certo são creators e jogadores reais, não trailers.</div></div>
  <div class="mail" data-a="pop" style="${abs(1020,150,'width:772px;padding:40px 48px')}">
   <div style="display:flex;gap:28px;align-items:center"><div style="width:110px;height:110px;border-radius:50%;background:linear-gradient(135deg,var(--g1),var(--g6));flex:none"></div><div><div style="font:800 52px/1.05 Syne">Rita, 21</div><div style="font-size:28px;color:#6B7F73;margin-top:6px">Estudante de Design · Porto</div></div></div>
   <div data-a="kids" style="margin-top:30px;display:flex;flex-direction:column;gap:18px">
-  ${[['Objetivo','Vestir-se com estilo sem gastar o orçamento do mês.'],['Frustração','Perde horas a fazer scroll na Vinted entre anúncios todos iguais.'],['Onde está online','TikTok, Instagram e Vinted, onde vê outfits e preços.'],['Decide quando','vê alguém parecido com ela a usar a peça.']].map(f=>`<div style="border-top:1px solid #D9E5DC;padding-top:16px"><div class="lab" style="font-size:20px">${f[0]}</div><div style="font:500 31px/1.3 'DM Sans';margin-top:6px">${f[1]}</div></div>`).join('')}
+  ${[['Objetivo','Jogar os lançamentos sem gastar o orçamento do mês.'],['Frustração','Perde horas a comparar preços entre sites e anúncios no OLX.'],['Onde está online','TikTok, Twitch e Discord, onde vê reviews e jogadas.'],['Decide quando','vê alguém parecido com ela a jogar o jogo.']].map(f=>`<div style="border-top:1px solid #D9E5DC;padding-top:16px"><div class="lab" style="font-size:20px">${f[0]}</div><div style="font:500 31px/1.3 'DM Sans';margin-top:6px">${f[1]}</div></div>`).join('')}
   </div>
  </div>`);
 
@@ -4127,7 +4131,7 @@ const statS=(i,p)=>{const col=['var(--g1)','var(--g2)','var(--g3)'][i];return `$
  </div>`};
 PTD.forEach((p,i)=>S('dados-'+(i+1),'ink','Digital','Portugal em números · '+(i+1),'Fonte: DataReportal, “Digital 2026: Portugal” (dados do início de 2026)',statS(i,p)+(i===2?`<div data-a="up" data-d=".4" class="lead" style="${abs(128,930,'font-size:40px')}">Pergunta: quantas horas de ecrã tiveste ontem? E <span class="acc">em que apps</span>?</div>`:''),{init:(r,tl)=>{tl.to(qq('.pbar',r),{scaleX:1,duration:1.4,ease:'power3.out'},1.0)}}));
 
-const MEIOS=[['Próprios','O que a marca controla: site, newsletter, o perfil no Instagram e no TikTok.','Exemplo: o Instagram da Segunda Mão.'],['Pagos','O que a marca compra: anúncios, creators pagos, patrocínio de festivais.','Exemplo: pagar a um creator para mostrar uma peça.'],['Ganhos','O que os outros dizem: partilhas, stitches, reviews, vídeos de reação.','Exemplo: um vídeo «o meu achado na Segunda Mão», que ninguém pediu.']];
+const MEIOS=[['Próprios','O que a marca controla: site, newsletter, o perfil no Instagram e no TikTok.','Exemplo: o Instagram da Save Point.'],['Pagos','O que a marca compra: anúncios, creators pagos, patrocínio de festivais.','Exemplo: pagar a um creator para mostrar uma peça.'],['Ganhos','O que os outros dizem: partilhas, stitches, reviews, vídeos de reação.','Exemplo: um vídeo «o meu achado na Save Point», que ninguém pediu.']];
 MEIOS.forEach((m,i)=>{const c=PO[i][2];S('meio-'+['proprio','pago','ganho'][i],'ink','Digital','Meios '+m[0].toLowerCase(),FM2,solo({lay:'B',eb:'Digital · Onde a marca aparece',i:i+1,n:3,pill:'Meios '+m[0].toLowerCase(),name:m[0],line:m[1],ex:['Na prática',m[2].replace('Exemplo: ','')],col:c,panel:`<svg data-a="pop" data-at=".35" viewBox="0 0 400 400" width="560" height="560" style="${abs(1180,260)}overflow:visible"><circle cx="200" cy="200" r="190" fill="${c}" fill-opacity=".22" stroke="${c}" stroke-width="5"/><text x="200" y="224" text-anchor="middle" font-family="Syne" font-weight="800" font-size="50" fill="${c}">${m[0]}</text></svg>`}))});
 S('meio-ideal','ink','Digital','Os três meios juntos',FM2,`
  ${eb('Digital · Onde a marca aparece')}${ti('O ideal: os três juntos')}
@@ -4143,7 +4147,7 @@ S('meio-ideal','ink','Digital','Os três meios juntos',FM2,`
 
 CN.forEach((c,i)=>{const ic=['site','social','mail','target','camera','star'][i],col=['var(--g1)','var(--g2)','var(--g3)','var(--g4)','var(--g5)','var(--g6)'][i];
  S('cn-'+['site','redes','email','anuncios','creators','imprensa'][i],'ink','Digital',c[0],FM2,solo({lay:'C',eb:'Digital · Cada canal tem um papel',i:i+1,n:6,pill:c[2],name:c[0],ns:c[0].length>16?96:116,line:c[1],tags:c[3].split(' · '),icon:ic,...(i===1?{logos:['tiktok_i','instagram_i','youtube_i']}:{}),col}))});
-S('cn-fim','ink','Digital','Estar onde a persona está',FM2,stmt({eb:'Digital · Cada canal tem um papel',fs:104,t:'Não é preciso estar em todo o lado: é preciso estar <span class="acc">onde a persona está</span>.',sub:'Pergunta: se tivesses de escolher só dois canais para a loja vintage, quais?'}));
+S('cn-fim','ink','Digital','Estar onde a persona está',FM2,stmt({eb:'Digital · Cada canal tem um papel',fs:104,t:'Não é preciso estar em todo o lado: é preciso estar <span class="acc">onde a persona está</span>.',sub:'Pergunta: se tivesses de escolher só dois canais para a loja de jogos, quais?'}));
 
 PDC.forEach((p,i)=>S('pdc-'+['pago','dados','comunidade'][i],'ink','Digital',p[0],FM2,solo({lay:'R',eb:'Digital · Três alavancas',i:i+1,n:3,pill:p[1],name:p[0],ns:p[0].length>16?96:116,line:p[2],bullets:p[3],icon:['target','lock','people'][i],...(i!==1?{panel:panel(p[4],mg(['radar',0,'chat'][i],p[4],560),700)}:{}),col:p[4],ls:38})));
 S('pdc-fim','ink','Digital','Aluga atenção ou é teu',FM2,stmt({eb:'Digital · Três alavancas',fs:112,t:'O pago <span class="acc">aluga atenção</span>. Os dados e a comunidade <span class="acc">são teus</span>.'}));
@@ -4177,21 +4181,21 @@ S('heroi-papeis','ink','Histórias','Herói e guia',F1+' · StoryBrand',`
  <div class="card" style="height:400px;border-color:var(--acc2);padding:44px 48px"><div class="k k2">O guia</div><div class="t3" style="margin:20px 0;font-size:72px">A marca</div><div class="txt mut" style="font-size:36px">Mostra empatia, tem um plano claro e convida à ação.</div></div></div>
  <div data-a="words" data-at="1" class="title" style="${abs(128,790,'font-size:50px;width:1664px')}">No Wrapped, o herói és tu e o Spotify é <span class="acc">o guia</span>.</div>`);
 
-S('abt-e','ink','Histórias','E: a situação',F1+' · Exemplo fictício',solo({lay:'N',eb:'Histórias · A estrutura mais curta',i:1,n:3,pill:'Situação',name:'E…',line:'A Segunda Mão tem 63 peças únicas e uma comunidade que adora um achado.',big:'E',col:'var(--g4)'}));
-S('abt-mas','ink','Histórias','MAS: o conflito',F1+' · Exemplo fictício',solo({lay:'N',eb:'Histórias · A estrutura mais curta',i:2,n:3,pill:'Conflito',name:'MAS…',line:'As melhores peças desaparecem em duas horas e quase ninguém chega a tempo.',big:'MAS',bs:150,col:'var(--g3)',ex:['Sem este passo','Há uma lista, não uma história.']}));
-S('abt-porisso','ink','Histórias','POR ISSO: a ação',F1+' · Exemplo fictício',solo({lay:'N',eb:'Histórias · A estrutura mais curta',i:3,n:3,pill:'Ação',name:'POR ISSO…',ns:104,line:'Abrimos a coleção sempre ao sábado, às 18h, com aviso na newsletter.',big:'POR ISSO',bs:130,col:'var(--g1)',ex:['Experimenta','Escreve uma frase para cada palavra, com a tua marca.']}));
+S('abt-e','ink','Histórias','E: a situação',F1+' · Exemplo fictício',solo({lay:'N',eb:'Histórias · A estrutura mais curta',i:1,n:3,pill:'Situação',name:'E…',line:'A Save Point tem 80 jogos retro e uma comunidade que adora uma raridade.',big:'E',col:'var(--g4)'}));
+S('abt-mas','ink','Histórias','MAS: o conflito',F1+' · Exemplo fictício',solo({lay:'N',eb:'Histórias · A estrutura mais curta',i:2,n:3,pill:'Conflito',name:'MAS…',line:'Os jogos mais raros desaparecem em duas horas e quase ninguém chega a tempo.',big:'MAS',bs:150,col:'var(--g3)',ex:['Sem este passo','Há uma lista, não uma história.']}));
+S('abt-porisso','ink','Histórias','POR ISSO: a ação',F1+' · Exemplo fictício',solo({lay:'N',eb:'Histórias · A estrutura mais curta',i:3,n:3,pill:'Ação',name:'POR ISSO…',ns:104,line:'Pomos as novidades à venda sempre ao sábado, às 18h, com aviso na newsletter.',big:'POR ISSO',bs:130,col:'var(--g1)',ex:['Experimenta','Escreve uma frase para cada palavra, com a tua marca.']}));
 
-const GH=[['Pergunta','E se a roupa que deitas fora valesse 50 € na Vinted?','Abre uma dúvida que a pessoa quer ver fechada.','var(--g1)'],['Contradição','Deixei de postar todos os dias e o meu alcance duplicou.','Diz o contrário do que se espera.','var(--g2)'],['Meio da ação','«Eram 3h da manhã e o meu colega de casa estava a vender o sofá.»','Começa já no meio da cena, sem apresentações.','var(--g3)'],['Promessa','Em 30 segundos vais perceber porque não consegues fazer scroll.','Diz o que a pessoa ganha se ficar.','var(--g4)'],['Detalhe estranho','O casaco que ninguém quis por 5 € e que esgotou em duas horas.','Um pormenor que não encaixa e pede explicação.','var(--g5)']];
+const GH=[['Pergunta','E se aquele jogo esquecido na gaveta valesse 50 € no OLX?','Abre uma dúvida que a pessoa quer ver fechada.','var(--g1)'],['Contradição','Deixei de postar todos os dias e o meu alcance duplicou.','Diz o contrário do que se espera.','var(--g2)'],['Meio da ação','«Eram 3h da manhã e o meu colega de casa estava a vender o sofá.»','Começa já no meio da cena, sem apresentações.','var(--g3)'],['Promessa','Em 30 segundos vais perceber porque não consegues fazer scroll.','Diz o que a pessoa ganha se ficar.','var(--g4)'],['Detalhe estranho','O jogo que ninguém quis por 5 € e que esgotou em duas horas.','Um pormenor que não encaixa e pede explicação.','var(--g5)']];
 GH.forEach((g,i)=>S('gancho-'+(i+1),'ink','Histórias','Gancho: '+g[0],F2+' · Exemplo fictício',quote({style:'phone',eb:'Histórias · Abrir bem',i:i+1,n:5,pill:'Gancho '+(i+1)+' de 5',name:g[0],q:g[1],line:g[2],col:g[3],qs:g[1].length>70?52:60})));
 S('ganchos-fim','ink','Histórias','Sem conflito, deslizam',F2,stmt({eb:'Histórias · Abrir bem',fs:100,t:'Se o gancho não prometer <span class="acc">conflito ou curiosidade</span>, deslizam para o vídeo seguinte.',sub:'Desafio: escreve um gancho para um vídeo sobre a tua semana de aulas.'}));
 
 /* ================= IA ================= */
-const SGQ=[['«Pronto para renovar o teu guarda-roupa?»'],['«Descobre a nossa nova coleção de outono!»'],['«Acreditamos que a moda sustentável é o futuro.»'],['«Peças únicas, cheias de estilo e história.»'],['«Dá uma segunda vida à moda.»'],['«Visita-nos agora e encontra o look perfeito para ti.»']];
+const SGQ=[['«Pronto para levar o teu jogo a outro nível?»'],['«Descobre a nossa nova semana retro!»'],['«Acreditamos que jogar é muito mais do que um passatempo.»'],['«Jogos únicos, cheios de nostalgia e emoção.»'],['«Revive os clássicos.»'],['«Visita-nos agora e encontra o jogo perfeito para ti.»']];
 SG.forEach((s,i)=>S('sinal-'+(i+1),'ink','IA','Sinal '+(i+1)+': '+s[0],FA+' · Exemplo fictício',quote({style:'post',eb:'IA · Como reconhecer o slop',i:i+1,n:6,pill:'Sinal '+(i+1)+' de 6',name:s[0],q:SGQ[i][0],line:s[1],col:['var(--g1)','var(--g2)','var(--g3)','var(--g4)','var(--g5)','var(--g6)'][i],qs:58})));
 S('sinal-falta','ink','IA','O que falta ao slop',FA+' · Exemplo fictício',`
  ${eb('IA · O que o bom texto tem')}${ti('O que falta ao slop')}
  <div data-a="kids" style="${abs(128,320,'width:1664px;display:grid;grid-template-columns:repeat(4,1fr);gap:24px')}">
- ${[['person','Uma pessoa','A Marta, que coseu o bolso.','var(--g1)'],['target','Um número','14 €, onze invernos, vinte minutos.','var(--g2)'],['site','Um lugar e uma hora','Sábado, às 18h.','var(--g3)'],['chat','Uma opinião','«Não vais encontrar aqui a t-shirt de 5 €.»','var(--g4)']].map(r=>`<div class="card" style="height:480px;padding:34px 30px;display:flex;flex-direction:column"><svg viewBox="0 0 120 120" width="120" height="120" fill="none" stroke="${r[3]}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">${ICO[r[0]]}</svg><div class="t3" style="font-size:40px;margin-top:28px">${r[1]}</div><div class="txt mut" style="font-size:28px;margin-top:14px;line-height:1.3">${r[2]}</div></div>`).join('')}
+ ${[['person','Uma pessoa','O Rui, que trocou o botão.','var(--g1)'],['target','Um número','45 €, 80 jogos, 1998.','var(--g2)'],['site','Um lugar e uma hora','Sábado, às 18h.','var(--g3)'],['chat','Uma opinião','«Não vais encontrar aqui a consola de 20 € com jogos copiados.»','var(--g4)']].map(r=>`<div class="card" style="height:480px;padding:34px 30px;display:flex;flex-direction:column"><svg viewBox="0 0 120 120" width="120" height="120" fill="none" stroke="${r[3]}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">${ICO[r[0]]}</svg><div class="t3" style="font-size:40px;margin-top:28px">${r[1]}</div><div class="txt mut" style="font-size:28px;margin-top:14px;line-height:1.3">${r[2]}</div></div>`).join('')}
  </div>
  <div data-a="up" data-d=".4" class="lead" style="${abs(128,860,'font-size:46px')}">Teste final: <span class="acc">podia ser de outra marca?</span> Se sim, ainda é slop.</div>`);
 
@@ -4206,23 +4210,23 @@ S('ia-assinala','ink','Ética e RGPD','Se parece real, assinala',FRG,solo({lay:'
 
 /* ---------- Notas de apresentador dos slides curtos ---------- */
 const N4={
- 'stp-segmentar':'Passo 1 de 3. Segmentar é dividir o mercado em grupos com necessidades e comportamentos parecidos, não só por idade. O exemplo da Segunda Mão é fictício.',
+ 'stp-segmentar':'Passo 1 de 3. Segmentar é dividir o mercado em grupos com necessidades e comportamentos parecidos, não só por idade. O exemplo da Save Point é fictício.',
  'stp-escolher':'Passo 2 de 3. Escolher é decidir a quem vais servir bem: não dá para agradar a todos. É uma decisão de renúncia.',
- 'stp-posicionar':'Passo 3 de 3. Posicionar é o lugar que ocupas na cabeça desse público, face às outras marcas. Pergunta: onde é que a Segunda Mão se posiciona face à fast fashion?',
- 'stp-formula':'A fórmula é um molde para escreverem o posicionamento da marca que vão escolher na atividade 01. Lê o exemplo da Segunda Mão (fictício) e pede que completem a deles.',
+ 'stp-posicionar':'Passo 3 de 3. Posicionar é o lugar que ocupas na cabeça desse público, face às outras marcas. Pergunta: onde é que a Save Point se posiciona face às lojas online?',
+ 'stp-formula':'A fórmula é um molde para escreverem o posicionamento da marca que vão escolher na atividade 01. Lê o exemplo da Save Point (fictício) e pede que completem a deles.',
  'persona-def':'Uma persona é o retrato do cliente ideal, construído com dados reais (conversas com clientes, inquéritos, comentários, métricas) e não com suposições. O que a define é o problema e o contexto, não a idade. Uma persona por campanha.',
- 'persona-rita':'Exemplo fictício: a Rita, estudante de Design. Mostra como cada campo muda a comunicação: se decide quando vê alguém parecido com ela a usar a peça, o conteúdo certo são creators e clientes reais, não fotos de catálogo. Segue-se a atividade 01.',
+ 'persona-rita':'Exemplo fictício: a Rita, estudante de Design. Mostra como cada campo muda a comunicação: se decide quando vê alguém parecido com ela a jogar o jogo, o conteúdo certo são creators e jogadores reais, não trailers. Segue-se a atividade 01.',
  'mv-marca':'Marca é a ideia que fica na cabeça das pessoas: nome, valores, personalidade. Exemplo real: o «Just Do It» da Nike nasceu em 1988, na agência Wieden+Kennedy. Entre 1988 e 1998 a quota da Nike no calçado desportivo na América do Norte passou de 18% para 43% (Wikipedia, «Just Do It»). Pergunta: que palavra vos vem à cabeça quando ouvem «Nike»?',
  'mv-proposta':'Proposta de valor é a promessa concreta: o que ofereces, a quem e porque és a melhor escolha. A missão oficial da Nike é «Bring inspiration and innovation to every athlete in the world», com a nota «If you have a body, you are an athlete» (about.nike.com). Repara que alarga o público: não é só para desportistas. Pede a um aluno que diga a proposta de valor de uma marca que conheça.',
  'mv-tom':'Tom de voz é a forma de falar. Nos sliders, compara o Duolingo (bolas verdes) com a Nike (anéis): as duas têm voz forte, mas a Nike é intensa e inspiradora e o Duolingo é brincalhão. As posições são uma leitura nossa, não uma medição: pergunta à turma se concordam. Liga ao slide seguinte: Duolingo e Wendy’s têm um tom de voz inconfundível.',
  'smart-letras':'Percorre as cinco letras em voz alta: específico, mensurável, atingível, relevante, temporal. Não te demores: o exemplo no slide seguinte mostra-as em ação.',
- 'smart-exemplo':'Do objetivo vago ao SMART (exemplo fictício da loja vintage). Primeiro só aparece o vago: «Quero mais seguidores.» Pergunta: como saberíamos se foi atingido? Deixa a turma responder; ao avançar, o vago fica riscado e aparece a versão SMART. Pergunta: como saberíamos se “mais seguidores” foi atingido? Sem número nem prazo, não há forma de avaliar. Liga a algo que conhecem: um creator que diz “quero crescer no TikTok” é vago; “chegar aos 10 mil em 3 meses” já se mede.',
+ 'smart-exemplo':'Do objetivo vago ao SMART (exemplo fictício da loja de jogos). Primeiro só aparece o vago: «Quero mais seguidores.» Pergunta: como saberíamos se foi atingido? Deixa a turma responder; ao avançar, o vago fica riscado e aparece a versão SMART. Pergunta: como saberíamos se “mais seguidores” foi atingido? Sem número nem prazo, não há forma de avaliar. Liga a algo que conhecem: um creator que diz “quero crescer no TikTok” é vago; “chegar aos 10 mil em 3 meses” já se mede.',
  'dados-1':'Números do DataReportal, “Digital 2026: Portugal” (início de 2026): cerca de 9,26 milhões de utilizadores de internet, cerca de 89% da população. Confirma no relatório original antes de usares numa avaliação.',
  'dados-2':'7,59 milhões de identidades em redes sociais (72,9% da população). Atenção: identidades em redes sociais não é o mesmo que pessoas únicas.',
  'dados-3':'13,9 milhões de ligações móveis: 133% da população, ou seja, mais ligações do que pessoas (muitas pessoas têm mais do que um cartão). Pergunta final: quantas horas de ecrã tiveram ontem e em que apps? Pede para levantarem a mão por app: é onde a atenção deles está.',
- 'meio-proprio':'Meios próprios: o que a marca controla (site, newsletter, perfis). Exemplo com a loja vintage: publica no seu Instagram.',
+ 'meio-proprio':'Meios próprios: o que a marca controla (site, newsletter, perfis). Exemplo com a loja de jogos: publica no seu Instagram.',
  'meio-pago':'Meios pagos: o que a marca compra. Exemplo: paga a um creator para mostrar uma peça. Chegas a quem não te conhece, mas só enquanto pagas.',
- 'meio-ganho':'Meios ganhos: o que os outros dizem sem ninguém pedir. Exemplo: alguém faz um vídeo “o meu achado na Segunda Mão”. O Spotify Wrapped é um produto próprio, mas o que o torna enorme são as pessoas a partilharem nos stories (ganho). Pergunta em que meio as marcas costumam investir menos.',
+ 'meio-ganho':'Meios ganhos: o que os outros dizem sem ninguém pedir. Exemplo: alguém faz um vídeo “o meu achado na Save Point”. O Spotify Wrapped é um produto próprio, mas o que o torna enorme são as pessoas a partilharem nos stories (ganho). Pergunta em que meio as marcas costumam investir menos.',
  'meio-ideal':'Fecha com o diagrama: o ideal é combinar os três. O pago dá alcance, o próprio cria relação, o ganho dá credibilidade.',
  'cn-site':'Site e SEO: a casa da marca, ser encontrado quando alguém procura. Meio próprio. Ajuda na descoberta e na decisão.',
  'cn-redes':'Redes sociais: TikTok, Instagram, YouTube. Mostrar, responder, criar comunidade. Meio próprio, para descoberta e consideração.',
@@ -4230,7 +4234,7 @@ const N4={
  'cn-anuncios':'Anúncios pagos: alcance rápido e segmentado, quando há orçamento. Meio pago, para descoberta e decisão.',
  'cn-creators':'Criadores e parcerias: confiança emprestada de quem o público já segue. Pago ou ganho, para consideração. Lembra a regra do #pub.',
  'cn-imprensa':'Imprensa e avaliações: credibilidade que não se compra. Meio ganho, para decisão e recomendação.',
- 'cn-fim':'Uma marca pequena não precisa de estar em todos os canais: dois canais bem escolhidos e consistentes valem mais do que seis abandonados. Liga com a persona: onde está a Rita? Pergunta: se tivessem de escolher só dois canais para a loja vintage, quais?',
+ 'cn-fim':'Uma marca pequena não precisa de estar em todos os canais: dois canais bem escolhidos e consistentes valem mais do que seis abandonados. Liga com a persona: onde está a Rita? Pergunta: se tivessem de escolher só dois canais para a loja de jogos, quais?',
  'pdc-pago':'Publicidade paga: chegas a quem não te conhece, mas só enquanto pagas. Segmenta bem, testa versões e mede o custo por resultado, não só os gostos.',
  'pdc-dados':'Dados próprios: email, compras e respostas que as pessoas te dão com consentimento. São teus e não dependem de um algoritmo. Liga ao bloco de RGPD no fim.',
  'pdc-comunidade':'Comunidade e crises: social listening é ver o que dizem de ti mesmo quando não te marcam. Numa crise, responde depressa, com voz humana; se erraste, reconhece, corrige e explica.',
@@ -4265,7 +4269,7 @@ const N4={
  'sinal-6':'Sinal 6 de 6: fecho genérico, sem dia, sem hora, sem motivo.',
  'sinal-falta':'O que falta ao slop: uma pessoa, um número, um lugar, uma opinião. Pergunta: troquem o nome da loja por outro nome qualquer. Alguma frase deixa de fazer sentido? Se não, é slop.',
  'mov-1':'Movimento 1: contexto real. Quem és, para quem, em que tom, com exemplos teus.',
- 'mov-2':'Movimento 2: matéria tua. A Marta, os 14 €, o bolso descosido: é o que a IA não tem.',
+ 'mov-2':'Movimento 2: matéria tua. O Rui, os 45 €, o botão trocado: é o que a IA não tem.',
  'mov-3':'Movimento 3: várias versões. Pede cinco e escolhe ou mistura.',
  'mov-4':'Movimento 4: edita à mão. Corta tudo o que podia ser de qualquer marca.',
  'mov-5':'Movimento 5: verifica os factos. Nomes, datas, números e promessas.',
@@ -4339,7 +4343,7 @@ const AD_DIG=c=>SVGP(`
  <path d="M200 252 L250 180 L290 226 L320 196 L370 252Z" fill="${c}"/><circle cx="330" cy="112" r="20" fill="${c}"/>
  <path d="M178 330 C178 318 162 312 156 324 C150 312 134 318 134 330 C134 344 156 354 156 354 C156 354 178 344 178 330Z" transform="translate(18 -8)" fill="${c}"/>
  <text x="208" y="338" font-family="DM Sans" font-weight="700" font-size="20" fill="var(--fg)">2 340</text>
- ${[['@rita','onde compro isto?'],['@segundamao','na loja de Coimbra, sábado!'],['@joao','já partilhei com a turma']].map((m,k)=>`<g transform="translate(152 ${380+k*64})"><rect width="256" height="52" rx="16" fill="${k===1?c:'var(--line)'}" fill-opacity="${k===1?.3:1}"/><text x="14" y="22" font-family="DM Sans" font-weight="700" font-size="15" fill="${k===1?'var(--fg)':'var(--mut)'}">${m[0]}</text><text x="14" y="42" font-family="DM Sans" font-weight="500" font-size="16" fill="var(--fg)">${m[1]}</text></g>`).join('')}`);
+ ${[['@rita','onde compro isto?'],['@savepoint','na loja de Coimbra, sábado!'],['@joao','já partilhei com a turma']].map((m,k)=>`<g transform="translate(152 ${380+k*64})"><rect width="256" height="52" rx="16" fill="${k===1?c:'var(--line)'}" fill-opacity="${k===1?.3:1}"/><text x="14" y="22" font-family="DM Sans" font-weight="700" font-size="15" fill="${k===1?'var(--fg)':'var(--mut)'}">${m[0]}</text><text x="14" y="42" font-family="DM Sans" font-weight="500" font-size="16" fill="var(--fg)">${m[1]}</text></g>`).join('')}`);
 const HIST=[
  ['producao','Produção','até 1920','Fazer muito e barato. Quem tinha fábrica vendia tudo o que produzia.','Ford, 1922','Henry Ford sobre o Modelo T: «Qualquer cor, desde que seja preto.» Ninguém perguntava o que o cliente queria.',AD_PROD,'var(--g4)'],
  ['vendas','Vendas','1920–1950','Há mais oferta do que procura. Vence quem empurra mais: vendedores porta a porta e anúncios insistentes.','A ideia da época','O produto já está feito. O trabalho é convencer alguém a comprá-lo.',AD_VEND,'var(--g1)'],
@@ -4349,18 +4353,18 @@ const HIST=[
 HIST.forEach((h,i)=>S('hist-'+h[0],'ink','Marketing','História: '+h[1],FM1+(i===3?' · Fonte: Executive Digest (2023)':i===1||i===4?' · Ilustração original':' · Ilustração original'),tline(i)+solo({lay:'R',eb:'Marketing · De onde vem',pill:h[2],name:h[1],ns:110,line:h[3],ls:40,ex:[h[4],h[5]],col:h[7],panel:panel(h[7],h[0]==='relacao'&&typeof LOGO!=='undefined'&&LOGO.continente?`<img src="${LOGO.continente}" alt="Cartão Continente" data-a="pop" data-at=".3" style="width:560px;transform:rotate(-6deg);filter:drop-shadow(0 30px 40px rgba(0,0,0,.25))">`:h[6](h[7]),700)})));
 
 const BEN=[
- ['notoriedade','Notoriedade','Ser lembrado quando a pessoa precisa. Se não pensam em ti, não te escolhem.',['Exemplo · Red Bull','«Red Bull dá-te asas»: o mesmo slogan desde o lançamento, em 1987. Ouves «asas» e pensas na marca.'],'eye','var(--g1)'],
+ ['notoriedade','Notoriedade','Ser lembrado quando a pessoa precisa. Se não pensam em ti, não te escolhem.',['Exemplo · Red Bull Stratos','Em 2012, Felix Baumgartner saltou da estratosfera com a Red Bull no fato. Milhões viram em direto e toda a gente falou da marca.'],null,'var(--g1)'],
  ['relacao','Relação','Clientes que voltam, recomendam e defendem a marca. Manter é mais barato do que conquistar.',['Exemplo · Cartão Continente','Ofertas personalizadas desde 2008: a marca sabe o que compras e lembra-se de ti.'],'heart','var(--g2)'],
  ['crescimento','Crescimento','Mais clientes, mais vendas, mais valor. É aqui que o marketing paga as contas.',['Exemplo · Gymshark','Fundada em 2012 por dois estudantes de 20 anos, cresceu com influencers do fitness. Em 2020 foi avaliada em 1,25 mil milhões de libras.'],null,'var(--g3)']];
-BEN.forEach((b,i)=>S('ben-'+b[0],'ink','Marketing','Benefício: '+b[1],FM1+(i===2?' · Fonte: Wikipedia, «Gymshark»':''),solo({lay:'N',eb:'Marketing · Para que serve',i:i+1,n:3,pill:'Benefício '+(i+1)+' de 3',name:b[1],line:b[2],ex:b[3],logo:['redbull','continente','gymshark'][i],lh:[56,64,40][i],col:b[5],...(b[4]?{icon:b[4]}:{big:'1,25',bigLabel:'mil milhões de libras (2020)',bs:300})})));
+BEN.forEach((b,i)=>S('ben-'+b[0],'ink','Marketing','Benefício: '+b[1],FM1+(i===2?' · Fonte: Wikipedia, «Gymshark»':i===0?' · Fonte: Guinness World Records':''),solo({lay:'N',eb:'Marketing · Para que serve',i:i+1,n:3,pill:'Benefício '+(i+1)+' de 3',name:b[1],line:b[2],ex:b[3],logo:['redbull','continente','gymshark'][i],lh:[56,64,40][i],col:b[5],...(b[4]?{icon:b[4]}:i===0?{big:'39 km',bigLabel:'de altura, em direto',bs:260}:{big:'1,25',bigLabel:'mil milhões de libras (2020)',bs:300})})));
 
 const SRC2=[['INE','Quantos somos, idades, onde vivemos.'],['Pordata','Estatísticas de Portugal, fáceis de comparar.'],['DataReportal','Uso de internet e redes sociais.'],['Google Trends','O que as pessoas pesquisam, e quando.']];
 const SURVEY=c=>`<div data-a="pop" data-at=".25" style="${abs(1130,200,`width:662px;height:700px;border-radius:48px;border:2px solid ${c};background:${tint(c,14)};display:flex;align-items:center;justify-content:center`)}">
  <div class="card" style="width:520px;padding:36px 40px;border-radius:28px">
-  <div class="k" style="color:${c}">Inquérito · Segunda Mão</div>
-  <div style="font:700 34px/1.25 Syne;margin-top:16px">Onde compras roupa em segunda mão?</div>
+  <div class="k" style="color:${c}">Inquérito · Save Point</div>
+  <div style="font:700 34px/1.25 Syne;margin-top:16px">Onde compras os teus jogos?</div>
   <div data-a="kids" data-at=".8" style="margin-top:24px;display:flex;flex-direction:column;gap:14px">
-  ${[['Apps (Vinted, OLX)',1],['Lojas vintage',0],['Feiras e mercados',1],['Nunca comprei',0]].map(o=>`<div style="display:flex;gap:16px;align-items:center;font:500 28px 'DM Sans'"><i style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;border:3px solid ${c};background:${o[1]?c:'transparent'};flex:none">${o[1]?'<svg width="20" height="20" viewBox="0 0 20 20"><path d="M3 10L8 15L17 4" stroke="var(--on)" stroke-width="3.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>':''}</i>${o[0]}</div>`).join('')}
+  ${[['Lojas online',1],['Lojas de jogos',0],['Usados (OLX)',1],['Só jogo grátis',0]].map(o=>`<div style="display:flex;gap:16px;align-items:center;font:500 28px 'DM Sans'"><i style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;border:3px solid ${c};background:${o[1]?c:'transparent'};flex:none">${o[1]?'<svg width="20" height="20" viewBox="0 0 20 20"><path d="M3 10L8 15L17 4" stroke="var(--on)" stroke-width="3.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>':''}</i>${o[0]}</div>`).join('')}
   </div>
   <div style="margin-top:28px;height:10px;border-radius:5px;background:var(--line)"><div style="width:40%;height:100%;border-radius:5px;background:${c}"></div></div>
   <div class="mut" style="font-size:20px;margin-top:10px">Pergunta 2 de 5</div>
@@ -4375,20 +4379,21 @@ S('mr-quanti','ink','Marketing','Quantitativo e qualitativo',FM1+' · Exemplo fi
  <div class="card" data-a="left" data-d=".1" style="${abs(128,300,'width:800px;height:560px;padding:40px 48px')}">
   <span class="pill" style="font-size:20px;padding:12px 24px;background:var(--g4);color:var(--on)">Quantitativo</span>
   <div style="font:800 64px/1 Syne;margin-top:22px">Quantos?</div>
-  <div class="txt mut" style="font-size:28px;margin-top:10px">Números de muitas pessoas: inquéritos, métricas.</div>
-  <div style="margin-top:34px;display:flex;flex-direction:column;gap:18px">
-  ${[['Apps',62],['Lojas vintage',24],['Feiras',14]].map(b=>`<div style="display:grid;grid-template-columns:200px 1fr 90px;align-items:center;gap:18px;font:600 26px 'DM Sans'"><span>${b[0]}</span><div style="height:34px;border-radius:10px;background:var(--line)"><div class="qbar" style="height:100%;width:${b[1]}%;border-radius:10px;background:var(--g4);transform:scaleX(0);transform-origin:0 50%"></div></div><b style="font:800 30px Syne">${b[1]}%</b></div>`).join('')}
+  <div class="txt mut" style="font-size:28px;margin-top:10px">Muitas pessoas, respostas fechadas. Dá números.</div>
+  <div style="margin-top:30px;display:flex;flex-direction:column;gap:16px">
+  <div class="mut" style="font:600 24px 'DM Sans'">Onde compras os teus jogos?</div>
+  ${[['Online',58],['Lojas',27],['Usados',15]].map(b=>`<div style="display:grid;grid-template-columns:200px 1fr 90px;align-items:center;gap:18px;font:600 26px 'DM Sans'"><span>${b[0]}</span><div style="height:34px;border-radius:10px;background:var(--line)"><div class="qbar" style="height:100%;width:${b[1]}%;border-radius:10px;background:var(--g4);transform:scaleX(0);transform-origin:0 50%"></div></div><b style="font:800 30px Syne">${b[1]}%</b></div>`).join('')}
   </div></div>
  <div class="card" data-a="right" data-d=".1" style="${abs(992,300,'width:800px;height:560px;padding:40px 48px')}">
   <span class="pill" style="font-size:20px;padding:12px 24px;background:var(--g1);color:var(--on)">Qualitativo</span>
   <div style="font:800 64px/1 Syne;margin-top:22px">Porquê?</div>
-  <div class="txt mut" style="font-size:28px;margin-top:10px">Palavras de poucas pessoas: entrevistas, observação.</div>
+  <div class="txt mut" style="font-size:28px;margin-top:10px">Poucas pessoas, conversa aberta. Dá razões.</div>
   <div data-a="kids" data-d=".2" style="margin-top:30px;display:flex;flex-direction:column;gap:16px">
-  ${['«Na Vinted perco horas a procurar.»','«Gosto de saber a história da peça.»','«Numa loja posso experimentar.»'].map((q,k)=>`<div style="align-self:${k%2?'flex-end':'flex-start'};padding:16px 26px;border-radius:24px;background:${tint('var(--g1)',22)};font:600 28px/1.3 'DM Sans'">${q}</div>`).join('')}
+  ${['«Online é mais barato, mas demora a chegar.»','«Numa loja posso experimentar antes.»','«Gosto de falar com quem percebe de jogos.»'].map((q,k)=>`<div style="align-self:${k%2?'flex-end':'flex-start'};padding:16px 26px;border-radius:24px;background:${tint('var(--g1)',22)};font:600 28px/1.3 'DM Sans'">${q}</div>`).join('')}
   </div></div>
  <div data-a="up" data-d=".3" class="lead" style="${abs(128,900,'font-size:38px')}">Os números dizem <span class="acc">o quê</span>. As conversas dizem <span class="acc">porquê</span>. Precisas dos dois.</div>`,
  {init:(r,tl)=>{tl.to(qq('.qbar',r),{scaleX:1,duration:1.1,ease:'power3.out',stagger:.15},1.0)}});
-S('mr-exemplo','ink','Marketing','Pesquisa rápida: Segunda Mão',FM1+' · Exemplo fictício',`
+S('mr-exemplo','ink','Marketing','Pesquisa rápida: Save Point',FM1+' · Exemplo fictício',`
  ${eb('Marketing · Estudar antes de decidir')}${dots(5,5,'var(--g5)')}${ti('Uma pesquisa em 3 perguntas')}
  <div data-a="kids" style="${abs(128,300,'width:1080px;display:flex;flex-direction:column;gap:22px')}">
  ${['Onde compraste a última peça de roupa? Porquê lá?','O que te faz desistir de comprar em segunda mão?','Se a loja tivesse uma conta no TikTok, o que gostavas de ver?'].map((q,k)=>`<div class="card row" style="padding:28px 36px;gap:30px"><div class="num" style="font-size:54px;min-width:56px;color:var(--g5)">${k+1}</div><div class="txt" style="font:600 36px/1.3 'DM Sans'">${q}</div></div>`).join('')}
@@ -4464,13 +4469,13 @@ Object.assign(N4,{
  'hist-marketing':'Era do marketing: a lógica inverte-se. Primeiro percebe-se o que as pessoas querem, depois faz-se o produto. Em 1960, E. Jerome McCarthy organiza as decisões em 4Ps (Produto, Preço, Praça, Promoção). Diz que voltam a eles daqui a pouco.',
  'hist-relacao':'Era da relação: manter um cliente sai mais barato do que conquistar um novo. Cartões de pontos, ofertas à medida, atendimento. Exemplo português: o Cartão Continente nasceu em 2007 e em 2008 enviou as primeiras ofertas personalizadas; serve cerca de 4 milhões de famílias (Executive Digest, 2023). Pergunta: quantos cartões de cliente têm na carteira ou no telemóvel?',
  'hist-digital':'Era digital: a marca deixa de falar sozinha. Facebook (2004), YouTube (2005), iPhone (2007), depois o TikTok. Tudo é público e tudo se mede. Ponte: é exatamente isto que vamos ver no bloco Digital, a seguir. O telemóvel é uma ilustração original com uma conta fictícia.',
- 'ben-notoriedade':'Para que serve o marketing, em três benefícios rápidos (cerca de 40 segundos cada). Notoriedade: estar na cabeça das pessoas no momento da escolha. Red Bull usa «dá-te asas» desde o lançamento, em 1987. Pergunta: que marca de energética vos vem à cabeça primeiro?',
+ 'ben-notoriedade':'Para que serve o marketing, em três benefícios rápidos (cerca de 40 segundos cada). Notoriedade: estar na cabeça das pessoas no momento da escolha. Exemplo: o Red Bull Stratos. A 14 de outubro de 2012, Felix Baumgartner saltou de cerca de 39 km de altura, com o logótipo da Red Bull no fato e na cápsula; mais de 8 milhões de pessoas viram em simultâneo no YouTube, um recorde na altura (Guinness). A marca não falou da bebida e mesmo assim toda a gente falou dela. Pergunta: que marca de energética vos vem à cabeça primeiro? O caso volta na parte Digital, visto como conteúdo.',
  'ben-relacao':'Relação: clientes que voltam e recomendam. Ligação com a era da relação que acabámos de ver. O Cartão Continente envia ofertas personalizadas desde 2008: é a marca a mostrar que se lembra de ti.',
  'ben-crescimento':'Crescimento: o marketing também se mede em dinheiro. A Gymshark foi fundada em 2012 por Ben Francis e Lewis Morgan, com 20 anos, e cresceu com influencers do fitness. Em agosto de 2020, a General Atlantic comprou 21% por 275 milhões de libras, o que avaliou a empresa em 1,25 mil milhões (Wikipedia, «Gymshark»).',
  'mr-oque':'Estudos de mercado em 4 minutos. Liga ao icebergue do início: a pesquisa de mercado estava debaixo de água. Caso LEGO Friends: segundo a LEGO, foram 4 anos de pesquisa com milhares de raparigas e mães (a empresa falou em 4.500), observando como brincavam. Lançada em 2012, as vendas para raparigas triplicaram nesse ano (Wikipedia, «Lego Friends»). Mensagem: estudar custa menos do que lançar às cegas.',
  'mr-secundarios':'Dados secundários: já existem, alguém os recolheu. Quatro fontes úteis em Portugal: INE (população), Pordata (estatísticas comparáveis), DataReportal (internet e redes sociais) e Google Trends (o que se pesquisa). Começa sempre por aqui: é grátis e rápido.',
- 'mr-primarios':'Dados primários: recolhes tu, para a tua pergunta. Inquérito (muitas pessoas, respostas fechadas), entrevista (poucas pessoas, conversa aberta) e observação (o que fazem, não o que dizem). O inquérito da Segunda Mão é um exemplo fictício.',
- 'mr-quanti':'Quantitativo responde a «quantos?»; qualitativo responde a «porquê?». Os números do gráfico são fictícios, só para ilustrar. Mostra que os dois se completam: os 62% dizem onde compram, as frases dizem o que os incomoda, e é daí que nasce uma ideia de campanha.',
+ 'mr-primarios':'Dados primários: recolhes tu, para a tua pergunta. Inquérito (muitas pessoas, respostas fechadas), entrevista (poucas pessoas, conversa aberta) e observação (o que fazem, não o que dizem). O inquérito da Save Point é um exemplo fictício.',
+ 'mr-quanti':'Quantitativo responde a «quantos?»; qualitativo responde a «porquê?». Os números do gráfico são fictícios, só para ilustrar. Mostra que os dois se completam: os 58% dizem onde compram, as frases dizem o que os incomoda, e é daí que nasce uma ideia de campanha.',
  'mr-exemplo':'Exemplo prático e barato: 3 perguntas, 10 estudantes, uma tarde. Pergunta à turma qual destas perguntas daria a melhor ideia para uma campanha. Fecha com a ponte: o que se descobre aqui alimenta a segmentação e a persona, que vêm a seguir.'
 });
 
@@ -4577,13 +4582,13 @@ function offCtl(){return IN_CLAUDE?[{t:'Abrir a apresentação com telemóveis',
 /* nuvem de palavras */
 V.cloud={
  body(){let w={},who=0;
-  if(online()){Object.keys(ans).forEach(k=>{if(!players[k])return;who++;Object.values((ans[k]||{}).w||{}).forEach(x=>{x=String(x).trim();const key=x.toLowerCase();if(key){w[key]=w[key]||{t:x,n:0};w[key].n++}})})}
-  else w=off_(M.id).w||(off_(M.id).w={});
+  if(online()){const L=[];Object.keys(ans).forEach(k=>{if(!players[k])return;who++;Object.values((ans[k]||{}).w||{}).forEach(x=>L.push(x))});w=bmerge(L)}
+  else w=bmerge(off_(M.id).raw||(off_(M.id).raw=[]));
   const ks=Object.keys(w),cols=CONTENT.cores;
   return `${online()?cnt('Participantes',who):`<div class="lv-in"><input class="lv-inp" id="lvw" maxlength="30" placeholder="Escreve o que disserem e carrega em Enter"></div>`}
    <div class="lv-cloud">${ks.length?ks.map((k,i)=>`<span style="font-size:${Math.min(120,36+w[k].n*18)}px;color:${cols[(i+3)%cols.length]}">${H(w[k].t)}</span>`).join(''):`<span class="mut" style="font-size:40px">${online()?'As respostas aparecem aqui.':'Ainda sem respostas.'}</span>`}</div>`},
- wire(b){const i=b.querySelector('#lvw');if(!i)return;i.onkeydown=e=>{if(e.key==='Enter'){const v=i.value.trim();i.value='';if(!v||isBad(v))return;const W=off_(M.id).w||(off_(M.id).w={});const k=v.toLowerCase();W[k]=W[k]||{t:v,n:0};W[k].n++;if(D().pool){const all={};let j=0;Object.values(W).forEach(x=>{for(let r=0;r<x.n;r++)all[j++]=x.t});window.POOL=poolFrom(all)}draw()}}},
- ctl(){return online()?[{t:'Recomeçar',f:()=>start(M.id)}]:[{t:'Limpar',f:()=>{off_(M.id).w={};draw()}}]}
+ wire(b){const i=b.querySelector('#lvw');if(!i)return;i.onkeydown=e=>{if(e.key==='Enter'){const v=i.value.trim();i.value='';if(!v||isBad(v))return;const R=off_(M.id).raw||(off_(M.id).raw=[]);R.push(v);if(D().pool){window.POOL=poolFrom(Object.assign({},R))}draw()}}},
+ ctl(){return online()?[{t:'Recomeçar',f:()=>start(M.id)}]:[{t:'Limpar',f:()=>{off_(M.id).raw=[];draw()}}]}
 };
 
 /* arrastar para grupos */
@@ -4735,7 +4740,7 @@ liveS('live-marcas','marcas','Abertura',F0,'Ao vivo · Aquecimento','Marcas de q
 liveS('live-primsec','primsec','Marketing',FM1,'Praticar · Estudo de mercado','Primário ou secundário?','Arrasta cada fonte de dados para o tipo certo.');
 liveS('live-posicionar','posicionar','Marketing',FM1,'Praticar · Posicionamento','Posiciona a marca','Cada telemóvel recebe uma das marcas da turma. Completa a fórmula e votamos.');
 liveS('live-persona','persona','Marketing',FM1,'Praticar · Persona','Cria a persona','Grupos de 3 ou 4, um telemóvel por grupo. A persona de uma das marcas da turma.');
-liveS('live-4p','quatrop','Marketing',FM1,'Praticar · 4Ps','Que P é este?','Oito decisões da loja Segunda Mão. Arrasta cada uma para o P certo.');
+liveS('live-4p','quatrop','Marketing',FM1,'Praticar · 4Ps','Que P é este?','Oito decisões da loja Save Point. Arrasta cada uma para o P certo.');
 liveS('live-smart','smart','Marketing',FM1,'Praticar · Objetivos','Torna-o SMART','«Quero mais seguidores.» Reescreve-o como objetivo SMART.');
 liveS('live-canais','canais','Digital',FM2,'Praticar · Meios','Próprio, pago ou ganho?','Arrasta cada meio para o grupo certo.');
 liveS('live-metricas','metricas','Digital',FM2,'Praticar · Métricas','Útil ou vaidade?','Objetivo: vender mais na loja online. Que métricas interessam?');
@@ -4744,7 +4749,7 @@ liveS('live-abt','abt','Histórias',F1,'Praticar · E, MAS, POR ISSO','Escreve e
 liveS('live-spine','spine','Histórias',F1,'Praticar · Story Spine','Ordena a história','8 frases baralhadas. Quem acerta mais posições ganha.');
 liveS('live-spinew','spinew','Histórias',F1,'Praticar · Story Spine','A vossa Story Spine','Por grupo: a história da vossa marca em 8 frases. Depois votamos.');
 liveS('live-gancho','gancho','Histórias',F2,'Praticar · Ganchos','O melhor gancho','A frase que abre o vídeo da vossa marca. Depois votamos.');
-liveS('live-slop','slop','IA',FA,'Praticar · IA','Slop ou não?','6 frases da Segunda Mão. Vazia ou com substância?');
+liveS('live-slop','slop','IA',FA,'Praticar · IA','Slop ou não?','6 frases da Save Point. Vazia ou com substância?');
 liveS('live-rgpd','rgpd','Ética e RGPD',FE,'Praticar · RGPD e publicidade','Pode ou não pode?','6 situações. Decide depressa.');
 liveS('live-votacao','votacao','Workshop',FW,'Palco · Votação','Votação dos pitches','Cada equipa apresenta e as outras votam no telemóvel.');
 liveS('live-quiz','quiz','Fecho',FF,'Ao vivo · Revisão','Quiz final','12 perguntas sobre toda a aula. Quanto mais rápido, mais pontos.');
@@ -4755,7 +4760,7 @@ Object.assign(N4,{
  'live-primsec':'Prática (2 min), logo a seguir aos dados primários e secundários. Individual. Revela e comenta as que a turma mais trocou: normalmente a sondagem nos stories (primário, foste tu que perguntaste) e o Google Trends (secundário, já existe). O tempo só começa quando carregas em «Começar».',
  'live-posicionar':'Prática (4 min), logo a seguir à fórmula do posicionamento. Cada telemóvel recebe uma marca ao acaso. 2 min para escrever, abre a votação (ninguém vota no seu), revela. Comenta o vencedor: a diferença é concreta e é algo que a concorrência não diz? O tempo só começa quando carregas em «Começar».',
  'live-persona':'Prática (5 min), logo a seguir à Rita. Forma os grupos de 3 ou 4 (ficam até ao workshop) e pede um telemóvel por grupo. Cada telemóvel recebe uma marca: essa passa a ser a marca do grupo. 4 min para escrever, 1 para mostrar. Pergunta: o que é que a persona da marca X tem de diferente da Rita? O tempo só começa quando carregas em «Começar».',
- 'live-4p':'Prática (2 min), logo a seguir aos 4Ps. Individual. As trocas mais comuns: a garantia de troca (é produto, faz parte do que vendes) e vender na Vinted (é praça, onde a pessoa compra).',
+ 'live-4p':'Prática (2 min), logo a seguir aos 4Ps. Individual. As trocas mais comuns: a garantia de troca (é produto, faz parte do que vendes) e vender pelo OLX (é praça, onde a pessoa compra).',
  'live-smart':'Prática (3 min), logo a seguir ao «Do vago ao SMART». Individual. A verificação automática é simples (procura número, prazo, verbo…): usa-a como ponto de partida. Abre a votação e revela. O tempo só começa quando carregas em «Começar».',
  'live-canais':'Prática (2 min), logo a seguir aos três meios. Individual. Revela e comenta o creator pago e o post impulsionado (pagos, mesmo parecendo conteúdo). O tempo só começa quando carregas em «Começar».',
  'live-metricas':'Prática (2 min), logo a seguir à métrica de vaidade. Individual. As impressões e as views não são inúteis, mas para «vender mais» não dizem se estás mais perto. O tempo só começa quando carregas em «Começar».',
@@ -4774,22 +4779,23 @@ const FC=PN+' · Histórias nos conteúdos';
 const crP=pts=>{let d=`M${pts[0][0]} ${pts[0][1]}`;for(let i=0;i<pts.length-1;i++){const p0=pts[i-1]||pts[i],p1=pts[i],p2=pts[i+1],p3=pts[i+2]||p2;
  d+=` C${(p1[0]+(p2[0]-p0[0])/6).toFixed(1)} ${(p1[1]+(p2[1]-p0[1])/6).toFixed(1)} ${(p2[0]-(p3[0]-p1[0])/6).toFixed(1)} ${(p2[1]-(p3[1]-p1[1])/6).toFixed(1)} ${p2[0]} ${p2[1]}`}return d};
 
-/* casaco simples para os posts */
-const JK=(c='#0A120D',w=150)=>`<svg viewBox="0 0 250 260" width="${w}" height="${w*260/250}" fill="none" stroke="${c}" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"><path d="M80 30 L112 14 Q125 30 138 14 L170 30 L215 70 L198 150 L176 140 L176 245 L74 245 L74 140 L52 150 L35 70Z"/><path d="M125 30 V245"/><path d="M92 180 H118 V214 H92Z"/><path d="M95 200 l6 -6 l6 6 l6 -6" stroke-width="5"/></svg>`;
+/* consola portátil simples para os posts */
+const GBI='<path d="M76 8 H174 Q188 8 188 22 V214 Q188 252 150 252 H76 Q62 252 62 238 V22 Q62 8 76 8Z"/><rect x="80" y="28" width="90" height="84" rx="8"/><rect x="95" y="41" width="60" height="56" rx="3"/><path d="M84 172 H116 M100 156 V188" stroke-width="11"/><circle cx="150" cy="178" r="10"/><circle cx="170" cy="160" r="10"/><path d="M100 218 L112 212 M124 218 L136 212"/>';
+const JK=(c='#0A120D',w=150)=>`<svg viewBox="0 0 250 260" width="${w}" height="${w*260/250}" fill="none" stroke="${c}" stroke-width="7" stroke-linejoin="round" stroke-linecap="round">${GBI}</svg>`;
 const postIG=(cap,bg,id='')=>`<div class="post" ${id} style="width:720px;padding:0;overflow:hidden">
  <div style="height:270px;background:${bg};display:flex;align-items:center;justify-content:center">${JK('#0A120D',170)}</div>
- <div style="padding:22px 34px 30px"><div style="display:flex;gap:14px;align-items:center;margin-bottom:14px"><div style="width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--g1),var(--g6))"></div><b style="font:700 26px 'DM Sans'">segundamao.vintage</b></div>${cap}</div></div>`;
+ <div style="padding:22px 34px 30px"><div style="display:flex;gap:14px;align-items:center;margin-bottom:14px"><div style="width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--g1),var(--g6))"></div><b style="font:700 26px 'DM Sans'">savepoint.jogos</b></div>${cap}</div></div>`;
 
 S('ct-antes','ink','Conteúdos','O mesmo post, duas vezes',FC+' · Exemplo fictício',`
  ${eb('Conteúdos · Anúncio ou história?')}${ti('O mesmo post, duas vezes')}
- <div data-a="up" style="${abs(128,290)}">${postIG(`<p style="font-size:28px;line-height:1.4;margin:0">NOVA COLEÇÃO! Casacos vintage a partir de 12 €. Qualidade garantida. Link na bio!</p><p style="font-size:24px;margin:12px 0 0;color:#2a6fd6">#vintage #moda #sustentavel</p>`,'#E9E4D8')}</div>
+ <div data-a="up" style="${abs(128,290)}">${postIG(`<p style="font-size:28px;line-height:1.4;margin:0">NOVIDADES! Consolas retro a partir de 30 €. Qualidade garantida. Link na bio!</p><p style="font-size:24px;margin:12px 0 0;color:#2a6fd6">#retro #gaming #jogos</p>`,'#E9E4D8')}</div>
  <div data-step data-a="up" style="${abs(0,0,'width:1920px;height:1080px;pointer-events:none')}">
-  <div style="${abs(1072,290)}">${postIG(`<p style="font-size:28px;line-height:1.4;margin:0"><b>Este casaco já teve três donas.</b> A primeira comprou-o em Paris, em 1987. A última deixou-o no fundo do armário com o bolso rasgado. Cosemos o bolso. Agora procura a quarta.</p>`,'#BFF2D6')}</div>
+  <div style="${abs(1072,290)}">${postIG(`<p style="font-size:28px;line-height:1.4;margin:0"><b>Este Game Boy já teve três donos.</b> O primeiro recebeu-o no Natal de 1998. O último deixou-o numa gaveta, com um botão partido. Trocámos o botão. Agora procura o quarto dono.</p>`,'#BFF2D6')}</div>
   <div class="pill" style="${abs(150,312,'background:#fff;color:#0A120D;border:2px solid #0A120D')}">Anúncio</div>
   <div class="pill" style="${abs(1094,312)}">História</div>
  </div>`);
 
-const MS=[['Somos sustentáveis.','Este casaco já teve três donas. Tu podes ser a quarta.'],['O nosso café é o melhor da zona.','Às 7h já há fila de estudantes à porta, de apontamentos na mão.'],['Entregas super rápidas.','Encomendaste às 20h12. Às 20h39 tocou a campainha.']];
+const MS=[['Os nossos usados são de confiança.','Cada jogo usado é jogado do início ao fim antes de ir para a prateleira.'],['O nosso café é o melhor da zona.','Às 7h já há fila de estudantes à porta, de apontamentos na mão.'],['Entregas super rápidas.','Encomendaste às 20h12. Às 20h39 tocou a campainha.']];
 S('ct-mostra','ink','Conteúdos','Mostra, não digas',FC+' · Exemplos fictícios',`
  ${eb('Conteúdos · A regra de ouro')}${ti('Mostra, não digas')}
  <div data-a="fade" style="${abs(128,290,'width:1664px;display:grid;grid-template-columns:560px 90px 1fr;font:700 24px/1 \'DM Sans\';letter-spacing:.16em;text-transform:uppercase;color:var(--mut)')}"><span>Dizer</span><span></span><span style="color:var(--acc)">Mostrar</span></div>
@@ -4819,7 +4825,7 @@ S('ct-duo','ink','Conteúdos','A mascote que morreu',FC+' · Fonte: NPR, 13 e 26
  </div>
  <div data-step data-a="pop" style="${abs(128,590,'width:560px')}"><div class="k">O resultado</div><div style="font:800 96px/1 Syne;color:var(--acc);margin-top:16px;letter-spacing:-.03em">50,9 mil<br>milhões</div><div class="txt mut" style="margin-top:12px;font-size:30px">de XP feitos pelos utilizadores</div></div>`);
 
-const SER=[['Seg','Reel','Gancho','Encontrámos 30 casacos num sótão em Braga.','var(--g2)'],['Ter','Stories','Bastidores','A lavar e a coser, um a um.','var(--g4)'],['Qua','Carrossel','Rutura','Metade tinha traça. Quantos se salvam?','var(--g6)'],['Qui','Reel','Clímax','Salvámos 18. Sábado às 10h, na loja.','var(--g1)'],['Sex','Stories','Comunidade','Mostrem-nos o vosso casaco preferido.','var(--g3)']];
+const SER=[['Seg','Reel','Gancho','Encontrámos 40 jogos de Mega Drive num sótão em Braga.','var(--g2)'],['Ter','Stories','Bastidores','A limpar e a testar, um a um.','var(--g4)'],['Qua','Carrossel','Rutura','Metade não liga. Quantos se salvam?','var(--g6)'],['Qui','Reel','Clímax','Salvámos 22. Sábado às 18h, na loja.','var(--g1)'],['Sex','Stories','Comunidade','Mostrem-nos o vosso primeiro jogo.','var(--g3)']];
 const SERX=[166,499,832,1165,1498],SERY=[380,320,250,90,200];
 const SERP=crP([[0,420],...SERX.map((x,i)=>[x,SERY[i]]),[1664,230]]);
 S('ct-serie','ink','Conteúdos','Uma semana, uma história',FC+' · Exemplo fictício',`
@@ -4836,12 +4842,12 @@ S('ct-serie','ink','Conteúdos','Uma semana, uma história',FC+' · Exemplo fict
  {init:(r,tl)=>{const p=q('#scv',r);if(!p)return;const L=p.getTotalLength();tl.fromTo(p,{strokeDasharray:L,strokeDashoffset:L},{strokeDashoffset:0,duration:2,ease:'power2.inOut'},.5)}});
 
 /* storyboard em quatro planos */
-const SB=[['Gancho','0–2 s','Este casaco já teve 3 donas','Grande plano do casaco',`<g transform="translate(55 90) scale(.56)">${'<path d="M80 30 L112 14 Q125 30 138 14 L170 30 L215 70 L198 150 L176 140 L176 245 L74 245 L74 140 L52 150 L35 70Z"/><path d="M125 30 V245"/><path d="M92 180 H118 V214 H92Z"/><path d="M95 200 l6 -6 l6 6 l6 -6"/>'}</g>`,'var(--g1)'],
- ['Tensão','2–12 s','A última deixou-o assim','Mãos a coser o bolso','<circle cx="125" cy="200" r="58"/><path d="M80 260 L185 140"/><circle cx="182" cy="144" r="5"/><path d="M182 144 Q215 190 170 230 Q130 262 150 300" stroke-dasharray="8 8"/>','var(--g6)'],
- ['Recompensa','12–18 s','Agora procura a 4.ª dona','Alguém a vesti-lo, plano geral','<circle cx="125" cy="118" r="30"/><path d="M80 170 L105 155 Q125 168 145 155 L170 170 L190 230 L172 236 L170 310 L80 310 L78 236 L60 230Z"/><path d="M125 168 V310"/>','var(--g3)'],
- ['Convite','18–20 s','Sábado, 10h, na loja','Cartão final com a morada','<path d="M125 120 C95 120 80 142 80 165 C80 200 125 245 125 245 C125 245 170 200 170 165 C170 142 155 120 125 120Z"/><circle cx="125" cy="166" r="16"/><path d="M70 285 H180 M90 315 H160"/>','var(--g2)']];
+const SB=[['Gancho','0–2 s','Este Game Boy já teve 3 donos','Grande plano do Game Boy',`<g transform="translate(55 100) scale(.56)">${GBI}</g>`,'var(--g1)'],
+ ['Tensão','2–12 s','O último deixou-o assim','Mãos a trocar o botão','<rect x="62" y="150" width="110" height="180" rx="14"/><circle cx="140" cy="262" r="12"/><circle cx="110" cy="282" r="12"/><path d="M200 120 L150 238" stroke-width="8"/><path d="M214 88 L196 130" stroke-width="20"/>','var(--g6)'],
+ ['Recompensa','12–18 s','Agora procura o 4.º dono','Alguém a jogar, plano geral','<circle cx="125" cy="118" r="30"/><path d="M80 170 L105 155 Q125 168 145 155 L170 170 L190 230 L172 236 L170 310 L80 310 L78 236 L60 230Z"/><rect x="106" y="200" width="38" height="56" rx="6" fill="var(--bg,#0d1410)"/>','var(--g3)'],
+ ['Convite','18–20 s','Sábado, 18h, na loja','Cartão final com a morada','<path d="M125 120 C95 120 80 142 80 165 C80 200 125 245 125 245 C125 245 170 200 170 165 C170 142 155 120 125 120Z"/><circle cx="125" cy="166" r="16"/><path d="M70 285 H180 M90 315 H160"/>','var(--g2)']];
 S('ct-story','ink','Conteúdos','Do guião ao storyboard',FC+' · Exemplo fictício',`
- ${eb('Conteúdos · Vídeo curto · Segunda Mão')}${ti('Do guião ao storyboard')}
+ ${eb('Conteúdos · Vídeo curto · Save Point')}${ti('Do guião ao storyboard')}
  <div style="${abs(128,280,'width:1664px;display:grid;grid-template-columns:repeat(4,1fr);gap:40px')}">
  ${SB.map(s=>`<div data-step data-a="up" style="display:flex;flex-direction:column;align-items:center">
   <div style="display:flex;justify-content:space-between;width:300px;align-items:baseline;white-space:nowrap"><span class="k" style="color:${s[5]};font-size:21px">${s[0]}</span><span style="font:700 21px 'DM Sans';color:var(--mut)">${s[1]}</span></div>
@@ -4854,11 +4860,11 @@ S('ct-story','ink','Conteúdos','Do guião ao storyboard',FC+' · Exemplo fictí
  </div>`);
 
 const LG=[['Gancho','A única linha que se vê antes do «mais».','var(--g1)'],['Conflito','Algo corre mal.','var(--g6)'],['Viragem','O que mudou.','var(--g3)'],['Convite','Uma pergunta fácil de responder.','var(--g2)']];
-const LGT=['Encontrámos 30 casacos num sótão em Braga.','Estavam lá desde 1987. Metade tinha traça.','Passámos uma semana a lavar e a coser. Salvámos 18.','Sábado, às 10h, estão na loja. Qual escolhias?'];
+const LGT=['Encontrámos 40 jogos de Mega Drive num sótão em Braga.','Estavam lá desde 1994. Metade não ligava.','Passámos uma semana a limpar e a soldar. Salvámos 22.','Sábado, às 18h, estão na loja. Qual escolhias?'];
 S('ct-legenda','ink','Conteúdos','A legenda também conta',FC+' · Exemplo fictício',`
  ${eb('Conteúdos · Instagram e TikTok')}${ti('A legenda também conta')}
  <div class="post" data-a="pop" style="${abs(128,290,'width:860px;padding:36px 44px')}">
-  <div style="display:flex;gap:14px;align-items:center;margin-bottom:22px"><div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--g1),var(--g6))"></div><b style="font:700 28px 'DM Sans'">segundamao.vintage</b></div>
+  <div style="display:flex;gap:14px;align-items:center;margin-bottom:22px"><div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--g1),var(--g6))"></div><b style="font:700 28px 'DM Sans'">savepoint.jogos</b></div>
   ${LGT.map((t,i)=>`${i===1?'<div style="display:flex;align-items:center;gap:14px;margin:4px 0 16px;color:#8a948e;font:600 22px \'DM Sans\'"><span>… mais</span><i style="flex:1;border-top:2px dashed #c9cfcb"></i></div>':''}<p id="lg${i}" style="font-size:32px;line-height:1.38;margin:0 0 14px;border-radius:10px;padding:4px 10px;margin-left:-10px;${i===0?'font-weight:700':''}">${t}</p>`).join('')}
  </div>
  <div style="${abs(1080,300,'width:712px;display:flex;flex-direction:column;gap:20px')}">
@@ -4884,8 +4890,8 @@ Object.assign(N4,{
  'd4':'Início de Histórias nos conteúdos, o coração prático da aula: anúncio vs. história, mostrar e não dizer, seis formatos, caso Duolingo, uma semana em episódios, canais, reels e storyboard, carrossel e legenda, prática no telemóvel e as três perguntas.',
  'd-ia':'Início do bloco de IA: o pedido, os dois textos e a votação, os seis sinais, prática, os cinco movimentos e a checklist.',
  'd5':'Início do workshop: brief, criação, ensaio e palco. Os grupos já existem desde as práticas anteriores.',
- 'ct-antes':'Mostra só o post da esquerda e pergunta: «Isto fazia-vos parar?». Depois avança para o da direita. É o mesmo casaco, o mesmo preço, a mesma loja. A diferença é que o segundo tem alguém, um problema e uma mudança. É a ideia de toda esta parte: cada publicação é uma pequena história.',
- 'ct-mostra':'Em cada linha, mostra primeiro o «dizer» e pede à turma que o transforme em algo que se veja ou se imagine. Só depois revela o «mostrar». A regra: troca adjetivos («sustentável», «o melhor», «rápido») por um facto concreto, um número ou uma cena.',
+ 'ct-antes':'Mostra só o post da esquerda e pergunta: «Isto fazia-vos parar?». Depois avança para o da direita. É o mesmo produto, a mesma loja. A diferença é que o segundo tem alguém, um problema e uma mudança. É a ideia de toda esta parte: cada publicação é uma pequena história.',
+ 'ct-mostra':'Em cada linha, mostra primeiro o «dizer» e pede à turma que o transforme em algo que se veja ou se imagine. Só depois revela o «mostrar». A regra: troca adjetivos («de confiança», «o melhor», «rápido») por um facto concreto, um número ou uma cena.',
  'ct-formatos':'Seis formatos que as marcas usam todas as semanas, e todos são histórias: bastidores (como se faz), antes e depois (a transformação), o cliente herói (testemunhos e conteúdo dos clientes), o erro (vulnerabilidade gera confiança), um dia na vida (rotina e rutura) e a série (episódios com uma pergunta no ar). Pergunta que tipo é que eles veem até ao fim.',
  'ct-duo':'Caso real. A 11 de fevereiro de 2025, a Duolingo anunciou a «morte» do Duo, a sua mascote. A 17, explicou como trazê-lo de volta: os utilizadores tinham de juntar 50 mil milhões de XP, que se ganham a fazer lições. A 24 publicou o vídeo do regresso e, no dia seguinte, admitiu que tinha sido encenado. Os utilizadores juntaram cerca de 50,9 mil milhões de XP (NPR, 26/02/2025). Liga com os ingredientes: personagem (a mascote), conflito (a morte), transformação (o regresso). E com os meios ganhos: as pessoas fizeram parte da história. Pergunta antes de revelar: «Porque é que uma marca havia de matar a própria mascote?»',
  'ct-serie':'O plano de conteúdos da parte Digital, agora com uma história por cima. Cada dia é um episódio e a semana segue o arco: gancho, bastidores, rutura, clímax e a comunidade a continuar a história. Mostra que o formato muda (reel, stories, carrossel) mas a história é uma só. Pergunta: «O que publicavam na segunda para quererem ver a quinta?»',
@@ -4904,15 +4910,15 @@ const N2={
  'd1':'Início do Bloco 1 (0:10). 30 minutos: o que mudou com o digital (4), marcas que falam contigo (4), números de Portugal (2), meios próprios, pagos e ganhos (5), jornada do cliente (5), persona (3) e atividade 01 (7).',
  'monologo':'Revela uma linha de cada vez. Pergunta: que marcas conhecem que falam “com” e não “para”? O slide seguinte traz três exemplos que a turma reconhece. A frase final resume o bloco.',
  'dados':'Números do DataReportal, “Digital 2026: Portugal” (início de 2026). Mais de 9 em cada 10 pessoas estão online e há mais ligações móveis do que habitantes (muitas pessoas têm mais do que um cartão). Atenção: “identidades em redes sociais” não é o mesmo que pessoas únicas. Confirma os valores no relatório original antes de os usares numa avaliação. Pergunta final à turma: quantas horas de ecrã tiveram ontem e em que apps (TikTok, Instagram, YouTube, Twitch, Spotify)? Pede para levantarem a mão por app. É onde a atenção deles está, e é onde as marcas competem.',
- 'poem':'Revela os três meios um a um e vai desenhando o diagrama. Exemplo com a loja vintage: publica no seu Instagram (próprio), paga a um creator para mostrar uma peça (pago) e alguém faz um vídeo “o meu achado na Segunda Mão” sem ninguém pedir (ganho). Outro exemplo que conhecem: o Spotify Wrapped é um produto próprio, mas o que o torna enorme são as pessoas a partilharem nos stories (ganho). Pergunta em que meio as marcas costumam investir menos.',
+ 'poem':'Revela os três meios um a um e vai desenhando o diagrama. Exemplo com a loja de jogos: publica no seu Instagram (próprio), paga a um creator para mostrar um jogo (pago) e alguém faz um vídeo “o meu achado na Save Point” sem ninguém pedir (ganho). Outro exemplo que conhecem: o Spotify Wrapped é um produto próprio, mas o que o torna enorme são as pessoas a partilharem nos stories (ganho). Pergunta em que meio as marcas costumam investir menos.',
  'jornada':'Uma etapa de cada vez. Para cada uma, pergunta: do que é que a pessoa precisa aqui? Pede à turma que pense na última compra importante (ténis, telemóvel, bilhete de festival) e em onde descobriram, onde compararam e o que os convenceu. Sublinha que não há um conteúdo para tudo: um TikTok funciona para descoberta, mas quem já está a decidir quer reviews e informação clara. Este modelo volta no slide das métricas.',
  'persona':'Exemplo fictício: a Rita, estudante de Design. Explica que a persona deve vir de dados reais (conversas com clientes, inquéritos, comentários, métricas) e não de suposições. Mostra como cada campo muda a comunicação: se decide quando vê alguém parecido com ela a usar a peça, o conteúdo certo são creators e clientes reais, não fotos de catálogo. Nota importante: dois jovens de 20 anos podem não ter nada em comum; o que define a persona é o problema e o contexto, não só a idade.',
  'act-persona':'Atividade 01 (8 min). Forma já os grupos de 3–4 pessoas, que se mantêm até ao workshop. 1 min de instruções, 5 min de trabalho, 2 min de partilha com 2 grupos. Se um grupo ficar preso, pede-lhe que pense numa pessoa real que conhecem e que compra aquela marca.',
  'd2':'Início do Bloco 2 (0:40). 30 minutos: objetivos SMART (5), canais (6), plano de conteúdos (5), métricas (4) e atividade 02 (10).',
- 'smart':'Explica as cinco letras e depois mostra a transformação do objetivo vago no objetivo SMART (exemplo fictício da loja vintage). Pergunta: como saberíamos se “mais seguidores” foi atingido? Sem número nem prazo, não há forma de avaliar. Liga a algo que conhecem: um creator que diz “quero crescer no TikTok” é vago; “chegar aos 10 mil em 3 meses” já se pode medir.',
+ 'smart':'Explica as cinco letras e depois mostra a transformação do objetivo vago no objetivo SMART (exemplo fictício da loja de jogos). Pergunta: como saberíamos se “mais seguidores” foi atingido? Sem número nem prazo, não há forma de avaliar. Liga a algo que conhecem: um creator que diz “quero crescer no TikTok” é vago; “chegar aos 10 mil em 3 meses” já se pode medir.',
  'campanhas-reais':'Share a Coke: campanha australiana de 2011 com 150 dos nomes mais comuns nas garrafas; consumo entre jovens adultos +7% e tráfego no Facebook +870% (Packaging News). Pergunta: qual foi o canal próprio, qual foi o ganho? Embalagem e loja são próprios, as partilhas dos clientes são ganhas. Red Bull Stratos: 14 de outubro de 2012, mais de 8 milhões de espectadores em simultâneo no YouTube, recorde na altura (Tubefilter, Guinness). A marca virou editora de conteúdo. Barbie: 2023, orçamento de marketing de cerca de 150 milhões de dólares segundo a Variety e mais de 100 parcerias; o Barbenheimer nasceu dos fãs, não da marca (The Current). Fecha com a pergunta: o que é que a marca pediu às pessoas que fizessem?',
- 'canais-mkt':'Cada canal tem um papel diferente na jornada e um tipo de meio. Insiste que uma marca pequena não precisa de estar em todos: dois canais bem escolhidos e consistentes valem mais do que seis abandonados. Liga com a persona: onde está a Rita? Pergunta: se tivessem de escolher só dois canais para a loja vintage, quais?',
- 'calendario':'Exemplo fictício da loja vintage “Segunda Mão” que volta na Parte 2. Os pilares garantem variedade: não se pode só vender, nem só entreter. Mostra que cada conteúdo da semana tem um pilar e um formato. Pergunta: que pilar falta mais nos perfis que seguem?',
+ 'canais-mkt':'Cada canal tem um papel diferente na jornada e um tipo de meio. Insiste que uma marca pequena não precisa de estar em todos: dois canais bem escolhidos e consistentes valem mais do que seis abandonados. Liga com a persona: onde está a Rita? Pergunta: se tivessem de escolher só dois canais para a loja de jogos, quais?',
+ 'calendario':'Exemplo fictício da loja de jogos “Save Point”, que volta ao longo da aula. Os pilares garantem variedade: não se pode só vender, nem só entreter. Mostra que cada conteúdo da semana tem um pilar e um formato. Pergunta: que pilar falta mais nos perfis que seguem?',
  'kpis':'Liga cada etapa da jornada ao que se mede. Os KPI são exemplos. Revela no fim a métrica de vaidade: um vídeo pode ter 1 milhão de views e não vender nada. Os gostos e as views não são maus, mas sozinhos não dizem se o objetivo está mais perto. Um conteúdo, um objetivo, um sinal.',
  'act-plano':'Atividade 02 (10 min), nos mesmos grupos. 1 min de instruções, 7 de trabalho, 2 de partilha. O plano cabe numa folha com quatro caixas. Avisa que este plano é a base do workshop: vão transformá-lo numa história.',
  'pausa':'Pausa (1:10–1:25). Deixa este slide projetado com o cronómetro. O desafio liga as duas partes: pensar num TikTok, anúncio ou vídeo de que se lembram e em quem era o herói.',
@@ -4938,7 +4944,7 @@ const N2={
  'heroi-guia':'Ideia-chave de marketing: o cliente é o protagonista; a marca é o mentor (pensa em Yoda e Luke Skywalker, ou em Mando e Grogu). No Wrapped, o herói és tu e o Spotify é o guia. Pede à turma para pensar numa marca que conhecem bem e responder: no último conteúdo que viram, quem era o herói, o cliente ou a marca? Normalmente é a marca, e é por isso que esses conteúdos passam despercebidos.',
  'story-spine':'Aquecimento de 1 minuto: pede a alguém para contar o enredo de uma série ou filme que viu nas frases “Era uma vez… Todos os dias… Até que um dia…”. Explica as 8 frases com calma e revela-as por ordem. Insiste em 3 ideias: (1) as frases “Por causa disso” encadeiam causa e efeito, é isso que dá motor à história; (2) o clímax é o momento em que o conflito se resolve ou rebenta; (3) a última frase mostra a transformação, o novo normal. A estrutura é muitas vezes atribuída a Kenn Adams (improviso) e popularizada através da Pixar; se a usares em contexto avaliativo, confirma a origem.',
  'arco':'O arco emocional da história. Revela de ponto em ponto e a bolinha vai subindo pela curva: Gancho (prende a atenção), Rutura (algo corre mal), Clímax (o ponto de maior tensão) e Novo normal (a transformação). Liga à Story Spine: da rotina à rutura sobe, o «até que finalmente» é o clímax, e o «desde então» é a descida para o novo equilíbrio. Pergunta à turma: em que filme ou série viram este desenho?',
- 'spine-exemplo':'Lê o exemplo em voz alta, frase a frase. Depois pede à turma: onde está a personagem? Qual é o conflito? Qual é a transformação? Repara que o produto só aparece no fim, como resultado, não como ponto de partida. A loja Segunda Mão é inventada para esta aula; o conflito (fast fashion a 5 euros) é um que eles conhecem bem. Pergunta: já trocaram ou venderam roupa online?',
+ 'spine-exemplo':'Lê o exemplo em voz alta, frase a frase. Depois pede à turma: onde está a personagem? Qual é o conflito? Qual é a transformação? Repara que o produto só aparece no fim, como resultado, não como ponto de partida. A Save Point é inventada para esta aula; o conflito (as lojas online mais baratas) é um que eles conhecem bem. Pergunta: onde compraram o último jogo?',
  'ganchos':'Cinco tipos de gancho, cada um com um exemplo inventado. Lê-os em voz alta e pede à turma que diga qual os faria parar o scroll, e porquê. Liga com a Story Spine: o gancho é, na prática, a frase “Até que um dia…” trazida para o início. Desafio rápido (1 min): peça a cada aluno que escreva um gancho para um vídeo sobre a sua semana de aulas. No workshop, cada equipa terá de escrever o seu gancho.',
  'reels':'Em vídeo curto o gancho e a tensão quase se confundem: não há tempo para “contextualizar”. A coluna do telemóvel mostra a proporção aproximada de cada batida (a tensão ocupa a maior parte). Exemplo para a turma: “Perdi o voo por causa de uma meia” (gancho), o que aconteceu (tensão), a lição (recompensa), “envia isto a quem também se esquece de tudo” (convite). Exemplo inventado para a aula. Pergunta: quantos segundos esperam antes de fazer scroll?',
  'carrossel':'O carrossel é um “livro de bolso” da Story Spine. A capa é o gancho; os slides 2 e 3 são rutura e escalada; o 4 é o clímax e a resolução; o 5 é o convite. Pede à turma que dê exemplos de carrosséis que guardaram: quase sempre, o que os fez guardar foi uma viragem a meio. O carrossel também funciona no LinkedIn para histórias profissionais (um erro, uma lição, um método), útil para quando forem procurar estágio.',
@@ -4949,8 +4955,8 @@ const N2={
 /* ---- Ordem final ---- */
 Object.assign(N2,N3,N4);
 const ORDER=[
- ['Abertura',['cover','eu-ola','eu-percurso','eu-projetos','eu-casos','objetivos','statement-mkt','live-entrar','live-marcas']],
- ['Marketing',['d1','o-que-e','hist-producao','hist-vendas','hist-marketing','hist-relacao','hist-digital','ben-notoriedade','ben-relacao','ben-crescimento','mr-oque','mr-secundarios','mr-primarios','mr-quanti','mr-exemplo','live-primsec','stp-segmentar','stp-escolher','stp-posicionar','stp-formula','live-posicionar','persona-def','persona-rita','live-persona','4ps','live-4p','mv-marca','mv-proposta','mv-tom','marcas-conversa','jornada','smart-letras','smart-exemplo','live-smart']],
+ ['Abertura',['cover','eu-ola','eu-percurso','eu-casos','objetivos','statement-mkt','live-entrar','live-marcas']],
+ ['Marketing',['d1','o-que-e','hist-producao','hist-vendas','hist-marketing','hist-relacao','hist-digital','ben-notoriedade','ben-relacao','ben-crescimento','mr-oque','mr-secundarios','mr-primarios','mr-quanti','live-primsec','stp-segmentar','stp-escolher','stp-posicionar','stp-formula','live-posicionar','persona-def','persona-rita','live-persona','4ps','live-4p','mv-marca','mv-proposta','mv-tom','marcas-conversa','jornada','smart-letras','smart-exemplo','live-smart']],
  ['Digital',['d2','monologo','meio-proprio','meio-pago','meio-ganho','meio-ideal','live-canais','cn-site','cn-redes','cn-email','cn-anuncios','cn-creators','cn-imprensa','cn-fim','pdc-pago','pdc-dados','pdc-comunidade','pdc-fim','calendario','camp-coke','camp-redbull','camp-burger','camp-fim','kpis','kpi-vaidade','live-metricas','live-plano']],
  ['Pausa',['pausa']],
  ['Histórias',['d3','statement','forca-atencao','forca-emocao','forca-memoria','facto-historia','ing-personagem','ing-conflito','ing-transformacao','caso-wrapped','wrapped-3','heroi-papeis','heroi-guia','abt-e','abt-mas','abt-porisso','live-abt','story-spine','arco','spine-exemplo','live-spine','live-spinew','gancho-1','gancho-2','gancho-3','gancho-4','gancho-5','ganchos-fim','live-gancho']],
@@ -4975,7 +4981,7 @@ const FINAL=[];ORDER.forEach(([g,ids])=>ids.forEach(id=>{const s=BYID[id];if(!s)
 /* «pergunta primeiro»: nestes slides aparece só o título; o resto entra no 1.º clique */
 const ASK={
  'mr-quanti':'Qual é a diferença entre saber «quantos» e saber «porquê»? Que exemplo dão de cada um?',
- 'mr-exemplo':'Se fossem a loja Segunda Mão, que três perguntas fariam aos estudantes antes de lançar a coleção?',
+ 'mr-exemplo':'Se fossem a loja Save Point, que três perguntas fariam aos estudantes antes de lançar a coleção?',
  'stp-escolher':'Dos grupos que vimos, a quem servia melhor a loja? Porquê esse e não os outros?',
  'stp-posicionar':'Quando pensam numa marca de ténis, que palavra vos vem à cabeça? É isso que é o posicionamento.',
  'persona-rita':'O que é que já conseguem adivinhar sobre a Rita? Onde a encontrariam online?',
@@ -4999,7 +5005,7 @@ const ASK={
  'mr-oque':'Antes de lançar um produto, o que é que uma marca devia saber? Como descobria?',
  'mr-secundarios':'Que informação sobre o mercado já existe, sem termos de perguntar nada a ninguém?',
  'mr-primarios':'E quando essa informação não existe, como a vamos buscar?',
- 'stp-segmentar':'Se abrissem uma loja de roupa online, vendiam para toda a gente? Porquê?',
+ 'stp-segmentar':'Se abrissem uma loja de jogos, vendiam para toda a gente? Porquê?',
  'persona-def':'Já ouviram falar de «persona»? O que acham que é?',
  'mv-marca':'O que é uma marca? É só o nome e o logótipo?',
  'mv-proposta':'Porque é que compram numa marca e não na do lado?',

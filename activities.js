@@ -15,7 +15,7 @@ window.ACT={
  primsec:{type:'sort',t:'Primário ou secundário?',q:'Arrasta cada fonte de dados para o tipo certo.',lim:60,
   buckets:[{k:'p',t:'Primário',c:G},{k:'s',t:'Secundário',c:M}],
   items:[{t:'Censos do INE sobre a população de Lisboa',b:'s'},{t:'Inquérito feito por ti a 30 estudantes do campus',b:'p'},
-   {t:'Pesquisas por «roupa vintage» no Google Trends',b:'s'},{t:'Entrevista a 5 clientes da loja',b:'p'},
+   {t:'Pesquisas por «jogos retro» no Google Trends',b:'s'},{t:'Entrevista a 5 clientes da loja',b:'p'},
    {t:'Relatório DataReportal sobre redes sociais em Portugal',b:'s'},{t:'Observar durante 1 hora quem entra na loja',b:'p'},
    {t:'Estatísticas da Pordata sobre rendimentos',b:'s'},{t:'Sondagem nos stories da marca',b:'p'}]},
 
@@ -25,17 +25,17 @@ window.ACT={
   show:'Para {pub} que {nec}, {A} é {cat} que {dif}.'},
 
  persona:{type:'form',t:'Cria a persona',q:'Um telemóvel por grupo. A persona da marca que vos calhou.',lim:300,assign:'marcas',group:true,
-  fields:[{k:'nome',l:'Nome e idade',ph:'Rita, 21 anos'},{k:'dia',l:'Como é o dia dela?',ph:'estuda de manhã, trabalha num café à tarde'},
-   {k:'obj',l:'O que quer conseguir?',ph:'poupar para ir de Erasmus'},{k:'fru',l:'O que a frustra?',ph:'perder tempo à procura de coisas baratas'},
+  fields:[{k:'nome',l:'Nome e idade',ph:'Tiago, 22 anos'},{k:'dia',l:'Como é o dia desta pessoa?',ph:'estuda de manhã, trabalha num café à tarde'},
+   {k:'obj',l:'O que quer conseguir?',ph:'poupar para ir de Erasmus'},{k:'fru',l:'O que lhe causa frustração?',ph:'perder tempo à procura de coisas baratas'},
    {k:'onl',l:'Onde passa tempo online e em quem confia?',ph:'TikTok; confia em amigos e em creators pequenos'}],
-  show:'<b>{nome}</b> · {A}<br>Dia: {dia}<br>Quer: {obj}<br>Frustra-a: {fru}<br>Online: {onl}'},
+  show:'<b>{nome}</b> · {A}<br>Dia: {dia}<br>Quer: {obj}<br>Frustração: {fru}<br>Online: {onl}'},
 
- quatrop:{type:'sort',t:'Que P é este?',q:'Loja Segunda Mão: arrasta cada decisão para o P certo.',lim:75,
+ quatrop:{type:'sort',t:'Que P é este?',q:'Loja Save Point: arrasta cada decisão para o P certo.',lim:75,
   buckets:[{k:'pr',t:'Produto',c:G},{k:'pc',t:'Preço',c:L},{k:'pa',t:'Praça',c:M},{k:'pm',t:'Promoção',c:P}],
-  items:[{t:'Vender peças vintage escolhidas uma a uma',b:'pr'},{t:'Desconto de 20% para estudantes',b:'pc'},
-   {t:'Abrir um pop-up no campus ao sábado',b:'pa'},{t:'Publicar 3 TikToks por semana',b:'pm'},
-   {t:'Garantia de troca durante 30 dias',b:'pr'},{t:'Vender também pela Vinted',b:'pa'},
-   {t:'Pagar a uma creator para mostrar a coleção',b:'pm'},{t:'Peças entre 8 € e 40 €',b:'pc'}]},
+  items:[{t:'Vender jogos usados testados um a um',b:'pr'},{t:'Desconto de 20% para estudantes',b:'pc'},
+   {t:'Abrir um balcão no campus ao sábado',b:'pa'},{t:'Publicar 3 TikToks por semana',b:'pm'},
+   {t:'Garantia de troca durante 30 dias',b:'pr'},{t:'Vender também pelo OLX',b:'pa'},
+   {t:'Pagar a um streamer para jogar na Twitch',b:'pm'},{t:'Jogos entre 5 € e 60 €',b:'pc'}]},
 
  smart:{type:'form',t:'Torna-o SMART',q:'Transforma «Quero mais seguidores» num objetivo SMART.',lim:120,vote:true,check:'smart',
   fields:[{k:'t',l:'O objetivo SMART',ph:'Chegar aos 2 000 seguidores no TikTok até 31 de janeiro, com 3 vídeos por semana',ta:true}],show:'{t}'},
@@ -53,8 +53,8 @@ window.ACT={
    {t:'Clientes que voltam a comprar',b:'u'},{t:'Impressões de um anúncio',b:'v'}]},
 
  plano:{type:'form',t:'Mini plano',q:'Um telemóvel por grupo, para a vossa marca. Guardem: é a base do workshop.',lim:300,assign:'marcas',group:true,check:'smart',checkField:'obj',
-  fields:[{k:'obj',l:'Objetivo SMART',ph:'Vender 40 peças online até ao fim do mês',ta:true},{k:'c1',l:'Canal 1 e o papel dele',ph:'TikTok: dar a conhecer a loja'},
-   {k:'c2',l:'Canal 2 e o papel dele',ph:'Newsletter: avisar das peças novas'},{k:'kpi',l:'KPI a acompanhar',ph:'compras vindas do TikTok'}],
+  fields:[{k:'obj',l:'Objetivo SMART',ph:'Vender 40 jogos online até ao fim do mês',ta:true},{k:'c1',l:'Canal 1 e o papel dele',ph:'TikTok: dar a conhecer a loja'},
+   {k:'c2',l:'Canal 2 e o papel dele',ph:'Newsletter: avisar dos jogos novos'},{k:'kpi',l:'KPI a acompanhar',ph:'compras vindas do TikTok'}],
   show:'<b>{A}</b><br>Objetivo: {obj}<br>{c1}<br>{c2}<br>KPI: {kpi}'},
 
  abt:{type:'form',t:'Escreve em 3 frases',q:'E… MAS… POR ISSO… para o produto que te calhou.',lim:150,assign:'produtos',vote:true,
@@ -72,8 +72,8 @@ window.ACT={
   fields:[{k:'t',l:'O gancho',ph:'Ninguém te conta isto sobre o pão de ontem…'}],show:'«{t}»'},
 
  post:{type:'form',t:'Conta-o como história',q:'Reescreve o post que te calhou como uma pequena história.',lim:180,assign:'posts',vote:true,check:'hook',checkField:'g',
-  fields:[{k:'g',l:'1.ª linha (o gancho)',ph:'Este casaco já teve três donas.'},{k:'h',l:'O que aconteceu (quem e o que correu mal)',ph:'A última deixou-o no armário com o bolso rasgado. Cosemos o bolso.',ta:true},
-   {k:'c',l:'O convite',ph:'Qual é a peça mais antiga do teu armário?'}],
+  fields:[{k:'g',l:'1.ª linha (o gancho)',ph:'Este Game Boy já teve três donos.'},{k:'h',l:'O que aconteceu (quem e o que correu mal)',ph:'O último deixou-o numa gaveta com um botão partido. Trocámos o botão.',ta:true},
+   {k:'c',l:'O convite',ph:'Qual foi o teu primeiro jogo?'}],
   show:'<b>«{g}»</b><br>{h}<br>{c}'},
 
  slop:{type:'quiz',t:'Slop ou não?',lim:15},
@@ -87,7 +87,7 @@ window.ACTS=Object.keys(ACT).map(id=>({id,t:ACT[id].t}));
 
 window.ASSIGN={
  posts:['Nova coleção de inverno. 20% de desconto até domingo.','Abrimos um novo ginásio. Primeira semana grátis.','O nosso café tem agora leite de aveia.','Já podes encomendar pela app. Entregas em 30 minutos.','Novos ténis feitos com plástico reciclado.','Workshop de cerâmica no sábado. Inscrições abertas.'],
- marcas:['Loja de roupa em segunda mão','Festival de música','App de entregas de comida','Ginásio low-cost','Marca de ténis sustentáveis','Café perto da faculdade','Estúdio de pilates','Livraria independente','Loja online de plantas','App de transportes'],
+ marcas:['Loja de bicicletas','Festival de música','App de entregas de comida','Ginásio low-cost','Marca de ténis sustentáveis','Café perto da faculdade','Estúdio de pilates','Livraria independente','Loja online de plantas','App de transportes'],
  produtos:['Powerbank','Garrafa reutilizável','App para dividir contas','Auriculares sem fios','Sapatilhas de corrida','Cartão de transporte']
 };
 
@@ -105,12 +105,12 @@ window.SPINE=[
 const SG=['Slop','Tem substância'],PN=['Pode','Não pode'];
 window.QSETS={
  slop:[
-  {q:'«Pronta para elevar o teu estilo a outro nível?»',o:SG,a:0,why:'Abertura vazia: serve a qualquer marca do mundo.'},
-  {q:'«O casaco da foto chegou ontem de Braga: 12 €, botões originais e um rasgão no bolso que te mostramos no vídeo.»',o:SG,a:1,why:'Tem lugar, número e um defeito admitido. Só esta loja podia ter escrito isto.'},
-  {q:'«Acreditamos que a moda sustentável é o futuro.»',o:SG,a:0,why:'Valores de cartaz, sem prova nem opinião própria.'},
-  {q:'«Peças únicas, cheias de estilo e história.»',o:SG,a:0,why:'Adjetivos sem prova. Que peças? Que história?'},
-  {q:'«A Marta trouxe 30 peças da avó. Sábado às 10h estão todas na loja, a 5 € cada.»',o:SG,a:1,why:'Uma pessoa, um número, um dia e uma hora.'},
-  {q:'«Visita-nos e descobre o look perfeito para ti!»',o:SG,a:0,why:'Fecho genérico: sem dia, sem hora, sem motivo. Troca o nome da loja e continua a funcionar.'}],
+  {q:'«Pronto para levar o teu jogo a outro nível?»',o:SG,a:0,why:'Abertura vazia: serve a qualquer marca do mundo.'},
+  {q:'«O Game Boy da foto chegou ontem de Braga: 45 €, botões originais e um risco no ecrã que te mostramos no vídeo.»',o:SG,a:1,why:'Tem lugar, número e um defeito admitido. Só esta loja podia ter escrito isto.'},
+  {q:'«Acreditamos que jogar é muito mais do que um passatempo.»',o:SG,a:0,why:'Valores de cartaz, sem prova nem opinião própria.'},
+  {q:'«Jogos únicos, cheios de nostalgia e emoção.»',o:SG,a:0,why:'Adjetivos sem prova. Que jogos? Que emoção?'},
+  {q:'«O Rui trouxe 30 jogos da coleção do tio. Sábado às 18h estão todos na loja, a 5 € cada.»',o:SG,a:1,why:'Uma pessoa, um número, um dia e uma hora.'},
+  {q:'«Visita-nos e descobre o jogo perfeito para ti!»',o:SG,a:0,why:'Fecho genérico: sem dia, sem hora, sem motivo. Troca o nome da loja e continua a funcionar.'}],
  rgpd:[
   {q:'Enviar a newsletter a quem deixou o email só para participar num passatempo.',o:PN,a:1,why:'Finalidade: os dados só servem para aquilo que disseste. Para a newsletter, pede consentimento à parte.'},
   {q:'Pôr a caixa «Aceito receber novidades» já marcada no formulário.',o:PN,a:1,why:'O consentimento tem de ser ativo. Caixas já marcadas não valem.'},
@@ -128,7 +128,7 @@ window.QSETS={
   {q:'Um vídeo teve 2 milhões de views e só 3 vendas. Aqui as views são…',o:['O melhor KPI','Uma métrica de vaidade','Um dado secundário','Um gancho'],a:1,why:'Sobem mas não dizem se o objetivo está mais perto.'},
   {q:'Na Story Spine, que frase vem logo a seguir a «Todos os dias…»?',o:['Por causa disso…','E desde então…','Até que um dia…','Até que finalmente…'],a:2,why:'A rotina quebra-se com «Até que um dia…».'},
   {q:'Num reel, onde tem de estar o gancho?',o:['No fim, como surpresa','Nos primeiros segundos','Na legenda','Nas hashtags'],a:1,why:'Se o primeiro segundo não prender, ninguém chega à história.'},
-  {q:'Qual destas frases mostra em vez de dizer?',o:['Somos sustentáveis','A melhor qualidade do mercado','Este casaco já teve três donas','Peças únicas e com estilo'],a:2,why:'Um facto concreto mostra; um adjetivo só diz.'},
+  {q:'Qual destas frases mostra em vez de dizer?',o:['Somos sustentáveis','A melhor qualidade do mercado','Este Game Boy já teve três donos','Jogos únicos e com estilo'],a:2,why:'Um facto concreto mostra; um adjetivo só diz.'},
   {q:'Qual destes é um sinal de slop?',o:['Um número concreto','Uma pessoa com nome','Adjetivos sem prova («únicas», «perfeito»)','Uma opinião própria'],a:2,why:'O slop é texto correto e vazio: serve a qualquer marca.'},
   {q:'Uma creator recebeu dinheiro para mostrar um produto. O que tem de fazer?',o:['Nada, se gostar do produto','Assinalar que é publicidade, de forma visível','Pôr #pub no fim de 30 hashtags','Pedir autorização à CNPD'],a:1,why:'Tem de se ver que é publicidade: «#pub» ou «parceria paga», bem visível.'}]
 };
@@ -137,7 +137,11 @@ window.QSETS={
 const hsh=s=>{let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0};
 /* as marcas da turma (nuvem do início) passam a ser as marcas sorteadas nas atividades */
 window.POOL=window.POOL||null;
-window.poolFrom=w=>{const c={};Object.values(w||{}).forEach(x=>{const t=String(x).trim();const k=t.toLowerCase();if(k){c[k]=c[k]||{t,n:0};c[k].n++}});return Object.values(c).sort((a,b)=>b.n-a.n).slice(0,12).map(x=>x.t)};
+/* a mesma marca escrita de formas diferentes (Nike, nike, NIKE, Coca-Cola, coca cola) conta como uma só */
+window.bkey=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'');
+window.bpretty=v=>{let best='',n=-1;Object.keys(v).forEach(t=>{const sc=v[t]*10+(/[A-Z]/.test(t)?1:0);if(sc>n){n=sc;best=t}});return best};
+window.bmerge=list=>{const c={};list.forEach(x=>{const t=String(x).trim().replace(/\s+/g,' ');const k=bkey(t);if(!k)return;c[k]=c[k]||{v:{},n:0};c[k].n++;c[k].v[t]=(c[k].v[t]||0)+1});Object.values(c).forEach(o=>o.t=bpretty(o.v));return c};
+window.poolFrom=w=>Object.values(bmerge(Object.values(w||{}))).sort((a,b)=>b.n-a.n).slice(0,12).map(x=>x.t);
 window.assignList=a=>a==='marcas'&&Array.isArray(POOL)&&POOL.length>=3?POOL:ASSIGN[a];
 window.assignFor=(id,pid)=>{const a=ACT[id]&&ACT[id].assign;if(!a)return '';const L=assignList(a);return L[hsh(pid+a)%L.length]};
 window.formText=(id,f,A)=>{const d=ACT[id];const e=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

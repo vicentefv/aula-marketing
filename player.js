@@ -59,6 +59,9 @@ const head=()=>'<p class="sub" style="text-transform:uppercase;letter-spacing:.1
 
 /* ---------- vistas por tipo ---------- */
 const VIEWS={
+rank:{render(){const ps=Object.keys(players).map(k=>({id:k,c:players[k].color,t:Object.values(players[k].pts||{}).reduce((a,b)=>a+(+b||0),0)})).sort((a,b)=>b.t-a.t);const i=ps.findIndex(p=>p.id===pid);
+  const rv=act.phase==='rev';setMain(head()+'<div class="center rise"><div class="bigdot" style="background:'+(me?me.color:'var(--violet)')+'"></div><h2>'+(rv&&i>=0?(i+1)+'.º lugar':'Olha para o ecrã')+'</h2><p class="sub">'+(i>=0?ps[i].t+' pontos'+(rv?' · de '+ps.length:''):'')+'</p></div>')},
+ update(){VIEWS.rank.render()}},
 lobby:{render(){setMain('<div class="center rise"><div class="bigdot" style="background:'+(me?me.color:'var(--violet)')+'"></div><h2>Estás dentro'+(me?', '+esc(me.name):'')+'</h2><p class="sub">Olha para o ecrã. A próxima atividade aparece aqui sozinha.</p></div>')}},
 
 cloud:{render(){setMain(head()+'<h2>'+esc(D().q)+'</h2><div class="join" style="margin-top:0"><input id="w" maxlength="24" placeholder="Escreve aqui"><button class="btn" id="sw">Enviar</button></div><div class="chips" id="mine"></div><p class="sub" id="lim"></p>');

@@ -319,6 +319,20 @@ mark.s::after{content:attr(data-n);display:inline-block;vertical-align:top;font:
 .lv-win b{display:flex;align-items:center;gap:16px;font:800 52px/1 Syne}
 .lv-win .mut{margin-left:auto;font:700 28px 'DM Sans'}
 @keyframes lvw{from{transform:scale(.8);opacity:0}to{transform:none;opacity:1}}
+.lv-podw{display:grid;grid-template-columns:1fr 560px;gap:56px;align-items:end;height:100%}
+.lv-pod{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;align-items:end;min-height:470px}
+.lv-pc{display:flex;flex-direction:column;align-items:center;gap:10px}
+.lv-pc.up{animation:lvpu .9s cubic-bezier(.2,1.3,.4,1) backwards}
+@keyframes lvpu{from{transform:translateY(80px);opacity:0}to{transform:none;opacity:1}}
+.lv-pn{display:flex;align-items:center;gap:14px;font:800 38px/1.1 Syne;min-height:46px;text-align:center;max-width:100%}
+.lv-pn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lv-pp{font:700 26px 'DM Sans';color:var(--mut);min-height:32px}
+.lv-pb{width:100%;border-radius:22px 22px 0 0;display:flex;align-items:flex-start;justify-content:center;padding-top:22px;font:800 96px/1 Syne;color:var(--on)}
+.lv-rest{display:flex;flex-direction:column;gap:10px;max-height:500px;overflow:auto;align-self:start}
+.lv-ri{display:flex;align-items:center;gap:16px;padding:14px 22px;border-radius:18px;background:var(--card);border:1px solid var(--cardb)}
+.lv-ri b{font:700 28px 'DM Sans';flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lv-rn{font:800 30px Syne;color:var(--acc);min-width:44px}
+.lv-rp{font:800 28px Syne}
 
 html,body{background:#040806}
 body{color:var(--paper)}
@@ -2776,6 +2790,7 @@ window.ACT={
  slop:{type:'quiz',t:'Slop ou não?',lim:15},
  rgpd:{type:'quiz',t:'Pode ou não pode?',lim:15},
  quiz:{type:'quiz',t:'Quiz final',lim:20},
+ ranking:{type:'rank',t:'Ranking'},
 
  votacao:{type:'rate',t:'Votação dos pitches',pitch:120,
   crit:[['Persona','Percebe-se para quem é.'],['Objetivo e KPI','É claro e mensurável.'],['História','Há conflito e mudança.'],['Gancho','Pararia o scroll.'],['Canal','Respeita o formato.'],['Originalidade','Foge ao cliché.']]}
@@ -4597,6 +4612,18 @@ V.lobby={
   return offMsg()},
  ctl(){return online()?[{t:'Nova sala',f:async()=>{LSS('deck-room',null);const c=await newRoom();use(c);refresh()}}]:mode==='offline'?offCtl():[]}
 };
+/* ranking antes do workshop: pódio com os três primeiros e lista com os restantes */
+V.rank={
+ body(){if(!online())return offMsg();
+  const a=plist().map(p=>[p,tot(p)]).sort((x,y)=>y[1]-x[1]);if(!a.length)return '<p class="lead">Ainda ninguém entrou na sala.</p>';
+  const rv=act.phase==='rev'&&act.id===M.id,top=[a[1],a[0],a[2]],H_=[230,320,170],rk=[2,1,3],cl=['var(--g2)','var(--acc)','var(--g3)'],dl=[.7,1.4,0];
+  const pod=`<div class="lv-pod">${top.map((x,k)=>`<div class="lv-pc${rv?' up':''}" style="animation-delay:${dl[k]}s">${x?`<div class="lv-pn">${rv?`${dot(x[0].color)}<span>${H(x[0].name)}</span>`:'<span class="mut">?</span>'}</div><div class="lv-pp">${rv?x[1]+' pts':''}</div>`:'<div class="lv-pn"></div><div class="lv-pp"></div>'}<div class="lv-pb" style="height:${H_[k]}px;background:${cl[k]}">${rk[k]}</div></div>`).join('')}</div>`;
+  const rest=a.slice(3);
+  const list=`<div class="lv-rest">${rest.length?rest.map((x,i)=>`<div class="lv-ri"><span class="lv-rn">${i+4}</span>${dot(x[0].color)}<b>${H(x[0].name)}</b><span class="lv-rp">${x[1]}</span></div>`).join(''):'<p class="lead mut">Só há três equipas no pódio.</p>'}</div>`;
+  if(rv&&M.podKey!==act.key+act.t0){M.podKey=act.key+act.t0;setTimeout(()=>{try{ENG.confetti(960,380,140)}catch(e){}},2000)}
+  return `<div class="lv-podw">${pod}${list}</div>`},
+ ctl(){if(!online())return mode==='offline'?offCtl():[];return act.phase==='rev'?[{t:'Esconder o pódio',f:()=>patch({phase:'in'})}]:[{t:'Revelar pódio',p:1,f:()=>patch({phase:'rev',t0:TS()})}]}
+};
 function offMsg(){return `<div class="lv-msg"><div class="t3">${IN_CLAUDE?'Dentro do Claude, a apresentação não pode ligar-se aos telemóveis.':'Esta página não conseguiu ligar-se à sala dos telemóveis.'}</div>
  <p class="lead" style="max-width:1300px">${IN_CLAUDE?'Para usar os telemóveis, abre a apresentação no endereço abaixo, no Chrome. Aqui, as atividades funcionam em modo apresentador: a turma responde em voz alta e tu registas.':'Confirma a ligação à internet e tenta outra vez. Enquanto isso, as atividades funcionam em modo apresentador.'}</p>
  ${IN_CLAUDE?`<div class="lv-url">${DECK_URL.replace('https://','')}</div>`:''}</div>`}
@@ -4782,6 +4809,7 @@ liveS('live-gancho','gancho','Histórias',F2,'Praticar · Ganchos','O melhor gan
 liveS('live-slop','slop','IA',FA,'Praticar · IA','Slop ou não?','6 frases da Save Point. Vazia ou com substância?');
 liveS('live-rgpd','rgpd','Ética e RGPD',FE,'Praticar · RGPD e publicidade','Pode ou não pode?','6 situações. Decide depressa.');
 liveS('live-votacao','votacao','Workshop',FW,'Palco · Votação','Votação dos pitches','Cada equipa apresenta e as outras votam no telemóvel.');
+liveS('live-ranking','ranking','Ética e RGPD',PN+' · Ranking','Ao vivo · Pontuação','Quem vai à frente?','Os pontos de todas as atividades até agora. Depois, o workshop.');
 liveS('live-quiz','quiz','Fecho',FF,'Ao vivo · Revisão','Quiz final','12 perguntas sobre toda a aula. Quanto mais rápido, mais pontos.');
 
 Object.assign(N4,{
@@ -4801,6 +4829,7 @@ Object.assign(N4,{
  'live-gancho':'Prática (3 min), logo a seguir aos 5 tipos de gancho. Um gancho por grupo, para a sua marca. Abre a votação e revela. Comenta com a checklist: curto, curiosidade, concreto. O tempo só começa quando carregas em «Começar».',
  'live-slop':'Prática (2 min), logo a seguir ao que falta ao slop. Depois de cada revelação, pergunta: que sinal é este? Teste rápido: troca o nome da loja; se a frase continuar a funcionar, é slop. O tempo só começa quando carregas em «Começar».',
  'live-rgpd':'Prática (2 min), logo a seguir às regras de RGPD e publicidade. Seis situações rápidas. Lê a explicação de cada uma em voz alta. O tempo só começa quando carregas em «Começar».',
+ 'live-ranking':'Ranking antes do workshop, com os pontos de todas as atividades feitas até aqui. Primeiro aparece a lista do 4.º lugar para baixo e o pódio fica escondido; carrega em «Revelar pódio» e sobem o 3.º, o 2.º e o 1.º, com confetes. Nos telemóveis, cada pessoa vê o seu lugar e os pontos. Lembra que o workshop e o quiz final ainda dão pontos.',
  'live-quiz':'Quiz final (5 min). 12 perguntas sobre toda a aula, 20 segundos cada; respostas rápidas valem mais. No fim aparece o ranking com os pontos de todas as atividades. O tempo só começa quando carregas em «Começar».'
 });
 
@@ -4992,7 +5021,7 @@ const ORDER=[
  ['Pausa',['pausa']],
  ['Histórias',['d3','statement','forca-atencao','forca-emocao','forca-memoria','facto-historia','ing-personagem','ing-conflito','ing-transformacao','caso-wrapped','wrapped-3','heroi-papeis','heroi-guia','story-spine','arco','spine-exemplo','live-spine','gancho-1','gancho-2','gancho-3','gancho-4','gancho-5','ganchos-fim','live-gancho']],
  ['Histórias nos conteúdos',['d4','ct-antes','ct-mostra','ct-formatos','ct-duo','ct-serie','canais','reels','carrossel','ct-legenda','live-post','ct-fim']],
- ['Ética e RGPD',['etica','rg-consent','rg-final','rg-direitos','rg-coimas','pub-etiqueta','ia-assinala','live-rgpd']],
+ ['Ética e RGPD',['etica','rg-consent','rg-final','rg-direitos','rg-coimas','pub-etiqueta','ia-assinala','live-rgpd','live-ranking']],
  ['Workshop',['d5','wk-regras','wk-dados','wk-entregaveis','wk-criterios','wk-palco','live-votacao']],
  ['Fecho',['live-quiz','takeaways','checklist','fecho']]
 ];

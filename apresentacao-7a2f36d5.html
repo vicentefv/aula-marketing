@@ -80,10 +80,20 @@ a{color:inherit}
 #notes{position:fixed;left:0;right:0;bottom:0;max-height:34vh;overflow:auto;background:rgba(4,8,6,.96);color:#E4EFE8;font:400 clamp(16px,1.5vw,24px)/1.5 'DM Sans';padding:18px 5vw 22px;border-top:2px solid #2EE08A;z-index:40;display:none;user-select:text}
 #notes b{color:#2EE08A;letter-spacing:.12em;text-transform:uppercase;font-size:.7em;display:block;margin-bottom:6px}
 #idx{position:fixed;inset:0;background:rgba(4,8,6,.96);z-index:50;display:none;overflow:auto;padding:5vh 5vw;color:#F2F7F3}
+#bmenu{position:fixed;left:20px;bottom:20px;z-index:31;padding:12px 20px;border-radius:30px;background:rgba(8,12,10,.82);border:1px solid rgba(255,255,255,.22);color:#fff;font:700 16px 'DM Sans';opacity:0;transition:opacity .3s;pointer-events:none}
+body.mv #bmenu,#bmenu:hover,#bmenu:focus{opacity:.95;pointer-events:auto}
+#jump{position:fixed;left:50%;top:40px;transform:translateX(-50%);z-index:60;padding:16px 28px;border-radius:20px;background:rgba(4,8,6,.94);color:#F2F7F3;font:600 26px 'DM Sans';display:none;border:2px solid #2EE08A}
+#jump b{font:800 34px Syne;color:#2EE08A;margin:0 6px}#jump span{font-size:16px;opacity:.6;margin-left:10px}
+.ix-top{display:flex;align-items:baseline;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.ix-tip{font:500 15px 'DM Sans';opacity:.6}
+.ix-parts{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin:18px 0 8px}
+#idx .ix-p{padding:18px 20px;border-radius:16px;background:rgba(46,224,138,.12);border:1px solid rgba(46,224,138,.35)}
+#idx .ix-p b{display:block;font:800 22px/1.15 Syne}#idx .ix-p span{display:block;margin:6px 0 0;font-size:13px;opacity:.7}
+#idx .ix-p.here{background:#2EE08A;color:#06120B}
 #idx h4{font:700 14px 'DM Sans';letter-spacing:.2em;text-transform:uppercase;color:#A8F0C8;margin:22px 0 10px}
 #idx .gr{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
 #idx button{text-align:left;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);font-size:15px;line-height:1.3}
-#idx button:hover,#idx button.cur{background:#2EE08A;color:#06120B}
+#idx button:hover,#idx button.here{background:#2EE08A;color:#06120B}
 #idx button span{display:block;opacity:.6;font-size:12px;margin-bottom:3px}
 #fx{pointer-events:none;overflow:hidden}
 .conf{position:absolute;width:14px;height:22px;border-radius:3px}
@@ -346,6 +356,7 @@ body{color:var(--paper)}
  <div id="fx"></div>
 </div>
 <div id="navz"><div class="nav"><button id="bprev" aria-label="Anterior">←</button><button id="bnext" aria-label="Seguinte">→</button><button id="bnotes" aria-label="Notas">N</button><button id="bidx" aria-label="Índice">≡</button><button id="bfs" aria-label="Ecrã inteiro">⛶</button></div></div>
+<button id="bmenu" aria-label="Ir para">☰ Ir para</button>
 <div id="notes"></div><div id="idx"></div>
 <script>/*!
  * GSAP 3.12.5
@@ -3097,14 +3108,22 @@ const notesEl=$('#notes'),idxEl=$('#idx');
 function noTime(t){t=String(t).replace(/\s*\((?:[^()]*?\d+(?:[–-]\d+)?\s*(?:min|minutos?|s|segundos)\b[^()]*|\d+:\d\d(?:[–-]\d+:\d\d)?)\)/gi,'');
  return t.split(/(?<=[.!?])\s+/).filter(x=>!/\d+\s*(?:min\b|minutos?|segundos)|\bminutos?\b|\d+:\d\d/i.test(x)).join(' ')||'—'}
 function toggleNotes(){const on=notesEl.style.display!=='block';if(on){notesEl.innerHTML='<b>Notas do orador · '+(cur+1)+'. '+SL[cur].t+'</b>'+(typeof SL[cur].ask==='string'?'<p style="margin:0 0 12px;padding:10px 14px;border-left:4px solid var(--acc);background:rgba(127,127,127,.12)"><b style="display:inline">Pergunta à turma (só o título no ecrã):</b> '+SL[cur].ask+'</p>':'')+noTime(SL[cur].n||NT[SL[cur].id]||'—')}notesEl.style.display=on?'block':'none'}
-function buildIdx(){let h='<div style="font:800 40px Syne;margin-bottom:6px">Índice</div>',g='';SL.forEach((s,i)=>{if(s.g!==g){g=s.g;h+=(i?'</div>':'')+'<h4>'+g+'</h4><div class="gr">'}h+=`<button data-i="${i}"><span>${String(i+1).padStart(2,'0')}</span>${s.t}</button>`});idxEl.innerHTML=h+'</div>';$$('button',idxEl).forEach(b=>b.onclick=()=>{idxEl.style.display='none';go(+b.dataset.i)})}
-function toggleIdx(){const on=idxEl.style.display!=='block';if(on){buildIdx();$$('button',idxEl)[cur].classList.add('cur')}idxEl.style.display=on?'block':'none'}
+function buildIdx(){const P=[];SL.forEach((s,i)=>{const l=P[P.length-1];if(!l||l.g!==s.g)P.push({g:s.g,a:i,b:i});else l.b=i});const pc=P.findIndex(p=>cur>=p.a&&cur<=p.b);
+ let h='<div class="ix-top"><div style="font:800 40px Syne">Ir para</div><div class="ix-tip">Também podes escrever o número do slide e carregar em Enter · Esc fecha</div></div><div class="ix-parts">'+P.map((p,k)=>`<button data-i="${p.a}" class="ix-p${k===pc?' here':''}"><b>${p.g}</b><span>${p.a+1}–${p.b+1}</span></button>`).join('')+'</div>',g='';
+ SL.forEach((s,i)=>{if(s.g!==g){g=s.g;h+=(i?'</div>':'')+'<h4>'+g+'</h4><div class="gr">'}h+=`<button data-i="${i}" class="ix-s"><span>${String(i+1).padStart(2,'0')}</span>${s.t}</button>`});idxEl.innerHTML=h+'</div>';$$('button',idxEl).forEach(b=>b.onclick=()=>{b.blur();idxEl.style.display='none';go(+b.dataset.i)})}
+function toggleIdx(){const on=idxEl.style.display!=='block';if(on){buildIdx();const b=$$('.ix-s',idxEl)[cur];if(b){b.classList.add('here');setTimeout(()=>b.scrollIntoView({block:'center'}),30)}}idxEl.style.display=on?'block':'none'}
+/* saltar para um slide: escreve o número e carrega em Enter */
+let jbuf='',jto=0;const jumpEl=document.createElement('div');jumpEl.id='jump';document.body.appendChild(jumpEl);
+function jshow(){jumpEl.innerHTML=jbuf?`Ir para o slide <b>${jbuf}</b> <span>Enter</span>`:'';jumpEl.style.display=jbuf?'block':'none';clearTimeout(jto);if(jbuf)jto=setTimeout(()=>{jbuf='';jshow()},3000)}
 function fs(){try{const d=document;if(d.fullscreenElement)d.exitFullscreen();else d.documentElement.requestFullscreen().catch(()=>{})}catch(e){}}
 function firstTimer(){const t=$('.timer',SL[cur].el);return t&&t._st}
 addEventListener('keydown',e=>{
  if(e.metaKey||e.ctrlKey||e.altKey)return;
  if(e.target&&e.target.closest&&e.target.closest('input,textarea,select,[contenteditable]'))return;
  const k=e.key;
+ if(/^[0-9]$/.test(k)&&jbuf.length<3){jbuf+=k;jshow();return}
+ if(jbuf&&k==='Enter'){e.preventDefault();e.stopPropagation();if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();const n=+jbuf;jbuf='';jshow();idxEl.style.display='none';if(n>=1&&n<=SL.length)go(n-1);return}
+ if(jbuf&&(k==='Escape'||k==='Backspace')){e.preventDefault();jbuf=k==='Backspace'?jbuf.slice(0,-1):'';jshow();return}
  if(['ArrowRight','PageDown',' ','Enter'].includes(k)){e.preventDefault();if(idxEl.style.display==='block')return;next()}
  else if(['ArrowLeft','PageUp','Backspace'].includes(k)){e.preventDefault();prev()}
  else if(k==='Home')go(0);else if(k==='End')go(SL.length-1);
@@ -3124,7 +3143,9 @@ stage.addEventListener('click',e=>{
  if(Date.now()-tt<400&&tx<innerWidth*.22){prev();return}
  next()});
 $('#bprev').onclick=e=>{e.stopPropagation();prev()};$('#bnext').onclick=e=>{e.stopPropagation();next()};
-$('#bnotes').onclick=e=>{e.stopPropagation();toggleNotes()};$('#bidx').onclick=e=>{e.stopPropagation();toggleIdx()};$('#bfs').onclick=e=>{e.stopPropagation();fs()};
+$('#bnotes').onclick=e=>{e.stopPropagation();toggleNotes()};$('#bidx').onclick=e=>{e.stopPropagation();toggleIdx()};$('#bmenu').onclick=e=>{e.stopPropagation();e.currentTarget.blur();toggleIdx()};
+/* o botão «Ir para» aparece quando mexes o rato e desaparece sozinho */
+{let mt=0;addEventListener('mousemove',()=>{document.body.classList.add('mv');clearTimeout(mt);mt=setTimeout(()=>document.body.classList.remove('mv'),2500)})}$('#bfs').onclick=e=>{e.stopPropagation();fs()};
 
 function start(slides,notes){
  SL=slides;NT=notes;
@@ -3476,10 +3497,10 @@ const CA=[['Capa','Promete conflito'],['Problema','Mostra o problema'],['Viragem
 S('carrossel','cream','Bloco 3 · 30 min','Carrossel em cinco slides',F3,`
  ${eb('Conteúdos · Instagram e LinkedIn')}${ti('Carrossel em cinco slides')}
  <div style="${abs(128,310,'width:1664px;display:flex;gap:26px')}">
- ${CA.map((c,i)=>`<div class="card" data-step data-a="right" style="width:312px;height:420px;display:flex;flex-direction:column;justify-content:space-between;${i===2?'background:var(--acc2);border-color:transparent;color:#fff':''}"><div style="font:700 130px/0.9 'DM Sans';-webkit-text-stroke:2px ${i===2?'#fff':'var(--acc2)'};color:transparent">${i+1}</div><div><div class="t3" style="font-size:44px">${c[0]}</div><div class="txt" style="margin-top:12px;font-size:28px;${i===2?'color:#fff':'color:var(--mut)'}">${c[1]}</div></div></div>`).join('')}
+ ${CA.map((c,i)=>`<div class="card" data-step data-a="right" style="width:312px;height:420px;display:flex;flex-direction:column;justify-content:space-between;${i===2?'background:var(--acc);border-color:transparent;color:var(--on)':''}"><div style="font:700 130px/0.9 'DM Sans';-webkit-text-stroke:2px ${i===2?'var(--on)':'var(--acc)'};color:transparent">${i+1}</div><div><div class="t3" style="font-size:44px">${c[0]}</div><div class="txt" style="margin-top:12px;font-size:28px;${i===2?'color:var(--on)':'color:var(--mut)'}">${c[1]}</div></div></div>`).join('')}
  </div>
  <div id="dots" data-a="fade" style="${abs(128,770,'width:1664px;display:flex;justify-content:center;gap:12px')}">${CA.map(()=>'<i class="cd"></i>').join('')}</div>
- <div data-a="up" class="lead" style="${abs(128,850,'font-size:40px;max-width:1500px')}">Cada slide acaba com uma <span class="acc2">pergunta ou promessa</span> que obriga a passar ao seguinte.</div>`,
+ <div data-a="up" class="lead" style="${abs(128,850,'font-size:40px;max-width:1500px')}">Cada slide acaba com uma <span class="acc">pergunta ou promessa</span> que obriga a passar ao seguinte.</div>`,
  {onStep:(r,el,i)=>qq('.cd',r).forEach((d,k)=>d.classList.toggle('on',k===i)),onUnstep:(r,el,i)=>qq('.cd',r).forEach((d,k)=>d.classList.toggle('on',k===i-1))});
 
 S('email','ink','Bloco 3 · 30 min','Newsletter: começa em cena',F3+' · Exemplo fictício',`
@@ -4869,10 +4890,11 @@ const FMT=[['Bastidores','Como se faz o que vendes.','<rect x="14" y="48" width=
  ['O erro','O que correu mal e o que mudou.','<path d="M60 14 L108 100 H12Z"/><path d="M60 46 V70 M60 84 V86"/>','var(--g6)'],
  ['Um dia na vida','A rotina, até algo a quebrar.','<circle cx="60" cy="60" r="44"/><path d="M60 32 V60 L80 72"/>','var(--g4)'],
  ['A série','Episódios que deixam uma pergunta no ar.','<rect x="8" y="34" width="30" height="52" rx="6"/><rect x="45" y="34" width="30" height="52" rx="6"/><rect x="82" y="34" width="30" height="52" rx="6"/><path d="M18 52 L29 60 L18 68Z M55 52 L66 60 L55 68Z"/><path d="M93 56 Q97 48 101 56 Q101 62 97 64 V68 M97 76 V77"/>','var(--g5)']];
+const FMC=[['Gera confiança', 'Consideração'], ['Prova que resulta', 'Decisão'], ['Faz recomendar', 'Recomendação'], ['Torna a marca humana', 'Fidelização'], ['Cria proximidade', 'Descoberta'], ['Faz voltar', 'Fidelização']];
 S('ct-formatos','ink','Conteúdos','Seis histórias para as redes',FC,`
  ${eb('Conteúdos · Formatos com história')}${ti('Seis histórias para as redes')}
  <div data-a="kids" style="${abs(128,310,'width:1664px;display:grid;grid-template-columns:repeat(3,1fr);gap:28px')}">
- ${FMT.map((f,i)=>`<div class="card row" style="height:280px;gap:28px;padding:30px 34px"><svg class="bob" style="animation-delay:${i*.4}s;flex:none" viewBox="0 0 120 120" width="96" height="96" fill="none" stroke="${f[3]}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">${f[2]}</svg><div><div class="t3" style="font-size:38px;white-space:nowrap">${f[0]}</div><div class="txt mut" style="font-size:27px;margin-top:10px">${f[1]}</div></div></div>`).join('')}
+ ${FMT.map((f,i)=>`<div class="card row" style="height:280px;gap:28px;padding:30px 34px"><svg class="bob" style="animation-delay:${i*.4}s;flex:none" viewBox="0 0 120 120" width="96" height="96" fill="none" stroke="${f[3]}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">${f[2]}</svg><div><div class="t3" style="font-size:38px;white-space:nowrap">${f[0]}</div><div class="txt mut" style="font-size:25px;margin-top:8px">${f[1]}</div><div style="margin-top:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span style="padding:7px 14px;border-radius:16px;background:${f[3]};color:var(--on);font:700 19px 'DM Sans'">${FMC[i][0]}</span><span class="mut" style="font:700 16px 'DM Sans';letter-spacing:.08em;text-transform:uppercase">${FMC[i][1]}</span></div></div></div>`).join('')}
  </div>`);
 
 const DUO=[['11 fev. 2025','Rutura','A Duolingo anuncia que o Duo, a mascote, morreu.','var(--g6)'],['17 fev.','Convite','Para o trazer de volta: 50 mil milhões de XP, ganhos a fazer lições.','var(--g2)'],['24 fev.','Transformação','O Duo regressa.','var(--g1)']];
@@ -4952,7 +4974,7 @@ Object.assign(N4,{
  'marcas-conversa':'Duas marcas que falam como pessoas e que o público jovem segue. Duolingo: a coruja Duo é a cara da marca no TikTok, com memes e piadas sobre quem falta às lições (cerca de 18,2 milhões de seguidores, segundo a CreatorDB, dados de 30 de setembro de 2026). Ryanair: no TikTok, um avião com olhos e boca brinca com as taxas da própria companhia e com os passageiros; segundo a DMNews (abril de 2026), um vídeo sobre a taxa da bagagem juntou cerca de 47 mil comentários. O terceiro cartão é para a turma: pede 2 ou 3 marcas que sigam porque «falam como um amigo» e escreve-as no quadro.',
  'ct-antes':'Mostra só o post da esquerda e pergunta: «Isto fazia-vos parar?». Depois avança para o da direita. É o mesmo produto, a mesma loja. A diferença é que o segundo tem alguém, um problema e uma mudança. É a ideia de toda esta parte: cada publicação é uma pequena história.',
  'ct-mostra':'Em cada linha, mostra primeiro o «dizer» e pede à turma que o transforme em algo que se veja ou se imagine. Só depois revela o «mostrar». A regra: troca adjetivos («de confiança», «o melhor», «rápido») por um facto concreto, um número ou uma cena.',
- 'ct-formatos':'Seis formatos que as marcas usam todas as semanas, e todos são histórias: bastidores (como se faz), antes e depois (a transformação), o cliente herói (testemunhos e conteúdo dos clientes), o erro (vulnerabilidade gera confiança), um dia na vida (rotina e rutura) e a série (episódios com uma pergunta no ar). Pergunta que tipo é que eles veem até ao fim.',
+ 'ct-formatos':'Seis formatos que as marcas usam todas as semanas, e todos são histórias. Cada um serve uma etapa da jornada: bastidores geram confiança (consideração), o antes e depois prova que resulta (decisão), o cliente herói faz recomendar (recomendação), o erro torna a marca humana e faz ficar (fidelização), um dia na vida cria proximidade com quem ainda não conhece (descoberta) e a série faz voltar (fidelização). Pergunta: que tipo de vídeo de marca é que veem até ao fim?',
  'ct-duo':'Caso real. A 11 de fevereiro de 2025, a Duolingo anunciou a «morte» do Duo, a sua mascote. A 17, explicou como trazê-lo de volta: os utilizadores tinham de juntar 50 mil milhões de XP, que se ganham a fazer lições. A 24 publicou o vídeo do regresso e, no dia seguinte, admitiu que tinha sido encenado. Os utilizadores juntaram cerca de 50,9 mil milhões de XP (NPR, 26/02/2025). Liga com os ingredientes: personagem (a mascote), conflito (a morte), transformação (o regresso). E com os meios ganhos: as pessoas fizeram parte da história. Pergunta antes de revelar: «Porque é que uma marca havia de matar a própria mascote?»',
  'ct-serie':'O plano de conteúdos da parte Digital, agora com uma história por cima. Cada dia é um episódio e a semana segue o arco: gancho, bastidores, rutura, clímax e a comunidade a continuar a história. Mostra que o formato muda (reel, stories, carrossel) mas a história é uma só. Pergunta: «O que publicavam na segunda para quererem ver a quinta?»',
  'ct-story':'Antes de gravar, desenha-se. Quatro planos, um por batida do vídeo curto: gancho (0 a 2 s), tensão (até 12 s), recompensa e convite. Em cima de cada plano está o texto que aparece no ecrã, porque muita gente vê sem som. No workshop, o grupo visual vai fazer isto em papel.',
@@ -5020,7 +5042,7 @@ const ORDER=[
  ['Digital',['d2','monologo','meio-proprio','meio-pago','meio-ganho','meio-ideal','live-canais','cn-site','cn-redes','cn-email','cn-anuncios','cn-creators','cn-imprensa','cn-fim','pdc-pago','pdc-dados','pdc-comunidade','pdc-fim','calendario','camp-coke','camp-redbull','camp-burger','camp-fim','kpis','kpi-vaidade','live-metricas','live-plano']],
  ['Pausa',['pausa']],
  ['Histórias',['d3','statement','forca-atencao','forca-emocao','forca-memoria','facto-historia','ing-personagem','ing-conflito','ing-transformacao','caso-wrapped','wrapped-3','heroi-papeis','heroi-guia','story-spine','arco','spine-exemplo','live-spine','gancho-1','gancho-2','gancho-3','gancho-4','gancho-5','ganchos-fim','live-gancho']],
- ['Histórias nos conteúdos',['d4','ct-antes','ct-mostra','ct-formatos','ct-duo','ct-serie','canais','reels','carrossel','ct-legenda','live-post','ct-fim']],
+ ['Histórias nos conteúdos',['d4','ct-antes','ct-mostra','ct-formatos','ct-duo','ct-serie','reels','carrossel','ct-legenda','live-post','ct-fim']],
  ['Ética e RGPD',['etica','rg-consent','rg-final','rg-direitos','rg-coimas','pub-etiqueta','ia-assinala','live-rgpd','live-ranking']],
  ['Workshop',['d5','wk-regras','wk-dados','wk-entregaveis','wk-criterios','wk-palco','live-votacao']],
  ['Fecho',['live-quiz','takeaways','checklist','fecho']]

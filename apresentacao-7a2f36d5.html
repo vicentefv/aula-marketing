@@ -216,14 +216,16 @@ mark.s::after{content:attr(data-n);display:inline-block;vertical-align:top;font:
 .sa-msg{position:absolute;bottom:22px;left:0;right:0;text-align:center;color:#fff;font:600 22px 'DM Sans'}
 .sa-strip{position:relative;padding:12px 14px 14px;background:#141C17;cursor:pointer}
 .sa-chips{display:flex;gap:6px}
-.sa-chip{min-width:0;text-align:center;padding:9px 4px;border-radius:10px;background:rgba(255,255,255,.07);color:rgba(230,240,234,.55);font:700 15px/1.1 'DM Sans';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background .4s,color .4s}
-.sa-chip.done{background:rgba(46,224,138,.22);color:#BDF5D6}
-.sa-chip.on{background:#2EE08A;color:#06120B}
+.sa-chip{position:relative;min-width:0;display:flex;align-items:center;justify-content:center;text-align:center;min-height:44px;padding:4px 4px;border-radius:10px;background:rgba(255,255,255,.07);color:rgba(230,240,234,.55);font:700 14px/1.1 'DM Sans';overflow:hidden;cursor:pointer;transition:color .4s,box-shadow .4s}
+.sa-chip em{position:relative;font-style:normal;display:block}
+.sa-f{position:absolute;left:0;top:0;bottom:0;width:100%;background:rgba(46,224,138,.38);transform-origin:0 50%;transform:scaleX(0)}
+.sa-chip.done{color:#BDF5D6}
+.sa-chip.on{color:#fff;box-shadow:inset 0 0 0 2px #2EE08A}
 .sa-prog{height:6px;border-radius:3px;background:rgba(255,255,255,.12);margin-top:10px;overflow:hidden}
 .sa-prog i{display:block;height:100%;background:#2EE08A;transform-origin:0 50%;transform:scaleX(0)}
-.sa-cap{padding:30px 30px 34px;z-index:5;pointer-events:auto}
-.sa-l{font:800 44px/1.05 Syne;color:var(--acc);margin-top:16px}
-.sa-t{font:500 27px/1.35 'DM Sans';margin-top:16px}
+.sa-cap{padding:28px 26px 30px;z-index:5;pointer-events:auto;box-sizing:border-box;overflow:hidden}
+.sa-l{font:800 31px/1.1 Syne;color:var(--acc);margin-top:14px;overflow-wrap:break-word}
+.sa-t{font:500 24px/1.35 'DM Sans';margin-top:14px;overflow-wrap:break-word}
 /* ===== atividades ao vivo ===== */
 .lv{position:absolute;left:128px;right:128px;top:330px;bottom:118px;display:flex;flex-direction:column;gap:18px}
 .lv-body{flex:1;min-height:0;overflow:auto;scrollbar-width:none;padding:4px 4px 10px}
@@ -3983,8 +3985,8 @@ S('campanhas-reais','ink','Bloco 2 · Estratégia e canais','Campanhas que marca
  </div>
  <div data-step data-a="words" class="title" style="${abs(128,880,'font-size:46px;width:1664px')}">Em todas, a marca <span class="acc">deu às pessoas algo para fazer ou partilhar</span>.</div>`);
 
-S('calendario','cream','Bloco 2 · Estratégia e canais','Um plano de conteúdos',FM2+' · Exemplo fictício',`
- ${eb('Digital · Exemplo · Save Point, loja de jogos')}${ti('Um plano de conteúdos')}
+S('calendario','cream','Conteúdos','Um plano de conteúdos',PN+' · Histórias nos conteúdos · Exemplo fictício',`
+ ${eb('Conteúdos · Exemplo · Save Point, loja de jogos')}${ti('Um plano de conteúdos')}
  <div data-a="kids" style="${abs(128,290,'width:1664px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px')}">
  ${PL.map(p=>`<div class="card row" style="padding:16px 24px;gap:18px;height:104px"><i style="width:22px;height:22px;border-radius:50%;background:${p[2]};flex:none;display:block"></i><div><div class="t3" style="font-size:32px">${p[0]}</div><div class="txt mut" style="font-size:22px;margin-top:2px;line-height:1.25">${p[1]}</div></div></div>`).join('')}
  </div>
@@ -3992,7 +3994,7 @@ S('calendario','cream','Bloco 2 · Estratégia e canais','Um plano de conteúdos
  <div data-a="fade" style="${abs(128,466,'width:1664px;height:420px;display:grid;grid-template-columns:repeat(7,1fr);gap:10px')}">
  ${['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'].map((d,k)=>`<div style="border-radius:18px;background:rgba(10,18,13,.05);border:1px solid var(--cardb);padding:12px 10px;position:relative"><div style="font:700 20px 'DM Sans';letter-spacing:.1em;text-transform:uppercase;color:var(--mut);text-align:center">${d}</div>${CAL.filter(c=>c[0]===k).map(c=>`<div class="post-c" style="position:absolute;left:10px;right:10px;top:${56+(k%3)*64}px;border-radius:14px;padding:14px 16px;background:${PL[c[1]][2]};color:${PL[c[1]][3]}"><div style="font:700 15px 'DM Sans';letter-spacing:.1em;text-transform:uppercase;opacity:.85">${PL[c[1]][0]}</div><div style="font:800 21px/1.1 Syne;margin-top:6px;letter-spacing:-.02em">${c[2]}</div><div style="font-size:20px;line-height:1.25;margin-top:8px">${c[3]}</div></div>`).join('')}</div>`).join('')}
  </div>
- <div data-a="fade" class="mut" style="${abs(128,912,'font-size:24px')}">A mesma loja volta na parte de storytelling.</div>`,
+ <div data-a="fade" class="mut" style="${abs(128,912,'font-size:24px')}">A seguir: a mesma semana, contada como uma história.</div>`,
  {init:(r,tl)=>{tl.fromTo(qq('.post-c',r),{autoAlpha:0,y:40,scale:.8},{autoAlpha:1,y:0,scale:1,duration:.8,ease:'back.out(1.6)',stagger:.18},1.2)}});
 
 const KP=[['Descoberta','Alcance e visualizações','Pessoas novas alcançadas por semana','var(--g6)'],['Consideração','Retenção, guardados e cliques','Taxa de cliques para o site','var(--g2)'],['Decisão','Conversões','Compras vindas do TikTok e do Instagram','var(--g1)'],['Fidelização','Recompra e abertura de emails','Taxa de abertura da newsletter','var(--g3)'],['Recomendação','Partilhas, menções e avaliações','Avaliações novas por mês','var(--g5)']];
@@ -4987,9 +4989,9 @@ liveS('live-post','post','Conteúdos',FC,'Praticar · Conteúdos','Conta-o como 
 
 Object.assign(N4,{
  'd1':'Início do Marketing: o que é e a sua história, benefícios, estudos de mercado, segmentar, escolher e posicionar, persona, 4Ps, marca, proposta e tom, jornada e SMART, com as práticas no telemóvel pelo meio. Vai rápido nos exemplos: o storytelling precisa do tempo.',
- 'd2':'Início do Digital: do monólogo à conversa, meios próprios, pagos e ganhos, canais, pago vs. próprio, plano de conteúdos, campanhas, métricas e mini plano.',
+ 'd2':'Início do Digital: do monólogo à conversa, meios próprios, pagos e ganhos, canais, pago vs. próprio, campanhas, métricas e mini plano.',
  'd3':'Início das Histórias: porque funcionam, do facto à história, ingredientes, Spotify Wrapped, herói e guia, Story Spine e arco, ganchos e práticas. A seguir, as histórias passam para os conteúdos.',
- 'd4':'Início de Histórias nos conteúdos, o coração prático da aula: anúncio vs. história, mostrar e não dizer, seis formatos, caso Duolingo, uma semana em episódios, canais e reels, carrossel e legenda, prática no telemóvel e as três perguntas.',
+ 'd4':'Início de Histórias nos conteúdos, o coração prático da aula: anúncio vs. história, mostrar e não dizer, seis formatos, caso Duolingo, o plano de conteúdos e a semana em episódios, canais e reels, carrossel e legenda, prática no telemóvel e as três perguntas.',
  'd-ia':'Início do bloco de IA: o pedido, os dois textos e a votação, os seis sinais, prática, os cinco movimentos e a checklist.',
  'd5':'Início do workshop: brief, criação, ensaio e palco. Os grupos já existem desde as práticas anteriores.',
  'marcas-conversa':'Duas marcas que falam como pessoas e que o público jovem segue. Duolingo: a coruja Duo é a cara da marca no TikTok, com memes e piadas sobre quem falta às lições (cerca de 18,2 milhões de seguidores, segundo a CreatorDB, dados de 30 de setembro de 2026). Ryanair: no TikTok, um avião com olhos e boca brinca com as taxas da própria companhia e com os passageiros; segundo a DMNews (abril de 2026), um vídeo sobre a taxa da bagagem juntou cerca de 47 mil comentários. O terceiro cartão é para a turma: pede 2 ou 3 marcas que sigam porque «falam como um amigo» e escreve-as no quadro.',
@@ -5031,7 +5033,7 @@ S('spine-ads','ink','Histórias','Story Spine em ação',F1+' · Fonte: YouTube 
  ${SAV.map((v,k)=>`<div class="sa-win" data-k="${k}" style="${abs(440,236,'width:1040px')}">
   <div class="sa-bar"><i></i><i></i><i></i><span>${v.t}</span></div>
   <div class="sa-vid"><div class="sa-yt" id="sa-p${k}"></div><div class="sa-hit" data-int data-k="${k}"><div class="sa-play"><svg viewBox="0 0 40 40" width="46" height="46"><path d="M13 9 L32 20 L13 31Z" fill="currentColor"/></svg></div><div class="sa-msg"></div></div></div>
-  <div class="sa-strip" data-int data-k="${k}"><div class="sa-chips">${v.seg.map((s,i)=>`<span class="sa-chip" data-i="${i}" style="flex:${Math.max(8,((v.seg[i+1]?v.seg[i+1][0]:v.d)-s[0]))}">${s[1].replace('…','')}</span>`).join('')}</div><div class="sa-prog"><i></i></div></div>
+  <div class="sa-strip" data-int data-k="${k}"><div class="sa-chips">${v.seg.map((s,i)=>`<span class="sa-chip" data-i="${i}" style="flex:${Math.max(9,((v.seg[i+1]?v.seg[i+1][0]:v.d)-s[0]))}"><b class="sa-f"></b><em>${s[1].replace('…','')}</em></span>`).join('')}</div></div>
  </div>`).join('')}
  ${SAV.map((v,k)=>`<div class="card sa-cap" data-k="${k}" style="${abs(k?1500:70,300,'width:360px')}"><div class="k">Story Spine</div><div class="sa-l">Carrega no vídeo</div><div class="sa-t">À medida que o anúncio avança, aparece aqui a parte da história que está a acontecer.</div></div>`).join('')}
  </div>
@@ -5046,20 +5048,20 @@ S('spine-ads','ink','Histórias','Story Spine em ação',F1+' · Fonte: YouTube 
     qq('.sa-chip',W[k]).forEach((ch,j)=>{ch.classList.toggle('on',j===i);ch.classList.toggle('done',j<i)});
     const ch=qq('.sa-chip',W[k])[i];if(ch)G.fromTo(ch,{scale:1.25},{scale:1,duration:.6,ease:'back.out(3)'});
     G.timeline().to([L,T],{y:-24,autoAlpha:0,duration:.25,ease:'power2.in',stagger:.05})
-     .add(()=>{L.textContent=s[1];T.textContent=s[2]})
+     .add(()=>{L.textContent=s[1].replace('…','\u2060…');T.textContent=s[2]})
      .fromTo(L,{y:30,scale:.7,autoAlpha:0,filter:'blur(8px)'},{y:0,scale:1,autoAlpha:1,filter:'blur(0px)',duration:.6,ease:'back.out(2)'})
      .fromTo(T,{y:20,autoAlpha:0},{y:0,autoAlpha:1,duration:.5,ease:'power3.out'},'-=.3')
      .fromTo(c,{boxShadow:'0 0 0 0 rgba(46,224,138,.7)'},{boxShadow:'0 0 0 26px rgba(46,224,138,0)',duration:.9,ease:'power2.out'},'<-.4')};
    const tick=()=>{if(dead)return;[0,1].forEach(k=>{const p=P[k];if(!p||!p.getCurrentTime)return;const t=p.getCurrentTime()||0,d=p.getDuration()||SAV[k].d;
-     const b=q('.sa-prog i',W[k]);if(b)b.style.transform='scaleX('+Math.min(1,t/d)+')';
-     const st=p.getPlayerState&&p.getPlayerState();if(st===1||st===2||t>0){let i=0;SAV[k].seg.forEach((s,j)=>{if(t>=s[0])i=j});show(k,i)}})};
+     const SG=SAV[k].seg,te=t+.25;qq('.sa-f',W[k]).forEach((f,j)=>{const a=SG[j][0],z=SG[j+1]?SG[j+1][0]:d;f.style.transform='scaleX('+Math.max(0,Math.min(1,(t-a)/(z-a)))+')'});
+     const st=p.getPlayerState&&p.getPlayerState();if(st===1||st===2||t>0){let i=0;SAV[k].seg.forEach((s,j)=>{if(te>=s[0])i=j});show(k,i)}})};
    ytReady(fail=>{if(dead)return;if(fail||!window.YT){[0,1].forEach(k=>msg(k,'Sem ligação ao YouTube. Abre a apresentação com internet.'));return}
     [0,1].forEach(k=>{P[k]=new YT.Player('sa-p'+k,{videoId:SAV[k].id,width:'100%',height:'100%',playerVars:{controls:0,rel:0,modestbranding:1,playsinline:1,iv_load_policy:3,cc_load_policy:0,disablekb:1,fs:0},
      events:{onStateChange:e=>{W[k].classList.toggle('playing',e.data===1);if(e.data===0)W[k].classList.add('ended')},onError:()=>msg(k,'Não foi possível carregar este vídeo.')}})});
     iv=setInterval(tick,200)});
    const toggle=k=>{const p=P[k];if(!p||!p.getPlayerState)return;if(k!==front)return;const s=p.getPlayerState();if(s===1)p.pauseVideo();else{W[k].classList.remove('ended');p.playVideo()}};
    qq('.sa-hit',r).forEach(h=>h.onclick=e=>{e.stopPropagation();toggle(+h.dataset.k)});
-   qq('.sa-strip',r).forEach(s=>s.onclick=e=>{e.stopPropagation();const k=+s.dataset.k,p=P[k];if(k!==front||!p||!p.seekTo)return;const rc=s.getBoundingClientRect();const f=(e.clientX-rc.left)/rc.width;p.seekTo(f*(p.getDuration()||SAV[k].d),true)});
+   qq('.sa-strip',r).forEach(s=>s.onclick=e=>{e.stopPropagation();const k=+s.dataset.k,p=P[k];if(k!==front||!p||!p.seekTo)return;const c=e.target.closest('.sa-chip');if(!c)return;p.seekTo(SAV[k].seg[+c.dataset.i][0],true);if(p.getPlayerState()!==1)p.playVideo()});
    const key=e=>{if(e.key==='p'||e.key==='P'||e.key==='k'||e.key==='K'){toggle(front)}};addEventListener('keydown',key);
    r._swap=(to,instant)=>{if(front===to)return;const from=front;front=to;const p=P[from];if(p&&p.pauseVideo)try{p.pauseVideo()}catch(e){}
     const d=instant?0:1.1;place(from,to===1?'left':'right',d);place(to,'front',d);
@@ -5088,7 +5090,7 @@ const N2={
  'smart':'Explica as cinco letras e depois mostra a transformação do objetivo vago no objetivo SMART (exemplo fictício da loja de jogos). Pergunta: como saberíamos se “mais seguidores” foi atingido? Sem número nem prazo, não há forma de avaliar. Liga a algo que conhecem: um creator que diz “quero crescer no TikTok” é vago; “chegar aos 10 mil em 3 meses” já se pode medir.',
  'campanhas-reais':'Share a Coke: campanha australiana de 2011 com 150 dos nomes mais comuns nas garrafas; consumo entre jovens adultos +7% e tráfego no Facebook +870% (Packaging News). Pergunta: qual foi o canal próprio, qual foi o ganho? Embalagem e loja são próprios, as partilhas dos clientes são ganhas. Red Bull Stratos: 14 de outubro de 2012, mais de 8 milhões de espectadores em simultâneo no YouTube, recorde na altura (Tubefilter, Guinness). A marca tornou-se editora de conteúdo. Barbie: 2023, orçamento de marketing de cerca de 150 milhões de dólares segundo a Variety e mais de 100 parcerias; o Barbenheimer nasceu dos fãs, não da marca (The Current). Fecha com a pergunta: o que é que a marca pediu às pessoas que fizessem?',
  'canais-mkt':'Cada canal tem um papel diferente na jornada e um tipo de meio. Insiste que uma marca pequena não precisa de estar em todos: dois canais bem escolhidos e consistentes valem mais do que seis abandonados. Liga com a persona: onde está a Rita? Pergunta: se tivessem de escolher só dois canais para a loja de jogos, quais?',
- 'calendario':'Exemplo fictício da loja de jogos “Save Point”, que volta ao longo da aula. Os pilares garantem variedade: não se pode só vender, nem só entreter. Mostra que cada conteúdo da semana tem um pilar e um formato. Pergunta: que pilar falta mais nos perfis que seguem?',
+ 'calendario':'Exemplo fictício da Save Point. Antes de contar histórias, é preciso planear: os quatro pilares (educar, inspirar, entreter, converter) garantem variedade, e cada conteúdo da semana tem um pilar e um formato. No slide seguinte, a mesma semana passa a ser uma história em episódios. Pergunta: que pilar falta mais nos perfis que seguem?',
  'kpis':'Liga cada etapa da jornada ao que se mede. Os KPI são exemplos. Revela no fim a métrica de vaidade: um vídeo pode ter 1 milhão de views e não vender nada. Os gostos e as views não são maus, mas sozinhos não dizem se o objetivo está mais perto. Um conteúdo, um objetivo, um sinal.',
  'act-plano':'Atividade 02 (10 min), nos mesmos grupos. 1 min de instruções, 7 de trabalho, 2 de partilha. O plano cabe numa folha com quatro caixas. Avisa que este plano é a base do workshop: vão transformá-lo numa história.',
  'pausa':'Pausa (1:10–1:25). Deixa este slide projetado com o cronómetro. O desafio liga as duas partes: pensar num TikTok, anúncio ou vídeo de que se lembram e em quem era o herói.',
@@ -5127,10 +5129,10 @@ Object.assign(N2,N3,N4);
 const ORDER=[
  ['Abertura',['cover','eu-ola','eu-percurso','eu-casos','objetivos','statement-mkt','live-entrar','live-marcas']],
  ['Marketing',['d1','o-que-e','hist-producao','hist-vendas','hist-marketing','hist-relacao','hist-digital','ben-notoriedade','ben-relacao','ben-crescimento','mr-oque','mr-secundarios','mr-primarios','mr-quanti','live-primsec','stp-segmentar','stp-escolher','stp-posicionar','stp-formula','live-posicionar','persona-def','persona-rita','live-persona','4ps','live-4p','mv-marca','mv-proposta','mv-tom','marcas-conversa','jornada','smart-letras','smart-exemplo','live-smart']],
- ['Digital',['d2','monologo','meio-proprio','meio-pago','meio-ganho','meio-ideal','live-canais','cn-site','cn-redes','cn-email','cn-anuncios','cn-creators','cn-imprensa','cn-fim','pdc-pago','pdc-dados','pdc-comunidade','pdc-fim','calendario','camp-coke','camp-redbull','camp-burger','camp-fim','kpis','kpi-vaidade','live-metricas','live-plano']],
+ ['Digital',['d2','monologo','meio-proprio','meio-pago','meio-ganho','meio-ideal','live-canais','cn-site','cn-redes','cn-email','cn-anuncios','cn-creators','cn-imprensa','cn-fim','pdc-pago','pdc-dados','pdc-comunidade','pdc-fim','camp-coke','camp-redbull','camp-burger','camp-fim','kpis','kpi-vaidade','live-metricas','live-plano']],
  ['Pausa',['pausa']],
  ['Histórias',['d3','statement','forca-atencao','forca-emocao','forca-memoria','facto-historia','ing-personagem','ing-conflito','ing-transformacao','caso-wrapped','wrapped-3','heroi-papeis','heroi-guia','story-spine','arco','spine-ads','live-spine','gancho-1','gancho-2','gancho-3','gancho-4','gancho-5','ganchos-fim','live-gancho']],
- ['Histórias nos conteúdos',['d4','ct-antes','ct-mostra','ct-formatos','ct-duo','ct-serie','reels','carrossel','ct-legenda','live-post','ct-fim']],
+ ['Histórias nos conteúdos',['d4','ct-antes','ct-mostra','ct-formatos','ct-duo','calendario','ct-serie','reels','carrossel','ct-legenda','live-post','ct-fim']],
  ['Ética e RGPD',['etica','rg-consent','rg-final','rg-direitos','rg-coimas','pub-etiqueta','ia-assinala','live-rgpd','live-ranking']],
  ['Workshop',['d5','wk-regras','wk-dados','wk-entregaveis','wk-criterios','wk-palco','live-votacao']],
  ['Fecho',['live-quiz','takeaways','checklist','fecho']]

@@ -81,11 +81,12 @@ window.ACT={
  quiz:{type:'quiz',t:'Quiz final',lim:20},
  ranking:{type:'rank',t:'Pódio final'},
  equipas:{type:'team',t:'Equipas do workshop'},
- entrega:{type:'deliver',t:'Entrega do workshop',fields:[{k:'persona',l:'Persona (quem é e que problema tem)',ph:'Diogo, 20 anos, quer experimentar jogos sem gastar muito',ta:true},{k:'obj',l:'Objetivo SMART',ph:'300 estudantes no torneio de sexta até 15 de dezembro',ta:true},{k:'spine',l:'Story Spine (uma frase por linha)',ph:'Era uma vez…\nTodos os dias…\nAté que um dia…',ta:true,big:true},{k:'gancho',l:'Gancho (a primeira frase)',ph:'Encontrámos 40 jogos num sótão.'},{k:'canal',l:'Canal e peça',ph:'Reel de 20 segundos no Instagram'},{k:'kpi',l:'KPI',ph:'inscrições no torneio'}]},
- avaliacao:{type:'evalw',t:'Avaliação do trabalho'},
- resultado:{type:'result',t:'Resultado do workshop'},
+ wsala:{wk:true,type:'lobby',t:'Sala do workshop'},
+ entrega:{wk:true,type:'deliver',t:'Entrega do workshop',fields:[{k:'persona',l:'Persona (quem é e que problema tem)',ph:'Diogo, 20 anos, quer experimentar jogos sem gastar muito',ta:true},{k:'obj',l:'Objetivo SMART',ph:'300 estudantes no torneio de sexta até 15 de dezembro',ta:true},{k:'spine',l:'Story Spine (uma frase por linha)',ph:'Era uma vez…\nTodos os dias…\nAté que um dia…',ta:true,big:true},{k:'gancho',l:'Gancho (a primeira frase)',ph:'Encontrámos 40 jogos num sótão.'},{k:'canal',l:'Canal e peça',ph:'Reel de 20 segundos no Instagram'},{k:'kpi',l:'KPI',ph:'inscrições no torneio'}]},
+ avaliacao:{wk:true,type:'evalw',t:'Avaliação do trabalho'},
+ resultado:{wk:true,type:'result',t:'Resultado do workshop'},
 
- votacao:{type:'rate',t:'Votação dos pitches',pitch:120,
+ votacao:{wk:true,type:'rate',t:'Votação dos pitches',pitch:120,
   crit:[['Persona','Percebe-se para quem é.'],['Objetivo e KPI','É claro e mensurável.'],['História','Há conflito e mudança.'],['Gancho','Pararia o scroll.'],['Canal','Respeita o formato.'],['Originalidade','Foge ao cliché.']]}
 };
 window.ACTS=Object.keys(ACT).map(id=>({id,t:ACT[id].t}));

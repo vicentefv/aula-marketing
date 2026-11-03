@@ -67,4 +67,15 @@ window.hookCheck=t=>{t=(t||'').trim();const w=t.split(/\s+/).filter(Boolean).len
  window.isBad=t=>{const n=norm(t);let toks=n.replace(/[^a-z]+/g,' ').trim().split(' ').filter(Boolean);const m=[];toks.forEach(w=>{if(w.length===1&&m.length&&m[m.length-1].s)m[m.length-1].w+=w;else m.push({w,s:w.length===1})});toks=m.map(x=>col(x.w));
   if(toks.some(w=>EXA.includes(w)||PRE.some(p=>w.startsWith(p))))return true;
   const j=col(n.replace(/[^a-z]/g,''));return JOIN.some(p=>j.includes(p))};
+ /* nomes de pessoas e equipas: mais exigente (sem insultos, piadas parvas nem nomes sem sentido) */
+ const NAME=['vaca','vacas','cabra','cabras','gordo','gordos','gorda','gordas','feio','feios','feia','feias','lixo','burro','burros','burra','parvo','parvos','parva','nabo','nabos','toto','totos','otario','otarios','cretino','cretinos','anormal','anormais','atrasado','atrasados','mongo','besta','bestas','porco','porcos','porca','porcas','peido','peidos','rabo','rabos','rabudo','coco','xixi','mamas','mamocas','sexy','sexo','sex','porno','droga','drogas','ganza','charro','charros','bebado','bebados','deez','nuts','ligma','sugma','sus','amogus','kkk','lol','xd','idiota','idiotas','palhaco','palhacos','ze ninguem','ninguem','anonimo','teste','test','xpto','asdf','qwerty','abc','xyz','sei la','nao sei','nada','null','undefined'].map(col);
+ const MASH=/^(?:[qwertyuiop]{5,}|[asdfghjkl]{4,}|[zxcvbnm]{4,})$/;
+ window.badName=t=>{const raw=String(t||'').trim();if(raw.replace(/[^a-zA-ZÀ-ÿ]/g,'').length<2)return 'Escreve um nome com letras.';
+  if(isBad(raw))return 'Esse nome não é permitido. Escolhe outro.';
+  const n=norm(raw),toks=n.replace(/[^a-z0-9]+/g,' ').trim().split(' ').filter(Boolean).map(col),j=toks.join(' ');
+  if(/\b(69|420|666|1488)\b/.test(n))return 'Esse nome não é permitido. Escolhe outro.';
+  if(toks.some(w=>NAME.includes(w))||NAME.some(w=>w.includes(' ')&&j.includes(w)))return 'Escolhe um nome a sério, sem piadas.';
+  const L=toks.filter(w=>/[a-z]/.test(w));if(L.some(w=>w.length>=4&&(MASH.test(w)||!/[aeiouy]/.test(w))))return 'Esse nome não parece um nome. Escolhe outro.';
+  if(L.length&&L.every(w=>col(w).length<2))return 'Esse nome não parece um nome. Escolhe outro.';
+  return ''};
 })();

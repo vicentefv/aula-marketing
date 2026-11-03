@@ -24,19 +24,21 @@ async function boot(){
  top();
  let exists=null;try{exists=await STORE.get(P+'/created')}catch(e){}
  if(!exists){setMain('<div class="center"><h2>Sala não encontrada</h2><p class="sub">Confirma o código '+esc(C)+' no ecrã da sala.</p><a class="btn" href="index.html">Voltar</a></div>');return}
+ let wk=null;try{wk=await STORE.get(P+'/wk')}catch(e){}
+ window.__WK=!!wk;
  if(pid){const p=await STORE.get(P+'/players/'+pid);if(p){start();return}pid=null}
- joinForm();
+ joinForm(!!wk);
 }
-function joinForm(){
- setMain('<div class="rise"><p class="sub">Sala <b style="color:var(--amber);letter-spacing:.14em">'+esc(C)+'</b></p><h2 style="margin-top:6px">Como se chama a tua equipa?</h2><div class="join"><input id="nm" maxlength="22" placeholder="Nome da equipa ou o teu" autocomplete="off"><div class="err" id="er"></div><button class="btn" id="go" style="font-size:1.1rem">Entrar</button></div></div>');
+function joinForm(wk){
+ setMain('<div class="rise"><p class="sub">Sala <b style="color:var(--amber);letter-spacing:.14em">'+esc(C)+'</b></p><h2 style="margin-top:6px">'+(wk?'Como se chama a tua equipa?':'Como te chamas?')+'</h2>'+(wk?'<p class="sub">Só o responsável da equipa entra nesta sala.</p>':'')+'<div class="join"><input id="nm" maxlength="22" placeholder="'+(wk?'Nome da equipa':'O teu nome')+'" autocomplete="off"><div class="err" id="er"></div><button class="btn" id="go" style="font-size:1.1rem">Entrar</button></div></div>');
  const go=async()=>{const v=$('#nm').value.trim();if(v.length<2){$('#er').textContent='Escreve pelo menos 2 letras.';return}
-  if(isBad(v)){$('#er').textContent='Esse nome não é permitido. Escolhe outro.';return}
+  {const bn=badName(v);if(bn){$('#er').textContent=bn;return}}
   $('#go').disabled=true;pid=uid();const cores=CONTENT.cores;const color=cores[Math.floor(Math.random()*cores.length)];
   await STORE.set(P+'/players/'+pid,{name:v,color,at:STORE.TS});LS(PK,pid);vib(20);start()};
  $('#go').onclick=go;$('#nm').addEventListener('keydown',e=>{if(e.key==='Enter')go()});
 }
 function start(){
- STORE.on(P+'/players',v=>{players=v||{};me=players[pid]||me;top();update()});
+ STORE.on(P+'/players',v=>{players=v||{};if(pid&&me&&!players[pid]){pid=null;me=null;try{localStorage.removeItem(PK)}catch(e){}joinForm(!!window.__WK);const er=$('#er');if(er)er.textContent='O teu nome foi removido. Escolhe outro.';return}me=players[pid]||me;top();update()});
  STORE.on(P+'/act',v=>{act=v||{id:'lobby',key:'lobby',phase:'in'};subAns();render()});
  STORE.on(P+'/pool',v=>{const n=Array.isArray(v)?v:null;const ch=JSON.stringify(n)!==JSON.stringify(window.POOL);window.POOL=n;if(ch&&T()==='form'&&act.phase==='in')render()});
 }
@@ -70,7 +72,7 @@ result:{render(){setMain(head()+'<div class="center rise"><div class="bigdot" st
 team:{render(){const t=me&&me.team;
   if(t){setMain(head()+'<div class="center rise"><div class="bigdot" style="background:'+me.color+'"></div><h2>'+esc(t)+'</h2><p class="sub">És o responsável desta equipa. No fim, é neste telemóvel que a equipa vota.</p><button class="btn" id="tx" style="margin-top:14px">Mudar o nome</button></div>');$('#tx').onclick=()=>{STORE.set(P+'/players/'+pid+'/team',null)};return}
   setMain(head()+'<h2>És o responsável da tua equipa?</h2><p class="sub">Só o responsável escreve aqui. Os outros podem ignorar.</p><div class="join" style="margin-top:12px"><input id="tn" maxlength="24" placeholder="Nome da equipa"><button class="btn" id="ts">Registar</button></div><p class="sub" id="ms"></p>');
-  const go=()=>{const v=$('#tn').value.trim();if(!v)return;if(isBad(v)){$('#ms').textContent='Escolhe outro nome.';vib(40);return}STORE.set(P+'/players/'+pid+'/team',v.slice(0,24));vib(20)};
+  const go=()=>{const v=$('#tn').value.trim();if(!v)return;{const bn=badName(v);if(bn){$('#ms').textContent=bn;vib(40);return}}STORE.set(P+'/players/'+pid+'/team',v.slice(0,24));vib(20)};
   $('#ts').onclick=go;$('#tn').addEventListener('keydown',e=>{if(e.key==='Enter')go()})},
  update(){const t=!!(me&&me.team);if(t!==!!local.tm){local.tm=t;VIEWS.team.render()}}},
 rank:{render(){const ps=Object.keys(players).map(k=>({id:k,c:players[k].color,t:Object.values(players[k].pts||{}).reduce((a,b)=>a+(+b||0),0)})).sort((a,b)=>b.t-a.t);const i=ps.findIndex(p=>p.id===pid);

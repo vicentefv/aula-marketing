@@ -366,6 +366,27 @@ mark.s::after{content:attr(data-n);display:inline-block;vertical-align:top;font:
 .lv-ri b{font:700 28px 'DM Sans';flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .lv-rn{font:800 30px Syne;color:var(--acc);min-width:44px}
 .lv-rp{font:800 28px Syne}
+.lv-evt{display:flex;flex-direction:column;gap:8px}
+.lv-evr{display:grid;grid-template-columns:2.2fr repeat(6,1fr) 1fr;align-items:center;gap:10px;padding:14px 20px;border-radius:16px;background:var(--card);border:1px solid var(--cardb);font:600 24px 'DM Sans'}
+.lv-evr span:first-child{display:flex;align-items:center;gap:12px;font-weight:700}
+.lv-evr>span:not(:first-child),.lv-evr>b{text-align:center}
+.lv-evr>b{font:800 32px Syne;color:var(--acc)}
+.lv-evh{background:transparent;border:0;font:700 17px 'DM Sans';letter-spacing:.08em;text-transform:uppercase;color:var(--mut);padding-top:0;padding-bottom:0}
+.lv-res4 .lv-evr{grid-template-columns:2.2fr 1fr 1fr 1fr;font-size:30px}
+.lv-res4 .lv-evr>span:not(:first-child){font:700 32px Syne}
+.lv-w1{border:2px solid var(--acc);background:color-mix(in srgb,var(--acc) 14%,var(--card))}
+.lv-ev{display:grid;grid-template-columns:1fr 860px;gap:34px;align-items:start}
+.lv-evl{max-height:600px;overflow:auto;padding-right:8px}
+.lv-evf{padding:12px 0;border-top:1px solid var(--line)}
+.lv-evf span{display:block;font:700 16px 'DM Sans';letter-spacing:.1em;text-transform:uppercase;color:var(--acc)}
+.lv-evf div{font:500 22px/1.35 'DM Sans';margin-top:4px}
+.lv-evq{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 0;border-top:1px solid var(--line)}
+.lv-evq b{font:700 24px 'DM Sans';display:block}.lv-evq small{display:block;font:500 15px/1.3 'DM Sans';color:var(--mut);margin-top:3px;max-width:520px}
+.lv-evb{display:flex;gap:8px}.lv-evb .lv-b{min-width:54px;padding:10px 0;text-align:center}
+.lv-evc{max-height:610px;overflow:auto;padding-right:6px}
+.lv-evc .lv-cks .lv-ck{font-size:15px;padding:4px 10px}
+.lv-evq{padding:7px 0}.lv-evq b{font-size:21px}.lv-evq small{font-size:13px;max-width:560px}
+.lv-evb .lv-b{min-width:48px;padding:8px 0}
 
 html,body{background:#040806}
 body{color:var(--paper)}
@@ -2769,7 +2790,7 @@ window.ACT={
    {k:'cat',l:'a marca é (a categoria)',ph:'o ginásio'},{k:'dif',l:'que (a diferença)',ph:'abre às 6h e não pede fidelização'}],
   show:'Para {pub} que {nec}, {A} é {cat} que {dif}.'},
 
- persona:{type:'form',t:'Cria a persona',q:'Um telemóvel por grupo. A persona da marca que vos calhou.',lim:300,assign:'marcas',group:true,
+ persona:{type:'form',t:'Cria a persona',q:'A persona da marca que te calhou.',lim:300,assign:'marcas',
   fields:[{k:'nome',l:'Nome e idade',ph:'Tiago, 22 anos'},{k:'dia',l:'Como é o dia desta pessoa?',ph:'estuda de manhã, trabalha num café à tarde'},
    {k:'obj',l:'O que quer conseguir?',ph:'poupar para ir de Erasmus'},{k:'fru',l:'O que lhe causa frustração?',ph:'perder tempo à procura de coisas baratas'},
    {k:'onl',l:'Onde passa tempo online e em quem confia?',ph:'TikTok; confia em amigos e em creators pequenos'}],
@@ -2797,7 +2818,7 @@ window.ACT={
    {t:'Taxa de conversão do site',b:'u'},{t:'Visualizações de um Reel',b:'v'},{t:'Cliques no link para a loja',b:'u'},
    {t:'Clientes que voltam a comprar',b:'u'},{t:'Impressões de um anúncio',b:'v'}]},
 
- plano:{type:'form',t:'Mini plano',q:'Um telemóvel por grupo, para a vossa marca. Guardem: é a base do workshop.',lim:300,assign:'marcas',group:true,check:'smart',checkField:'obj',
+ plano:{type:'form',t:'Mini plano',q:'Para a marca que te calhou. Guarda: pode servir no workshop.',lim:300,assign:'marcas',check:'smart',checkField:'obj',
   fields:[{k:'obj',l:'Objetivo SMART',ph:'Vender 40 jogos online até ao fim do mês',ta:true},{k:'c1',l:'Canal 1 e o papel dele',ph:'TikTok: dar a conhecer a loja'},
    {k:'c2',l:'Canal 2 e o papel dele',ph:'Newsletter: avisar dos jogos novos'},{k:'kpi',l:'KPI a acompanhar',ph:'compras vindas do TikTok'}],
   show:'<b>{A}</b><br>Objetivo: {obj}<br>Canal 1: {c1}<br>Canal 2: {c2}<br>KPI: {kpi}'},
@@ -2813,7 +2834,7 @@ window.ACT={
   fields:SPINE_LAB.map((l,i)=>({k:'s'+i,l,ph:''})),
   show:'<b>{A}</b><br>'+SPINE_LAB.map((l,i)=>l+' {s'+i+'}').join('<br>')},
 
- gancho:{type:'form',t:'O melhor gancho',q:'A frase que abre o vídeo da vossa marca.',lim:120,assign:'marcas',vote:true,check:'hook',
+ gancho:{type:'form',t:'O melhor gancho',q:'A frase que abre o vídeo da tua marca.',lim:120,assign:'marcas',vote:true,check:'hook',
   fields:[{k:'t',l:'O gancho',ph:'Ninguém te conta isto sobre o pão de ontem…'}],show:'<b>{A}</b><br>«{t}»'},
 
  post:{type:'form',t:'Conta-o como história',q:'Reescreve o post que te calhou como uma pequena história.',lim:180,assign:'posts',vote:true,check:'hook',checkField:'g',
@@ -2824,7 +2845,11 @@ window.ACT={
  slop:{type:'quiz',t:'Slop ou não?',lim:15},
  rgpd:{type:'quiz',t:'Pode ou não pode?',lim:15},
  quiz:{type:'quiz',t:'Quiz final',lim:20},
- ranking:{type:'rank',t:'Ranking'},
+ ranking:{type:'rank',t:'Pódio final'},
+ equipas:{type:'team',t:'Equipas do workshop'},
+ entrega:{type:'deliver',t:'Entrega do workshop',fields:[{k:'persona',l:'Persona (quem é e que problema tem)',ph:'Diogo, 20 anos, quer experimentar jogos sem gastar muito',ta:true},{k:'obj',l:'Objetivo SMART',ph:'300 estudantes no torneio de sexta até 15 de dezembro',ta:true},{k:'spine',l:'Story Spine (uma frase por linha)',ph:'Era uma vez…\nTodos os dias…\nAté que um dia…',ta:true,big:true},{k:'gancho',l:'Gancho (a primeira frase)',ph:'Encontrámos 40 jogos num sótão.'},{k:'canal',l:'Canal e peça',ph:'Reel de 20 segundos no Instagram'},{k:'kpi',l:'KPI',ph:'inscrições no torneio'}]},
+ avaliacao:{type:'evalw',t:'Avaliação do trabalho'},
+ resultado:{type:'result',t:'Resultado do workshop'},
 
  votacao:{type:'rate',t:'Votação dos pitches',pitch:120,
   crit:[['Persona','Percebe-se para quem é.'],['Objetivo e KPI','É claro e mensurável.'],['História','Há conflito e mudança.'],['Gancho','Pararia o scroll.'],['Canal','Respeita o formato.'],['Originalidade','Foge ao cliché.']]}
@@ -3100,12 +3125,30 @@ const TR={
   m.set(b,{scaleX:0}).to(b,{scaleX:1.01,duration:.6,ease:'expo.inOut'}).add(swap).to(b,{scaleX:0,duration:.75,ease:'expo.inOut'},'+=.05')},
  zoom(m,T,dir,swap){const s=slidesEl;m.set(s,{transformOrigin:'50% 50%'}).to(s,{scale:dir>0?1.2:.8,opacity:0,duration:.5,ease:'power2.in'}).add(swap).fromTo(s,{scale:dir>0?.82:1.18,opacity:0},{scale:1,opacity:1,duration:.75,ease:'power3.out'})}
 };
+/* metamorfose: os elementos com o mesmo data-morph viajam de um slide para o seguinte */
+function goMorph(n){
+ const R=e=>{const r=e.getBoundingClientRect();return {left:(r.left-OX)/SC,top:(r.top-OY)/SC,width:r.width/SC,height:r.height/SC}};
+ const old=SL[cur].el,src={};$$('[data-morph]',old).forEach(e=>src[e.dataset.morph]={r:R(e),el:e});
+ const layer=document.createElement('div');layer.style.cssText='position:absolute;left:0;top:0;width:1920px;height:1080px;z-index:20;pointer-events:none';stage.appendChild(layer);
+ const C={};for(const k in src){const c=src[k].el.cloneNode(true);c.removeAttribute('data-morph');const r=src[k].r;Object.assign(c.style,{position:'absolute',left:r.left+'px',top:r.top+'px',width:r.width+'px',height:r.height+'px',right:'auto',bottom:'auto',margin:'0',boxSizing:'border-box',opacity:'1',visibility:'visible',transform:'none',overflow:'hidden'});layer.appendChild(c);C[k]=c}
+ $$('[data-morph]',old).forEach(e=>e.style.opacity=0);
+ mtl=gsap.timeline();
+ mtl.to([...old.children],{autoAlpha:0,duration:.45,ease:'power2.in'},0);
+ mtl.add(()=>{hide(cur);show(n,{dir:1});while(stepIdx<steps.length)reveal(steps[stepIdx++],true);
+  const root=SL[n].el,T=$$('[data-morph]',root);
+  const tm=gsap.timeline({onComplete:()=>{layer.remove();T.forEach(t=>t.style.opacity='')}});
+  T.forEach((t,i)=>{const c=C[t.dataset.morph];if(!c)return;t.style.opacity=0;const r=R(t),cs=getComputedStyle(t);
+   tm.to(c,{left:r.left,top:r.top,width:r.width,height:r.height,backgroundColor:cs.backgroundColor,color:cs.color,borderRadius:cs.borderRadius,duration:1.15,ease:'power3.inOut'},.1+i*.09)
+     .to(c,{opacity:0,duration:.35},'>-.15').to(t,{opacity:1,duration:.35},'<')});
+  tl.play()},.45);
+}
 function go(n,dir){
  if(mtl&&mtl.isActive())mtl.progress(1);
  if(n<0||n>=SL.length||n===cur)return;
  dir=dir||(n>cur?1:-1);const full=dir<0;
  if(cur<0||RM){if(cur>=0)hide(cur);show(n,{full:RM||full});if(!RM)tl.play();return}
  if(isCont(cur,n))return goCont(n,dir,full);
+ if(dir>0&&SL[n].morphFrom&&SL[cur]&&SL[cur].id===SL[n].morphFrom)return goMorph(n);
  const T=TH[SL[n].th],w=$('#wipe'),kind=TRL[n%TRL.length];
  w.style.visibility='visible';
  mtl=gsap.timeline({onComplete:()=>{w.style.visibility='hidden';$$('#wipe>div').forEach(d=>d.style.display='none');gsap.set($$('#wipe i,#wp,#wc'),{clearProps:'all'});gsap.set(slidesEl,{clearProps:'all'})}});
@@ -3975,7 +4018,7 @@ S('canais-mkt','ink','Bloco 2 · Estratégia e canais','Cada canal tem um papel'
  <div data-a="up" class="lead" style="${abs(128,870,'font-size:38px')}">Não é preciso estar em todo o lado: é preciso estar <span class="acc">onde a persona está</span>.</div>`);
 
 const PL=[['Educar','Ensinar algo útil.','var(--g2)','var(--on)'],['Inspirar','Mostrar pessoas e bastidores.','var(--g1)','var(--on)'],['Entreter','Momentos leves e partilháveis.','var(--g3)','var(--on)'],['Converter','Levar à ação: comprar, visitar.','var(--fg)','var(--on)']];
-const CAL=[[0,0,'Carrossel','Como saber se um jogo usado está bom'],[2,1,'Reel','Um dia com o dono da loja'],[4,2,'Story','Adivinha o preço: sondagem'],[5,3,'Post','Sábado às 18h: chegam jogos novos'],[6,1,'Newsletter','Os melhores achados da semana']];
+const CAL=[[0,2,'Reel','Encontrámos 40 jogos de Mega Drive num sótão em Braga.'],[1,1,'Stories','A limpar e a testar, um a um.'],[2,0,'Carrossel','Metade não liga. Como se testa um jogo antigo?'],[3,3,'Reel','Salvámos 22. Sábado às 18h, na loja.'],[4,2,'Stories','Mostrem-nos o vosso primeiro jogo.']];
 S('campanhas-reais','ink','Bloco 2 · Estratégia e canais','Campanhas que marcaram',FM2,`
  ${eb('Digital · Campanhas reais')}${ti('Campanhas que marcaram')}
  <div class="g3" style="${abs(128,296,'right:128px')}">
@@ -3992,7 +4035,7 @@ S('calendario','cream','Conteúdos','Um plano de conteúdos',PN+' · Histórias 
  </div>
  <div class="k k2" data-a="up" style="${abs(128,428)}">Uma semana</div>
  <div data-a="fade" style="${abs(128,466,'width:1664px;height:420px;display:grid;grid-template-columns:repeat(7,1fr);gap:10px')}">
- ${['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'].map((d,k)=>`<div style="border-radius:18px;background:rgba(10,18,13,.05);border:1px solid var(--cardb);padding:12px 10px;position:relative"><div style="font:700 20px 'DM Sans';letter-spacing:.1em;text-transform:uppercase;color:var(--mut);text-align:center">${d}</div>${CAL.filter(c=>c[0]===k).map(c=>`<div class="post-c" style="position:absolute;left:10px;right:10px;top:${56+(k%3)*64}px;border-radius:14px;padding:14px 16px;background:${PL[c[1]][2]};color:${PL[c[1]][3]}"><div style="font:700 15px 'DM Sans';letter-spacing:.1em;text-transform:uppercase;opacity:.85">${PL[c[1]][0]}</div><div style="font:800 21px/1.1 Syne;margin-top:6px;letter-spacing:-.02em">${c[2]}</div><div style="font-size:20px;line-height:1.25;margin-top:8px">${c[3]}</div></div>`).join('')}</div>`).join('')}
+ ${['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'].map((d,k)=>`<div style="border-radius:18px;background:rgba(10,18,13,.05);border:1px solid var(--cardb);padding:12px 10px;position:relative"><div style="font:700 20px 'DM Sans';letter-spacing:.1em;text-transform:uppercase;color:var(--mut);text-align:center">${d}</div>${CAL.filter(c=>c[0]===k).map(c=>`<div class="post-c" data-morph="d${k}" style="position:absolute;left:10px;right:10px;top:56px;border-radius:14px;padding:14px 16px;background:${PL[c[1]][2]};color:${PL[c[1]][3]}"><div style="font:700 15px 'DM Sans';letter-spacing:.1em;text-transform:uppercase;opacity:.85">${PL[c[1]][0]}</div><div style="font:800 21px/1.1 Syne;margin-top:6px;letter-spacing:-.02em">${c[2]}</div><div style="font-size:20px;line-height:1.25;margin-top:8px">${c[3]}</div></div>`).join('')}</div>`).join('')}
  </div>
  <div data-a="fade" class="mut" style="${abs(128,912,'font-size:24px')}">A seguir: a mesma semana, contada como uma história.</div>`,
  {init:(r,tl)=>{tl.fromTo(qq('.post-c',r),{autoAlpha:0,y:40,scale:.8},{autoAlpha:1,y:0,scale:1,duration:.8,ease:'back.out(1.6)',stagger:.18},1.2)}});
@@ -4572,7 +4615,7 @@ const LSG=k=>{try{return localStorage.getItem(k)}catch(e){return null}},LSS=(k,v
 const ALPHA='ABCDEFGHJKMNPQRSTUVWXYZ23456789';
 const shuf=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const H=s=>esc(s);
-let db=null,mode='idle',off=0,C=null,P=null,players={},act={id:'lobby',key:'lobby',phase:'in'},ans={},vt={},curKey=null,unA=null,unV=null,cto=null,listening=false;
+let ENT={},EV={},VR={};let db=null,mode='idle',off=0,C=null,P=null,players={},act={id:'lobby',key:'lobby',phase:'in'},ans={},vt={},curKey=null,unA=null,unV=null,cto=null,listening=false;
 let M=null;const OFF={};
 const now=()=>Date.now()+off;
 const online=()=>mode==='online';
@@ -4600,10 +4643,11 @@ async function ensureRoom(){
 async function newRoom(){let c,t=0,ex;do{c=Array.from({length:4},()=>ALPHA[Math.floor(Math.random()*ALPHA.length)]).join('');ex=(await db.ref('rooms/'+c+'/created').get()).val();t++}while(ex&&t<8);
  await db.ref('rooms/'+c).set({created:firebase.database.ServerValue.TIMESTAMP,act:{id:'lobby',key:'lobby',phase:'in'}});LSS('deck-room',c);return c}
 function use(c){
- if(P){db.ref(P+'/players').off();db.ref(P+'/act').off()}
+ if(P){['players','act','entrega','eval','vres'].forEach(x=>db.ref(P+'/'+x).off())}ENT={};EV={};VR={};
  C=c;P='rooms/'+c;curKey=null;
  db.ref(P+'/players').on('value',s=>{players=cleanP(s.val()||{});refresh()});
  db.ref(P+'/act').on('value',s=>{act=s.val()||{id:'lobby',key:'lobby',phase:'in'};subs();refresh()});
+ db.ref(P+'/entrega').on('value',s=>{ENT=s.val()||{};refresh()});db.ref(P+'/eval').on('value',s=>{EV=s.val()||{};refresh()});db.ref(P+'/vres').on('value',s=>{VR=s.val()||{};refresh()});
 }
 function subs(){if(act.key===curKey)return;curKey=act.key;ans={};vt={};if(unA)unA();if(unV)unV();
  const ra=db.ref(P+'/ans/'+curKey),rv=db.ref(P+'/vt/'+curKey);
@@ -4627,7 +4671,7 @@ function start(id){const d=ACT[id]||{},run=uid().slice(0,4);const A={id,run,phas
 const begin=()=>{const d=ACT[M.id]||{};patch({phase:d.type==='quiz'?'q':'in',t0:TS()})};
 const limTxt=s=>{const m=Math.floor(s/60),x=s%60;return m?(m+' min'+(x?' '+x+' s':'')):x+' s'};
 function readyView(){const d=ACT[M.id]||{},n=plist().length;
- return `<div class="lv-ready"><div class="k">${d.type==='quiz'?'Quiz':'Atividade'}</div><div class="lv-rt">Prontos?</div><p class="lead">${n} ${n===1?'equipa ligada':'equipas ligadas'}. Quando estiverem prontas, carrega em Começar.</p></div>`}
+ return `<div class="lv-ready"><div class="k">${d.type==='quiz'?'Quiz':'Atividade'}</div><div class="lv-rt">Prontos?</div><p class="lead">${n} ${n===1?'pessoa ligada':'pessoas ligadas'}. Quando estiverem prontas, carrega em Começar.</p></div>`}
 function follow(id){if(online()&&act.id!==id)start(id)}
 
 /* ---------- peças de interface ---------- */
@@ -4667,6 +4711,46 @@ V.rank={
   if(rv&&M.podKey!==act.key+act.t0){M.podKey=act.key+act.t0;setTimeout(()=>{try{ENG.confetti(960,380,140)}catch(e){}},2000)}
   return `<div class="lv-podw">${pod}${list}</div>`},
  ctl(){if(!online())return mode==='offline'?offCtl():[];return act.phase==='rev'?[{t:'Esconder o pódio',f:()=>patch({phase:'in'})}]:[{t:'Revelar pódio',p:1,f:()=>patch({phase:'rev',t0:TS()})}]}
+};
+V.team={
+ body(){if(!online())return offMsg();const t=plist().filter(p=>p.team);
+  return `${cnt('Equipas',t.length)}<p class="lead" style="margin-bottom:22px">Só o responsável de cada equipa escreve, no telemóvel, o nome da equipa. É esse telemóvel que vota no fim.</p><div class="lv-tiles">${t.map(p=>`<div class="card lv-tile"><div class="lv-nm" style="font-size:34px">${dot(p.color)}${H(p.team)}</div><div class="mut" style="font-size:22px;margin-top:8px">Responsável: ${H(p.name)}</div></div>`).join('')||'<p class="lead mut">As equipas aparecem aqui quando os responsáveis as registarem.</p>'}</div>`},
+ ctl(){if(!online())return mode==='offline'?offCtl():[];return plist().some(p=>p.team)?[{t:'Apagar equipas',f:()=>{const u={};plist().forEach(p=>{if(p.team)u[p.id+'/team']=null});db.ref(P+'/players').update(u)}}]:[]}
+};
+/* ---------- workshop: entrega, avaliação do trabalho e resultado final ---------- */
+const WCR=()=>(ACT.votacao&&ACT.votacao.crit)||[];
+const evArr=id=>{const v=EV[id];if(typeof v!=='string')return null;const a=v.split(',').map(Number);return a.length===WCR().length?a:null};
+const evAvg=id=>{const a=evArr(id);if(!a||a.some(x=>!(x>=1&&x<=5)))return null;return a.reduce((x,y)=>x+y,0)/a.length};
+const RUB=[['Só idade ou género','Tem um problema','Problema, contexto e onde está online'],['Vago','Tem número ou prazo','Número, prazo e KPI ligado ao objetivo'],['Lista de factos','Tem conflito','Conflito, viragem e mudança no fim'],['Genérico','Desperta curiosidade','Pararia o scroll'],['Canal sem razão','Adequado à persona','Respeita o formato e o ritmo do canal'],['Cliché','Tem um pormenor próprio','Só esta marca o podia fazer']];
+const ENF=[['persona','Persona'],['obj','Objetivo SMART'],['spine','Story Spine'],['gancho','Gancho'],['canal','Canal e peça'],['kpi','KPI']];
+V.deliver={
+ body(){if(!online())return offMsg();const t=teams();const n=t.filter(p=>ENT[p.id]).length;
+  return `${cnt('Entregues',n+' / '+t.length)}<p class="lead" style="margin-bottom:22px">O responsável de cada equipa envia, no telemóvel, tudo o que a equipa fez. Pode reenviar até ao fim.</p><div class="lv-tiles">${t.map(p=>`<div class="card lv-tile${ENT[p.id]?' win':''}"><div class="lv-nm">${dot(p.color)}${H(tnm(p))}<span style="margin-left:auto;font-size:22px" class="${ENT[p.id]?'':'mut'}">${ENT[p.id]?'Entregue ✓':'Por entregar'}</span></div></div>`).join('')||'<p class="lead mut">Regista primeiro as equipas.</p>'}</div>`},
+ ctl(){return online()?[]:mode==='offline'?offCtl():[]}
+};
+V.evalw={
+ body(){if(!online())return offMsg();const t=teams(),CR=WCR(),sel=act.sel&&players[act.sel]?Object.assign({id:act.sel},players[act.sel]):null;
+  if(act.sum){const rows=t.map(p=>[p,evArr(p.id),evAvg(p.id)]);
+   return `<div class="k" style="margin-bottom:16px">Avaliação do trabalho de cada equipa (1 a 5)</div><div class="lv-evt"><div class="lv-evr lv-evh"><span>Equipa</span>${CR.map(c=>`<span>${H(c[0])}</span>`).join('')}<span>Média</span></div>${rows.map(r=>`<div class="lv-evr"><span>${dot(r[0].color)}${H(tnm(r[0]))}</span>${CR.map((c,i)=>`<span>${r[1]?r[1][i]:'–'}</span>`).join('')}<b>${r[2]!=null?f1(r[2]):'–'}</b></div>`).join('')}</div>`}
+  if(sel){const e=ENT[sel.id],f=(e&&e.f)||{},cur=evArr(sel.id)||CR.map(()=>0);
+   const sp=(f.spine||'').split('\n').map(x=>x.trim()).filter(Boolean).length;
+   const aj=e?[...(smartCheck(f.obj||'')||[]).map(x=>['Objetivo: '+x[0],x[1]]),...(hookCheck(f.gancho||'')||[]).map(x=>['Gancho: '+x[0],x[1]]),['Story Spine: '+sp+' de 8 frases',sp>=6],['Campos preenchidos: '+ENF.filter(x=>(f[x[0]]||'').trim()).length+' de 6',ENF.every(x=>(f[x[0]]||'').trim())]]:null;
+   return `<div class="lv-ev"><div class="lv-evl"><div class="lv-rt" style="font-size:56px;margin-bottom:14px">${tmName(sel)}</div>${e?ENF.map(x=>`<div class="lv-evf"><span>${x[1]}</span><div>${H(f[x[0]]||'—').replace(/\n/g,'<br>')}</div></div>`).join(''):'<p class="lead mut">Esta equipa ainda não entregou.</p>'}</div>
+    <div class="lv-evc">${aj?`<div class="k" style="margin-bottom:8px">Ajudas automáticas (só para orientar)</div><div class="lv-cks" style="margin-bottom:16px">${chips(aj)}</div>`:''}${CR.map((c,i)=>`<div class="lv-evq"><div><b>${H(c[0])}</b><small>1 ${RUB[i]?RUB[i][0]:''} · 3 ${RUB[i]?RUB[i][1]:''} · 5 ${RUB[i]?RUB[i][2]:''}</small></div><div class="lv-evb">${[1,2,3,4,5].map(n=>`<button class="lv-b${cur[i]===n?' pri':''}" data-c="${i}" data-n="${n}">${n}</button>`).join('')}</div></div>`).join('')}</div></div>`}
+  return `<p class="lead" style="margin-bottom:20px">Toca numa equipa para ver o trabalho e avaliar com a grelha.</p><div class="lv-tiles">${t.map(p=>{const a=evAvg(p.id);return `<div class="card lv-tile lv-click" data-t="${p.id}"><div class="lv-nm">${dot(p.color)}${H(tnm(p))}${a!=null?`<b style="margin-left:auto;font-family:Syne;color:var(--acc);font-size:44px">${f1(a)}</b>`:`<span class="mut" style="margin-left:auto;font-size:20px">${ENT[p.id]?'por avaliar':'sem entrega'}</span>`}</div></div>`}).join('')||'<p class="lead mut">Ainda não há equipas.</p>'}</div>`},
+ wire(b){if(!online())return;b.querySelectorAll('[data-t]').forEach(el=>el.onclick=()=>patch({sel:el.dataset.t,sum:null}));
+  b.querySelectorAll('[data-c]').forEach(el=>el.onclick=e=>{e.stopPropagation();const id=act.sel,CR=WCR(),a=evArr(id)||CR.map(()=>0);a[+el.dataset.c]=+el.dataset.n;EV[id]=a.join(',');db.ref(P+'/eval/'+id).set(EV[id]);draw()})},
+ ctl(){if(!online())return mode==='offline'?offCtl():[];const t=teams(),i=t.findIndex(p=>p.id===act.sel);
+  if(act.sum)return [{t:'Voltar às equipas',p:1,f:()=>patch({sum:null,sel:null})}];
+  if(act.sel)return [{t:'Voltar às equipas',p:1,f:()=>patch({sel:null})},...(t[i+1]?[{t:'Equipa seguinte',f:()=>patch({sel:t[i+1].id})}]:[]),{t:'Ver todas as avaliações',f:()=>patch({sum:1,sel:null})}];
+  return [{t:'Ver todas as avaliações',p:1,f:()=>patch({sum:1})}]}
+};
+V.result={
+ body(){if(!online())return offMsg();const t=teams();const R=t.map(p=>{const e=evAvg(p.id),v=VR[p.id]!=null?+VR[p.id]:null;const tot=e!=null&&v!=null?(e+v)/2:(e!=null?e:v);return {p,e,v,tot}}).sort((a,b)=>(b.tot||0)-(a.tot||0));
+  const rv=act.phase==='rev'&&act.id===M.id;if(rv&&R[0]&&R[0].tot!=null&&M.podKey!==act.key+act.t0){M.podKey=act.key+act.t0;setTimeout(()=>{try{ENG.confetti(960,380,160)}catch(e){}},400)}
+  const row=(r,i)=>`<div class="lv-evr${rv&&i===0?' lv-w1':''}"><span>${rv?(i+1)+'. ':''}${dot(r.p.color)}${H(tnm(r.p))}</span><span>${r.e!=null?f1(r.e):'–'}</span><span>${r.v!=null?f1(r.v):'–'}</span><b>${rv&&r.tot!=null?f1(r.tot):'?'}</b></div>`;
+  return `${rv&&R[0]&&R[0].tot!=null?winH(Object.assign({},R[0].p,{name:tnm(R[0].p)}),f1(R[0].tot)+' de 5'):''}<div class="lv-evt lv-res4"><div class="lv-evr lv-evh"><span>Equipa</span><span>Avaliação do trabalho</span><span>Votação da turma</span><span>Total</span></div>${(rv?R:R.slice().sort((a,b)=>tnm(a.p).localeCompare(tnm(b.p)))).map(row).join('')}</div><p class="mut" style="margin-top:14px;font-size:22px">Total = média entre a avaliação do trabalho e a votação da turma (as duas de 1 a 5).</p>`},
+ ctl(){if(!online())return mode==='offline'?offCtl():[];return act.phase==='rev'?[{t:'Esconder',f:()=>patch({phase:'in'})}]:[{t:'Revelar vencedor',p:1,f:()=>patch({phase:'rev',t0:TS()})}]}
 };
 function offMsg(){return `<div class="lv-msg"><div class="t3">${IN_CLAUDE?'Dentro do Claude, a apresentação não pode ligar-se aos telemóveis.':'Esta página não conseguiu ligar-se à sala dos telemóveis.'}</div>
  <p class="lead" style="max-width:1300px">${IN_CLAUDE?'Para usar os telemóveis, abre a apresentação no endereço abaixo, no Chrome. Aqui, as atividades funcionam em modo apresentador: a turma responde em voz alta e tu registas.':'Confirma a ligação à internet e tenta outra vez. Enquanto isso, as atividades funcionam em modo apresentador.'}</p>
@@ -4748,35 +4832,40 @@ V.order={
 };
 
 /* votação por grupo: o responsável de cada grupo vota no telemóvel e vê-se a média */
-function rateStats(target,N){const sum=Array(N).fill(0);let n=0;
- Object.keys(ans).forEach(k=>{if(k===target||!players[k])return;const s=((ans[k]||{}).r||{})[target];if(typeof s!=='string')return;const a=s.split(',').map(Number);if(a.length!==N||a.some(x=>!(x>=1&&x<=5)))return;a.forEach((x,i)=>sum[i]+=x);n++});
+/* equipas do workshop: só os telemóveis dos responsáveis (com nome de equipa) contam */
+const tmode=()=>plist().some(p=>p.team);
+const teams=()=>{const t=plist().filter(p=>p.team);return t.length?t:plist()};
+const tnm=p=>p.team||p.name;
+function rateStats(target,N){const sum=Array(N).fill(0);let n=0;const tm=tmode();
+ Object.keys(ans).forEach(k=>{if(k===target||!players[k]||(tm&&!players[k].team))return;const s=((ans[k]||{}).r||{})[target];if(typeof s!=='string')return;const a=s.split(',').map(Number);if(a.length!==N||a.some(x=>!(x>=1&&x<=5)))return;a.forEach((x,i)=>sum[i]+=x);n++});
  return n?{n,crit:sum.map(x=>x/n),avg:sum.reduce((x,y)=>x+y,0)/(N*n)}:null}
 const f1=x=>x.toFixed(1).replace('.',',');
-const tmName=p=>`<span style="display:inline-flex;align-items:center;gap:16px">${dot(p.color)}${H(p.name)}</span>`;
+const tmName=p=>`<span style="display:inline-flex;align-items:center;gap:16px">${dot(p.color)}${H(tnm(p))}</span>`;
 V.rate={
  body(){
   if(!online())return offMsg();
-  const d=D(),CR_=d.crit,N=CR_.length,ps=plist(),st={};ps.forEach(p=>st[p.id]=rateStats(p.id,N));
-  const cur=act.cur&&players[act.cur]?players[act.cur]:null,ph=act.phase;
+  const d=D(),CR_=d.crit,N=CR_.length,ps=teams(),st={};ps.forEach(p=>st[p.id]=rateStats(p.id,N));
+  const cur=act.cur&&players[act.cur]?Object.assign({id:act.cur},players[act.cur]):null,ph=act.phase;
+  ps.forEach(p=>{const v=st[p.id]?Math.round(st[p.id].avg*100)/100:null;if(v!=null&&VR[p.id]!==v){VR[p.id]=v;db.ref(P+'/vres/'+p.id).set(v)}});
   if(ph==='end'){const a=ps.filter(p=>st[p.id]).sort((x,y)=>st[y.id].avg-st[x.id].avg);
    if(!a.length)return '<p class="lead">Ainda não há votos.</p>';
-   return `${winH(a[0],f1(st[a[0].id].avg)+' de média')}<div class="k" style="margin-bottom:18px">Média por grupo</div><div class="lv-rank">${a.map((p,i)=>`<div class="lv-rrow"><span class="lv-rk">${i+1}</span><div class="lv-rbar"><i style="width:${Math.round(st[p.id].avg/5*100)}%;background:${p.color}"></i><b>${H(p.name)}</b></div><span class="lv-pt">${f1(st[p.id].avg)}</span></div>`).join('')}</div>`}
+   return `<div class="k" style="margin-bottom:18px">Média da turma por equipa · o vencedor junta esta votação com a avaliação do trabalho</div><div class="lv-rank">${a.map((p,i)=>`<div class="lv-rrow"><span class="lv-rk">${i+1}</span><div class="lv-rbar"><i style="width:${Math.round(st[p.id].avg/5*100)}%;background:${p.color}"></i><b>${H(tnm(p))}</b></div><span class="lv-pt">${f1(st[p.id].avg)}</span></div>`).join('')}</div>`}
   if(cur&&ph==='pitch')return `<div class="lv-ready"><div class="k">A apresentar</div><div class="lv-rt" style="font-size:96px">${tmName(cur)}</div><div class="lv-clock" id="lvck">${fmt_(d.pitch||120)}</div></div>`;
   if(cur&&ph==='vote'){const others=ps.filter(p=>p.id!==act.cur);const done=others.filter(p=>(((ans[p.id]||{}).r||{})[act.cur]));
-   return `${cnt('Votos',done.length+' / '+others.length)}<div class="k" style="margin-bottom:10px">A votar</div><div class="lv-rt" style="font-size:84px;margin-bottom:26px">${tmName(cur)}</div><div class="lv-pl">${others.map(p=>{const s=!!(((ans[p.id]||{}).r||{})[act.cur]);return `<span class="lv-chip${s?' done':''}">${dot(p.color)}${H(p.name)}${s?' · votou':''}</span>`}).join('')}</div><p class="lead mut" style="margin-top:22px">O responsável de cada grupo vota no telemóvel, de 1 a 5 em cada critério.</p>`}
+   return `${cnt('Votos',done.length+' / '+others.length)}<div class="k" style="margin-bottom:10px">A votar</div><div class="lv-rt" style="font-size:84px;margin-bottom:26px">${tmName(cur)}</div><div class="lv-pl">${others.map(p=>{const s=!!(((ans[p.id]||{}).r||{})[act.cur]);return `<span class="lv-chip${s?' done':''}">${dot(p.color)}${H(tnm(p))}${s?' · votou':''}</span>`}).join('')}</div><p class="lead mut" style="margin-top:22px">O responsável de cada grupo vota no telemóvel, de 1 a 5 em cada critério.</p>`}
   if(cur&&ph==='rev'){const s=st[act.cur];
    if(!s)return `<div class="lv-rt" style="font-size:84px">${tmName(cur)}</div><p class="lead">Sem votos.</p>`;
    return `<div class="lv-res"><div><div class="k">${tmName(cur)}</div><div class="lv-rt" style="font-size:200px">${f1(s.avg)}</div><div class="k mut">média de ${s.n} ${s.n===1?'voto':'votos'}</div></div><div class="lv-crit">${CR_.map((c,i)=>`<div class="lv-cr"><span>${H(c[0])}</span><div class="lv-cb"><i style="width:${s.crit[i]/5*100}%"></i></div><b>${f1(s.crit[i])}</b></div>`).join('')}</div></div>`}
-  return `<p class="lead" style="margin-bottom:20px">Quem apresenta a seguir? Toca na equipa.</p><div class="lv-tiles">${ps.map(p=>`<div class="card lv-tile lv-click" data-t="${p.id}"><div class="lv-nm">${dot(p.color)}${H(p.name)}${st[p.id]?`<b style="margin-left:auto;font-family:Syne;color:var(--acc);font-size:44px">${f1(st[p.id].avg)}</b>`:'<span class="mut" style="margin-left:auto;font-size:20px">por apresentar</span>'}</div></div>`).join('')||'<p class="lead">Ainda ninguém entrou na sala.</p>'}</div>`},
+  return `<p class="lead" style="margin-bottom:20px">Quem apresenta a seguir? Toca na equipa.</p><div class="lv-tiles">${ps.map(p=>`<div class="card lv-tile lv-click" data-t="${p.id}"><div class="lv-nm">${dot(p.color)}${H(tnm(p))}${st[p.id]?`<b style="margin-left:auto;font-family:Syne;color:var(--acc);font-size:44px">${f1(st[p.id].avg)}</b>`:'<span class="mut" style="margin-left:auto;font-size:20px">por apresentar</span>'}</div></div>`).join('')||'<p class="lead">Ainda ninguém entrou na sala.</p>'}</div>`},
  wire(b){if(!online())return;b.querySelectorAll('[data-t]').forEach(el=>el.onclick=()=>patch({phase:'pitch',cur:el.dataset.t,t0:TS()}))},
  tick(){if(!online()||act.phase!=='pitch'||act.id!==M.id)return;const el=M.body.querySelector('#lvck');if(!el)return;const l=(D().pitch||120)-(now()-act.t0)/1000;el.textContent=fmt_(l);el.classList.toggle('over',l<=0);if(l<=-1.5&&M.endKey!==act.key+act.cur+act.t0){M.endKey=act.key+act.cur+act.t0;patch({phase:'vote'})}},
  ctl(){if(!online())return mode==='offline'?offCtl():[];const ph=act.phase,id=M.id;
-  const back=()=>patch({phase:'in',cur:null}),any=plist().some(p=>rateStats(p.id,D().crit.length));
+  const back=()=>patch({phase:'in',cur:null}),any=teams().some(p=>rateStats(p.id,D().crit.length));
   if(ph==='pitch')return [{t:'Abrir votação',p:1,f:()=>patch({phase:'vote'})},{t:'Outra equipa',f:back}];
   if(ph==='vote')return [{t:'Mostrar média',p:1,f:()=>patch({phase:'rev'})},{t:'Outra equipa',f:back}];
-  if(ph==='rev')return [{t:'Seguinte equipa',p:1,f:back},{t:'Revelar vencedor',f:()=>patch({phase:'end'})}];
+  if(ph==='rev')return [{t:'Seguinte equipa',p:1,f:back},{t:'Ver médias da turma',f:()=>patch({phase:'end'})}];
   if(ph==='end')return [{t:'Voltar às equipas',p:1,f:back},{t:'Recomeçar',f:()=>start(id)}];
-  return any?[{t:'Revelar vencedor',p:1,f:()=>patch({phase:'end'})}]:[]}
+  return any?[{t:'Ver médias da turma',p:1,f:()=>patch({phase:'end'})}]:[]}
 };
 const winH=(p,sub)=>p?`<div class="lv-win"><span class="k">Vencedor</span><b>${dot(p.color)}${H(p.name)}</b><span class="mut">${sub}</span></div>`:'';
 const fmt_=s=>{s=Math.max(0,Math.ceil(s));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
@@ -4840,20 +4929,24 @@ liveS('live-entrar','lobby','Abertura',F0,'Ao vivo · Entrar na sala','Peguem no
 liveS('live-marcas','marcas','Abertura',F0,'Ao vivo · Aquecimento','Marcas de que gostam','Escreve até 3. Vão ser as marcas das atividades de hoje.');
 liveS('live-primsec','primsec','Marketing',FM1,'Praticar · Estudo de mercado','Primário ou secundário?','Arrasta cada fonte de dados para o tipo certo.');
 liveS('live-posicionar','posicionar','Marketing',FM1,'Praticar · Posicionamento','Posiciona a marca','Cada telemóvel recebe uma das marcas da turma. Completa a fórmula e votamos.');
-liveS('live-persona','persona','Marketing',FM1,'Praticar · Persona','Cria a persona','Grupos de 3 ou 4, um telemóvel por grupo. A persona de uma das marcas da turma.');
+liveS('live-persona','persona','Marketing',FM1,'Praticar · Persona','Cria a persona','Cada um no seu telemóvel: a persona da marca que te calhar.');
 liveS('live-4p','quatrop','Marketing',FM1,'Praticar · 4Ps','Que P é este?','Oito decisões da loja Save Point. Arrasta cada uma para o P certo.');
 liveS('live-smart','smart','Marketing',FM1,'Praticar · Objetivos','Torna-o SMART','«Quero que a Save Point fique conhecida no campus.» Como se mede isto?');
 liveS('live-canais','canais','Digital',FM2,'Praticar · Meios','Próprio, pago ou ganho?','Arrasta cada meio para o grupo certo.');
 liveS('live-metricas','metricas','Digital',FM2,'Praticar · Métricas','Útil ou vaidade?','Objetivo: vender mais na loja online. Que métricas interessam?');
-liveS('live-plano','plano','Digital',FM2,'Para o workshop · Grupos','Mini plano','Objetivo SMART, dois canais e o KPI. Guardem: é a base do workshop.');
+liveS('live-plano','plano','Digital',FM2,'Praticar · Plano','Mini plano','Cada um no seu telemóvel: objetivo SMART, dois canais e o KPI.');
 liveS('live-abt','abt','Histórias',F1,'Praticar · E, MAS, POR ISSO','Escreve em 3 frases','Para o produto que te calhar. Depois votamos.');
 liveS('live-spine','spine','Histórias',F1,'Praticar · Story Spine','Ordena a história','8 frases baralhadas. Quem acerta mais posições ganha.');
 liveS('live-spinew','spinew','Histórias',F1,'Praticar · Story Spine','A vossa Story Spine','Por grupo: a história da vossa marca em 8 frases. Depois votamos.');
 liveS('live-gancho','gancho','Histórias',F2,'Praticar · Ganchos','O melhor gancho','A frase que abre o vídeo da vossa marca. Depois votamos.');
 liveS('live-slop','slop','IA',FA,'Praticar · IA','Slop ou não?','6 frases da Save Point. Vazia ou com substância?');
 liveS('live-rgpd','rgpd','Ética e RGPD',FE,'Praticar · RGPD e publicidade','Pode ou não pode?','6 situações. Decide depressa.');
+liveS('live-equipas','equipas','Workshop',FW,'Workshop · Equipas','Quem é o responsável?','O responsável de cada equipa escreve o nome da equipa no telemóvel.');
+liveS('live-entrega','entrega','Workshop',FW,'Workshop · Entrega','Enviem o vosso trabalho','O responsável envia tudo o que a equipa desenvolveu: persona, objetivo, história, gancho, canal e KPI.');
 liveS('live-votacao','votacao','Workshop',FW,'Palco · Votação','Votação dos pitches','Cada equipa apresenta e as outras votam no telemóvel.');
-liveS('live-ranking','ranking','Ética e RGPD',PN+' · Ranking','Ao vivo · Pontuação','Quem vai à frente?','Os pontos de todas as atividades até agora. Depois, o workshop.');
+liveS('live-avaliacao','avaliacao','Workshop',FW,'Workshop · Avaliação','Avaliação do trabalho','Cada equipa avaliada com a mesma grelha: seis critérios, de 1 a 5.');
+liveS('live-resultado','resultado','Workshop',FW,'Workshop · Resultado','E o vencedor é…','Avaliação do trabalho + votação da turma.');
+liveS('live-ranking','ranking','Fecho',PN+' · Pódio final','Ao vivo · Pontuação','Pódio final','Os pontos de todas as atividades e do quiz. Depois, o workshop.');
 liveS('live-quiz','quiz','Fecho',FF,'Ao vivo · Revisão','Quiz final','12 perguntas sobre toda a aula. Quanto mais rápido, mais pontos.');
 
 Object.assign(N4,{
@@ -4861,20 +4954,20 @@ Object.assign(N4,{
  'live-marcas':'Aquecimento (2 min). Cada pessoa escreve até 3 marcas de que gosta. Comenta 2 ou 3 da nuvem. Diz à turma que estas marcas vão voltar: nas atividades de posicionamento, persona, mini plano, Story Spine e gancho, cada telemóvel recebe uma das marcas mais escolhidas (as 12 com mais votos). Se houver menos de 3 marcas, as atividades usam uma lista de marcas de reserva.',
  'live-primsec':'Prática (2 min), logo a seguir aos dados primários e secundários. Individual. Revela e comenta as que a turma mais trocou: normalmente a sondagem nos stories (primário, foste tu que perguntaste) e o Google Trends (secundário, já existe). O tempo só começa quando carregas em «Começar».',
  'live-posicionar':'Prática (4 min), logo a seguir à fórmula do posicionamento. Cada telemóvel recebe uma marca ao acaso. 2 min para escrever, abre a votação (ninguém vota no seu), revela. Comenta o vencedor: a diferença é concreta e é algo que a concorrência não diz? O tempo só começa quando carregas em «Começar».',
- 'live-persona':'Prática (5 min), logo a seguir ao Diogo. Forma os grupos de 3 ou 4 (ficam até ao workshop) e pede um telemóvel por grupo. Cada telemóvel recebe uma marca: essa passa a ser a marca do grupo. 4 min para escrever, 1 para mostrar. Pergunta: o que é que a persona da marca X tem de diferente da Rita? O tempo só começa quando carregas em «Começar».',
- 'live-4p':'Prática (2 min), logo a seguir aos 4Ps. Individual. As trocas mais comuns: a garantia de troca (é produto, faz parte do que vendes) e vender pelo OLX (é praça, onde a pessoa compra).',
+ 'live-persona':'Prática individual, logo a seguir ao Diogo. Cada telemóvel recebe uma marca da turma e cria a persona dessa marca. Abre a votação no fim se quiseres comparar. Pergunta: o que é que a persona mais votada tem que as outras não têm? O tempo só começa quando carregas em «Começar».', 'live-4p':'Prática (2 min), logo a seguir aos 4Ps. Individual. As trocas mais comuns: a garantia de troca (é produto, faz parte do que vendes) e vender pelo OLX (é praça, onde a pessoa compra).',
  'live-smart':'Prática individual, logo a seguir ao «Do vago ao SMART». O desafio é diferente do exemplo: «conhecida» não tem número, por isso têm de escolher um indicador (seguidores de estudantes, pessoas no torneio, menções, inscrições no clube) e pôr-lhe número, prazo e o que vão fazer para lá chegar. A verificação automática é simples (procura número, prazo, verbo…): usa-a como ponto de partida. Abre a votação e revela. O tempo só começa quando carregas em «Começar».',
  'live-canais':'Prática (2 min), logo a seguir aos três meios. Individual. Revela e comenta o creator pago e o post impulsionado (pagos, mesmo parecendo conteúdo). O tempo só começa quando carregas em «Começar».',
  'live-metricas':'Prática (2 min), logo a seguir à métrica de vaidade. Individual. As impressões e as views não são inúteis, mas para «vender mais» não dizem se estás mais perto. O tempo só começa quando carregas em «Começar».',
- 'live-plano':'A atividade «para guardar» (5 min). Um telemóvel por grupo, o mesmo da persona: a marca mantém-se. Objetivo SMART, dois canais com o papel de cada um e o KPI. É a base do workshop. O tempo só começa quando carregas em «Começar».',
- 'live-abt':'Prática (3 min), logo a seguir ao E, MAS, POR ISSO. Individual: cada telemóvel recebe um produto. Abre a votação e revela. Comenta: o MAS tem mesmo um conflito? O tempo só começa quando carregas em «Começar».',
+ 'live-plano':'Prática individual: cada telemóvel recebe uma marca e escreve um objetivo SMART, dois canais com o papel de cada um e o KPI. Comenta dois ou três planos no ecrã. O tempo só começa quando carregas em «Começar».', 'live-abt':'Prática (3 min), logo a seguir ao E, MAS, POR ISSO. Individual: cada telemóvel recebe um produto. Abre a votação e revela. Comenta: o MAS tem mesmo um conflito? O tempo só começa quando carregas em «Começar».',
  'live-spine':'Prática (2 min), logo a seguir ao exemplo da Story Spine. Individual: ordenar as 8 frases. Revela e lê a história em voz alta. O tempo só começa quando carregas em «Começar».',
  'live-spinew':'Prática em grupo (8 min), com o telemóvel do grupo: a Story Spine da marca do grupo. Vai servir no workshop. Abre a votação no fim e lê a vencedora. O tempo só começa quando carregas em «Começar».',
- 'live-gancho':'Prática (3 min), logo a seguir aos 5 tipos de gancho. Um gancho por grupo, para a sua marca. Abre a votação e revela. Comenta com a checklist: curto, curiosidade, concreto. O tempo só começa quando carregas em «Começar».',
- 'live-slop':'Prática (2 min), logo a seguir ao que falta ao slop. Depois de cada revelação, pergunta: que sinal é este? Teste rápido: troca o nome da loja; se a frase continuar a funcionar, é slop. O tempo só começa quando carregas em «Começar».',
+ 'live-gancho':'Prática individual, logo a seguir aos 5 tipos de gancho. Cada telemóvel escreve um gancho para a marca que lhe calhou; a marca aparece por cima de cada resposta. Abre a votação e revela o vencedor. Comenta: que tipo de gancho ganhou?', 'live-slop':'Prática (2 min), logo a seguir ao que falta ao slop. Depois de cada revelação, pergunta: que sinal é este? Teste rápido: troca o nome da loja; se a frase continuar a funcionar, é slop. O tempo só começa quando carregas em «Começar».',
  'live-rgpd':'Prática (2 min), logo a seguir às regras de RGPD e publicidade. Seis situações rápidas. Lê a explicação de cada uma em voz alta. O tempo só começa quando carregas em «Começar».',
- 'live-ranking':'Ranking antes do workshop, com os pontos de todas as atividades feitas até aqui. Primeiro aparece a lista do 4.º lugar para baixo e o pódio fica escondido; carrega em «Revelar pódio» e sobem o 3.º, o 2.º e o 1.º, com confetes. Nos telemóveis, cada pessoa vê o seu lugar e os pontos. Lembra que o workshop e o quiz final ainda dão pontos.',
- 'live-quiz':'Quiz final (5 min). 12 perguntas sobre toda a aula, 20 segundos cada; respostas rápidas valem mais. No fim aparece o ranking com os pontos de todas as atividades. O tempo só começa quando carregas em «Começar».'
+ 'live-equipas':'Depois de formar os grupos: cada grupo escolhe um responsável, que escreve o nome da equipa no telemóvel (os outros não fazem nada aqui). As equipas aparecem no ecrã. Na votação final, só estes telemóveis contam: cada equipa apresenta e as outras votam. «Apagar equipas» limpa tudo se for preciso recomeçar.',
+ 'live-entrega':'No fim da criação, o responsável de cada equipa envia no telemóvel tudo o que a equipa fez (persona, objetivo SMART, Story Spine, gancho, canal e peça, KPI). Pode reenviar até ao fim. No ecrã vês quem já entregou.',
+ 'live-avaliacao':'Avaliação do trabalho, feita por ti com a grelha (de 1 a 5 em cada critério). Toca numa equipa: à esquerda vês tudo o que entregou, à direita os seis critérios com a descrição do 1, do 3 e do 5. As ajudas automáticas (objetivo SMART, gancho, número de frases da Story Spine, campos preenchidos) só servem para orientar: a nota é tua, por isso um bom trabalho nunca é penalizado por uma regra automática. Podes avaliar enquanto as equipas ensaiam e depois mostrar «Ver todas as avaliações».',
+ 'live-resultado':'Resultado final do workshop: junta a avaliação do trabalho e a média da votação da turma (as duas de 1 a 5) e faz a média. Primeiro aparece a tabela sem o total; «Revelar vencedor» ordena as equipas e mostra quem ganhou, com confetes.',
+ 'live-ranking':'Pódio final, depois do quiz: soma os pontos de todas as atividades individuais e do quiz. Primeiro aparece a lista do 4.º lugar para baixo e o pódio fica escondido; carrega em «Revelar pódio» e sobem o 3.º, o 2.º e o 1.º, com confetes. Nos telemóveis, cada pessoa vê o seu lugar. A seguir vem o workshop, em grupo e com votação à parte, que não conta para estes pontos.', 'live-quiz':'Quiz final (5 min). 12 perguntas sobre toda a aula, 20 segundos cada; respostas rápidas valem mais. No fim aparece o ranking com os pontos de todas as atividades. O tempo só começa quando carregas em «Começar».'
 });
 
 /* ================= HISTÓRIAS NOS CONTEÚDOS ================= */
@@ -4929,7 +5022,7 @@ S('ct-duo','ink','Conteúdos','A mascote que morreu',FC+' · Fonte: NPR, 13 e 26
  </div>
  <div data-step data-a="pop" style="${abs(128,590,'width:560px')}"><div class="k">O resultado</div><div style="font:800 96px/1 Syne;color:var(--acc);margin-top:16px;letter-spacing:-.03em">50,9 mil<br>milhões</div><div class="txt mut" style="margin-top:12px;font-size:30px">de XP feitos pelos utilizadores</div></div>`);
 
-const SER=[['Seg','Reel','Gancho','Encontrámos 40 jogos de Mega Drive num sótão em Braga.','var(--g2)'],['Ter','Stories','Bastidores','A limpar e a testar, um a um.','var(--g4)'],['Qua','Carrossel','Rutura','Metade não liga. Quantos se salvam?','var(--g6)'],['Qui','Reel','Clímax','Salvámos 22. Sábado às 18h, na loja.','var(--g1)'],['Sex','Stories','Comunidade','Mostrem-nos o vosso primeiro jogo.','var(--g3)']];
+const SER=[['Seg','Reel','Gancho','Encontrámos 40 jogos de Mega Drive num sótão em Braga.','var(--g2)'],['Ter','Stories','Bastidores','A limpar e a testar, um a um.','var(--g4)'],['Qua','Carrossel','Rutura','Metade não liga. Como se testa um jogo antigo?','var(--g6)'],['Qui','Reel','Clímax','Salvámos 22. Sábado às 18h, na loja.','var(--g1)'],['Sex','Stories','Comunidade','Mostrem-nos o vosso primeiro jogo.','var(--g3)']];
 const SERX=[166,499,832,1165,1498],SERY=[380,320,250,90,200];
 const SERP=crP([[0,420],...SERX.map((x,i)=>[x,SERY[i]]),[1664,230]]);
 S('ct-serie','ink','Conteúdos','Uma semana, uma história',FC+' · Exemplo fictício',`
@@ -4940,10 +5033,10 @@ S('ct-serie','ink','Conteúdos','Uma semana, uma história',FC+' · Exemplo fict
   ${SER.map((s,i)=>`<div data-step data-a="up" style="${abs(0,0,'width:1664px;height:720px;pointer-events:none')}">
    <div style="${abs(SERX[i]-2,SERY[i]+18,`width:0;height:${458-SERY[i]}px;border-left:3px dashed var(--line)`)}"></div>
    <div style="${abs(SERX[i]-16,SERY[i]-16,`width:32px;height:32px;border-radius:50%;background:${s[4]};box-shadow:0 0 0 8px color-mix(in srgb,${s[4]} 25%,transparent)`)}"></div>
-   <div class="card" style="${abs(SERX[i]-150,466,'width:300px;height:216px;padding:20px 24px')}"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font:800 34px Syne">${s[0]}</b><span style="font:700 18px 'DM Sans';letter-spacing:.1em;text-transform:uppercase;color:var(--mut)">${s[1]}</span></div><div class="k" style="color:${s[4]};margin-top:16px;font-size:20px">${s[2]}</div><div style="font:500 25px/1.3 'DM Sans';margin-top:10px">${s[3]}</div></div>
+   <div class="card" data-morph="d${i}" style="${abs(SERX[i]-150,466,'width:300px;height:216px;padding:20px 24px')}"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font:800 34px Syne">${s[0]}</b><span style="font:700 18px 'DM Sans';letter-spacing:.1em;text-transform:uppercase;color:var(--mut)">${s[1]}</span></div><div class="k" style="color:${s[4]};margin-top:16px;font-size:20px">${s[2]}</div><div style="font:500 25px/1.3 'DM Sans';margin-top:10px">${s[3]}</div></div>
   </div>`).join('')}
  </div>`,
- {init:(r,tl)=>{const p=q('#scv',r);if(!p)return;const L=p.getTotalLength();tl.fromTo(p,{strokeDasharray:L,strokeDashoffset:L},{strokeDashoffset:0,duration:2,ease:'power2.inOut'},.5)}});
+ {morphFrom:'calendario',init:(r,tl)=>{const p=q('#scv',r);if(!p)return;const L=p.getTotalLength();tl.fromTo(p,{strokeDasharray:L,strokeDashoffset:L},{strokeDashoffset:0,duration:2,ease:'power2.inOut'},.5)}});
 
 /* storyboard em quatro planos */
 const SB=[['Gancho','0–2 s','Este Game Boy já teve 3 donos','Grande plano do Game Boy',`<g transform="translate(55 100) scale(.56)">${GBI}</g>`,'var(--g1)'],
@@ -4993,7 +5086,7 @@ Object.assign(N4,{
  'd3':'Início das Histórias: porque funcionam, do facto à história, ingredientes, Spotify Wrapped, herói e guia, Story Spine e arco, ganchos e práticas. A seguir, as histórias passam para os conteúdos.',
  'd4':'Início de Histórias nos conteúdos, o coração prático da aula: anúncio vs. história, mostrar e não dizer, seis formatos, caso Duolingo, o plano de conteúdos e a semana em episódios, canais e reels, carrossel e legenda, prática no telemóvel e as três perguntas.',
  'd-ia':'Início do bloco de IA: o pedido, os dois textos e a votação, os seis sinais, prática, os cinco movimentos e a checklist.',
- 'd5':'Início do workshop: brief, criação, ensaio e palco. Os grupos já existem desde as práticas anteriores.',
+ 'd5':'Início do workshop, a única parte em grupo. Forma agora grupos de 3 ou 4; cada grupo escolhe um responsável, que regista a equipa no telemóvel no slide seguinte. Depois: brief, criação, ensaio e palco, com votação do melhor no fim (à parte dos pontos individuais).',
  'marcas-conversa':'Duas marcas que falam como pessoas e que o público jovem segue. Duolingo: a coruja Duo é a cara da marca no TikTok, com memes e piadas sobre quem falta às lições (cerca de 18,2 milhões de seguidores, segundo a CreatorDB, dados de 30 de setembro de 2026). Ryanair: no TikTok, um avião com olhos e boca brinca com as taxas da própria companhia e com os passageiros; segundo a DMNews (abril de 2026), um vídeo sobre a taxa da bagagem juntou cerca de 47 mil comentários. O terceiro cartão é para a turma: pede 2 ou 3 marcas que sigam porque «falam como um amigo» e escreve-as no quadro.',
  'ct-antes':'Mostra só o post da esquerda e pergunta: «Isto fazia-vos parar?». Depois avança para o da direita. É o mesmo produto, a mesma loja. A diferença é que o segundo tem alguém, um problema e uma mudança. É a ideia de toda esta parte: cada publicação é uma pequena história.',
  'ct-mostra':'Em cada linha, mostra primeiro o «dizer» e pede à turma que o transforme em algo que se veja ou se imagine. Só depois revela o «mostrar». A regra: troca adjetivos («de confiança», «o melhor», «rápido») por um facto concreto, um número ou uma cena.',
@@ -5103,7 +5196,7 @@ const N2={
  'canais':'Mapa rápido dos cinco canais que vamos explorar nos próximos slides. Pede à turma que diga em que canal consome mais histórias (TikTok, Stories, YouTube) e em que canal tem mais dificuldade em contá-las. As respostas ajudam-te a decidir onde te demoras. Os slides seguintes entram em detalhe: TikTok/Reels e carrossel.',
  'd5':'Início do workshop (2:25). Os grupos já existem desde a atividade 01. Cada grupo precisa de papel e canetas ou de um documento partilhado, e de um telemóvel para o cronómetro.',
  'wk-regras':'Explica o fluxo em 1 minuto. 5 min de brief, 12 de criação, 3 de ensaio e 10 de palco. Os papéis ajudam a repartir o trabalho; em grupos de 3, o estratega e o guionista juntam-se.',
- 'wk-dados':'Os grupos podem manter a marca e a persona das atividades 01 e 02 e lançar só o conflito e o canal, ou lançar tudo para um desafio novo. Cada grupo só pode passar uma coluna. Marcas e personagens fictícias. Duração: 5 minutos.',
+ 'wk-dados':'Cada grupo pode usar a marca e a persona que um dos membros criou nas práticas e lançar só o conflito e o canal, ou lançar tudo para um desafio novo. Cada grupo só pode passar uma coluna. Marcas e personagens fictícias. Duração: 5 minutos.',
  'wk-entregaveis':'Deixa este slide projetado durante a criação (12 min), com o cronómetro. Os quatro entregáveis juntam as duas partes da aula: persona e objetivo (Parte 1), Story Spine e gancho (Parte 2), canal e KPI (as duas). Aos 9 minutos, avisa que faltam 3.',
  'wk-criterios':'Mostra os seis critérios antes do pitch. Os dois primeiros avaliam a estratégia, os outros a história e o canal. O responsável de cada grupo vota no telemóvel, de 1 a 5 em cada critério, e ninguém vota no próprio grupo. A média de cada grupo aparece no slide da votação.',
  'wk-palco':'Regras do palco (10 min): até 5 grupos × 2 minutos. Primeiro a estratégia (1 min), depois a história (1 min). O relógio e a votação fazem-se no slide seguinte. Deixa 15–20 segundos de feedback com as três frases.',
@@ -5133,9 +5226,10 @@ const ORDER=[
  ['Pausa',['pausa']],
  ['Histórias',['d3','statement','forca-atencao','forca-emocao','forca-memoria','facto-historia','ing-personagem','ing-conflito','ing-transformacao','caso-wrapped','wrapped-3','heroi-papeis','heroi-guia','story-spine','arco','spine-ads','live-spine','gancho-1','gancho-2','gancho-3','gancho-4','gancho-5','ganchos-fim','live-gancho']],
  ['Histórias nos conteúdos',['d4','ct-antes','ct-mostra','ct-formatos','ct-duo','calendario','ct-serie','reels','carrossel','ct-legenda','live-post','ct-fim']],
- ['Ética e RGPD',['etica','rg-consent','rg-final','rg-direitos','rg-coimas','pub-etiqueta','ia-assinala','live-rgpd','live-ranking']],
- ['Workshop',['d5','wk-regras','wk-dados','wk-entregaveis','wk-criterios','wk-palco','live-votacao']],
- ['Fecho',['live-quiz','takeaways','checklist','fecho']]
+ ['Ética e RGPD',['etica','rg-consent','rg-final','rg-direitos','rg-coimas','pub-etiqueta','ia-assinala','live-rgpd']],,
+ ['Quiz e pódio',['live-quiz','live-ranking']],
+ ['Workshop',['d5','wk-regras','live-equipas','wk-dados','wk-entregaveis','live-entrega','wk-criterios','wk-palco','live-votacao','live-avaliacao','live-resultado']],
+ ['Fecho',['takeaways','checklist','fecho']]
 ];
 
 const BYID={};SLIDES.forEach(s=>BYID[s.id]=s);

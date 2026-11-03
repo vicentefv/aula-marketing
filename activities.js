@@ -24,7 +24,7 @@ window.ACT={
    {k:'cat',l:'a marca é (a categoria)',ph:'o ginásio'},{k:'dif',l:'que (a diferença)',ph:'abre às 6h e não pede fidelização'}],
   show:'Para {pub} que {nec}, {A} é {cat} que {dif}.'},
 
- persona:{type:'form',t:'Cria a persona',q:'Um telemóvel por grupo. A persona da marca que vos calhou.',lim:300,assign:'marcas',group:true,
+ persona:{type:'form',t:'Cria a persona',q:'A persona da marca que te calhou.',lim:300,assign:'marcas',
   fields:[{k:'nome',l:'Nome e idade',ph:'Tiago, 22 anos'},{k:'dia',l:'Como é o dia desta pessoa?',ph:'estuda de manhã, trabalha num café à tarde'},
    {k:'obj',l:'O que quer conseguir?',ph:'poupar para ir de Erasmus'},{k:'fru',l:'O que lhe causa frustração?',ph:'perder tempo à procura de coisas baratas'},
    {k:'onl',l:'Onde passa tempo online e em quem confia?',ph:'TikTok; confia em amigos e em creators pequenos'}],
@@ -52,7 +52,7 @@ window.ACT={
    {t:'Taxa de conversão do site',b:'u'},{t:'Visualizações de um Reel',b:'v'},{t:'Cliques no link para a loja',b:'u'},
    {t:'Clientes que voltam a comprar',b:'u'},{t:'Impressões de um anúncio',b:'v'}]},
 
- plano:{type:'form',t:'Mini plano',q:'Um telemóvel por grupo, para a vossa marca. Guardem: é a base do workshop.',lim:300,assign:'marcas',group:true,check:'smart',checkField:'obj',
+ plano:{type:'form',t:'Mini plano',q:'Para a marca que te calhou. Guarda: pode servir no workshop.',lim:300,assign:'marcas',check:'smart',checkField:'obj',
   fields:[{k:'obj',l:'Objetivo SMART',ph:'Vender 40 jogos online até ao fim do mês',ta:true},{k:'c1',l:'Canal 1 e o papel dele',ph:'TikTok: dar a conhecer a loja'},
    {k:'c2',l:'Canal 2 e o papel dele',ph:'Newsletter: avisar dos jogos novos'},{k:'kpi',l:'KPI a acompanhar',ph:'compras vindas do TikTok'}],
   show:'<b>{A}</b><br>Objetivo: {obj}<br>Canal 1: {c1}<br>Canal 2: {c2}<br>KPI: {kpi}'},
@@ -68,7 +68,7 @@ window.ACT={
   fields:SPINE_LAB.map((l,i)=>({k:'s'+i,l,ph:''})),
   show:'<b>{A}</b><br>'+SPINE_LAB.map((l,i)=>l+' {s'+i+'}').join('<br>')},
 
- gancho:{type:'form',t:'O melhor gancho',q:'A frase que abre o vídeo da vossa marca.',lim:120,assign:'marcas',vote:true,check:'hook',
+ gancho:{type:'form',t:'O melhor gancho',q:'A frase que abre o vídeo da tua marca.',lim:120,assign:'marcas',vote:true,check:'hook',
   fields:[{k:'t',l:'O gancho',ph:'Ninguém te conta isto sobre o pão de ontem…'}],show:'<b>{A}</b><br>«{t}»'},
 
  post:{type:'form',t:'Conta-o como história',q:'Reescreve o post que te calhou como uma pequena história.',lim:180,assign:'posts',vote:true,check:'hook',checkField:'g',
@@ -79,7 +79,11 @@ window.ACT={
  slop:{type:'quiz',t:'Slop ou não?',lim:15},
  rgpd:{type:'quiz',t:'Pode ou não pode?',lim:15},
  quiz:{type:'quiz',t:'Quiz final',lim:20},
- ranking:{type:'rank',t:'Ranking'},
+ ranking:{type:'rank',t:'Pódio final'},
+ equipas:{type:'team',t:'Equipas do workshop'},
+ entrega:{type:'deliver',t:'Entrega do workshop',fields:[{k:'persona',l:'Persona (quem é e que problema tem)',ph:'Diogo, 20 anos, quer experimentar jogos sem gastar muito',ta:true},{k:'obj',l:'Objetivo SMART',ph:'300 estudantes no torneio de sexta até 15 de dezembro',ta:true},{k:'spine',l:'Story Spine (uma frase por linha)',ph:'Era uma vez…\nTodos os dias…\nAté que um dia…',ta:true,big:true},{k:'gancho',l:'Gancho (a primeira frase)',ph:'Encontrámos 40 jogos num sótão.'},{k:'canal',l:'Canal e peça',ph:'Reel de 20 segundos no Instagram'},{k:'kpi',l:'KPI',ph:'inscrições no torneio'}]},
+ avaliacao:{type:'evalw',t:'Avaliação do trabalho'},
+ resultado:{type:'result',t:'Resultado do workshop'},
 
  votacao:{type:'rate',t:'Votação dos pitches',pitch:120,
   crit:[['Persona','Percebe-se para quem é.'],['Objetivo e KPI','É claro e mensurável.'],['História','Há conflito e mudança.'],['Gancho','Pararia o scroll.'],['Canal','Respeita o formato.'],['Originalidade','Foge ao cliché.']]}

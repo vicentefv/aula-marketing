@@ -59,6 +59,20 @@ const head=()=>'<p class="sub" style="text-transform:uppercase;letter-spacing:.1
 
 /* ---------- vistas por tipo ---------- */
 const VIEWS={
+deliver:{render(){const d=D(),TM=Object.values(players).some(x=>x.team);
+  if(TM&&!(me&&me.team)){setMain(head()+'<div class="center rise"><div class="bigdot" style="background:'+(me?me.color:'var(--violet)')+'"></div><h2>O responsável envia</h2><p class="sub">Ajuda a tua equipa a preencher no telemóvel do responsável.</p></div>');return}
+  const mine=(local.ent)||{};
+  setMain(head()+'<h2 style="font-size:clamp(20px,5.4vw,26px)">'+(me&&me.team?esc(me.team)+': ':'')+'enviem o vosso trabalho</h2>'+d.fields.map(f=>'<label class="sub" style="display:block;margin:10px 0 4px;color:var(--ink);font-weight:700">'+esc(f.l)+'</label>'+(f.ta?'<textarea class="ta" data-k="'+f.k+'" maxlength="900" placeholder="'+esc('Ex.: '+f.ph)+'" style="min-height:'+(f.big?190:80)+'px"></textarea>':'<input class="fi" data-k="'+f.k+'" maxlength="200" placeholder="'+esc('Ex.: '+f.ph)+'">')).join('')+'<button class="btn" id="sd" style="margin-top:14px;width:100%">Enviar trabalho</button><p class="sub" id="ms"></p>');
+  main.querySelectorAll('[data-k]').forEach(el=>{el.value=mine[el.dataset.k]||'';el.oninput=()=>{local.ent=local.ent||{};local.ent[el.dataset.k]=el.value}});
+  $('#sd').onclick=()=>{const o={};main.querySelectorAll('[data-k]').forEach(el=>{const v=el.value.trim();if(v)o[el.dataset.k]=v.slice(0,900)});if(!Object.keys(o).length){$('#ms').textContent='Preenche pelo menos um campo.';return}if(Object.values(o).some(isBad)){$('#ms').textContent='Há palavras não permitidas.';vib(40);return}STORE.set(P+'/entrega/'+pid,{f:o,at:Date.now()});vib(20);$('#ms').textContent='Enviado. Podem corrigir e reenviar.'}}},
+evalw:{render(){setMain(head()+'<div class="center rise"><div class="bigdot" style="background:'+(me?me.color:'var(--violet)')+'"></div><h2>Avaliação no ecrã</h2><p class="sub">Os trabalhos estão a ser avaliados com a grelha.</p></div>')}},
+result:{render(){setMain(head()+'<div class="center rise"><div class="bigdot" style="background:'+(me?me.color:'var(--violet)')+'"></div><h2>Olha para o ecrã</h2><p class="sub">Avaliação do trabalho + votação da turma.</p></div>')}},
+team:{render(){const t=me&&me.team;
+  if(t){setMain(head()+'<div class="center rise"><div class="bigdot" style="background:'+me.color+'"></div><h2>'+esc(t)+'</h2><p class="sub">És o responsável desta equipa. No fim, é neste telemóvel que a equipa vota.</p><button class="btn" id="tx" style="margin-top:14px">Mudar o nome</button></div>');$('#tx').onclick=()=>{STORE.set(P+'/players/'+pid+'/team',null)};return}
+  setMain(head()+'<h2>És o responsável da tua equipa?</h2><p class="sub">Só o responsável escreve aqui. Os outros podem ignorar.</p><div class="join" style="margin-top:12px"><input id="tn" maxlength="24" placeholder="Nome da equipa"><button class="btn" id="ts">Registar</button></div><p class="sub" id="ms"></p>');
+  const go=()=>{const v=$('#tn').value.trim();if(!v)return;if(isBad(v)){$('#ms').textContent='Escolhe outro nome.';vib(40);return}STORE.set(P+'/players/'+pid+'/team',v.slice(0,24));vib(20)};
+  $('#ts').onclick=go;$('#tn').addEventListener('keydown',e=>{if(e.key==='Enter')go()})},
+ update(){const t=!!(me&&me.team);if(t!==!!local.tm){local.tm=t;VIEWS.team.render()}}},
 rank:{render(){const ps=Object.keys(players).map(k=>({id:k,c:players[k].color,t:Object.values(players[k].pts||{}).reduce((a,b)=>a+(+b||0),0)})).sort((a,b)=>b.t-a.t);const i=ps.findIndex(p=>p.id===pid);
   const rv=act.phase==='rev';setMain(head()+'<div class="center rise"><div class="bigdot" style="background:'+(me?me.color:'var(--violet)')+'"></div><h2>'+(rv&&i>=0?(i+1)+'.º lugar':'Olha para o ecrã')+'</h2><p class="sub">'+(i>=0?ps[i].t+' pontos'+(rv?' · de '+ps.length:''):'')+'</p></div>')},
  update(){VIEWS.rank.render()}},
@@ -110,19 +124,20 @@ order:{render(){
   $('#sd').onclick=()=>{local.order=[...$('#sl').children].map(n=>+n.dataset.i);STORE.set(P+'/ans/'+curKey+'/'+pid,{o:local.order.join(',')});vib(25)}},
  update(){const m=$('#ms');if(m&&act.phase==='in')m.textContent=act.lim&&(STORE.now()-act.t0)/1000>=act.lim?'Acabou o tempo. A tua ordem foi enviada.':ans[pid]?'Enviado. Podes reordenar e reenviar até acabar o tempo.':''}},
 
-rate:{render(){const d=D(),N=d.crit.length,cur=act.cur,tm=cur&&players[cur];
+rate:{render(){const d=D(),N=d.crit.length,cur=act.cur,tm=cur&&players[cur],TM=Object.values(players).some(x=>x.team),nm=x=>x.team||x.name;
   const msg=(h,s)=>setMain(head()+'<div class="center rise"><div class="bigdot" style="background:'+(tm?tm.color:(me?me.color:'var(--violet)'))+'"></div><h2>'+h+'</h2>'+(s?'<p class="sub">'+s+'</p>':'')+'</div>');
   if(act.phase==='end'){msg('Resultados no ecrã','Obrigado pelos votos.');return}
   if(!tm||act.phase==='in'){msg('Aguarda a próxima equipa','Olha para o ecrã.');return}
   if(cur===pid){msg('É a vossa vez!','Não votam na vossa equipa. Apresentem com calma.');return}
-  if(act.phase==='pitch'){msg(esc(tm.name)+' está a apresentar','Prepara-te para votar.');return}
+  if(TM&&!(me&&me.team)){msg(esc(nm(tm))+' está a apresentar','O responsável da tua equipa é quem vota.');return}
+  if(act.phase==='pitch'){msg(esc(nm(tm))+' está a apresentar','Prepara-te para votar.');return}
   if(act.phase==='rev'){msg('Média no ecrã','Já está tudo.');return}
   local.rv=local.rv||{};if(!local.rv[cur])local.rv[cur]=Array(N).fill(0);
-  setMain(head()+'<h2 style="font-size:clamp(20px,5.4vw,26px)">Vota em '+esc(tm.name)+'</h2><p class="sub" style="margin-bottom:8px">De 1 (fraco) a 5 (excelente) em cada critério.</p>'+d.crit.map((c,i)=>'<div class="rrow" data-i="'+i+'"><div class="rl2"><b>'+esc(c[0])+'</b><small>'+esc(c[1])+'</small></div><div class="rb">'+[1,2,3,4,5].map(n=>'<button class="rn" data-n="'+n+'">'+n+'</button>').join('')+'</div></div>').join('')+'<button class="btn" id="rs" style="margin-top:16px;width:100%">Enviar voto</button><p class="sub" id="ms"></p>');
+  setMain(head()+'<h2 style="font-size:clamp(20px,5.4vw,26px)">Vota em '+esc(nm(tm))+'</h2><p class="sub" style="margin-bottom:8px">De 1 (fraco) a 5 (excelente) em cada critério.</p>'+d.crit.map((c,i)=>'<div class="rrow" data-i="'+i+'"><div class="rl2"><b>'+esc(c[0])+'</b><small>'+esc(c[1])+'</small></div><div class="rb">'+[1,2,3,4,5].map(n=>'<button class="rn" data-n="'+n+'">'+n+'</button>').join('')+'</div></div>').join('')+'<button class="btn" id="rs" style="margin-top:16px;width:100%">Enviar voto</button><p class="sub" id="ms"></p>');
   main.onclick=e=>{const b=e.target.closest('.rn');if(!b||act.phase!=='vote')return;const row=b.closest('.rrow');local.rv[cur][+row.dataset.i]=+b.dataset.n;vib();paint()};
   const rs=$('#rs');if(rs)rs.onclick=()=>{const v=local.rv[cur];if(v.some(x=>!x)){$('#ms').textContent='Falta pontuar todos os critérios.';vib(40);return}STORE.set(P+'/ans/'+curKey+'/'+pid+'/r/'+cur,v.join(','));vib(20);$('#ms').textContent='Voto enviado. Podes alterar até fechar.'};
   paint()},
- update(){if(act.phase!=='vote'||!act.cur||act.cur===pid)return;const N=D().crit.length;local.rv=local.rv||{};const mine=((ans[pid]||{}).r||{})[act.cur];
+ update(){if(act.phase!=='vote'||!act.cur||act.cur===pid)return;if(Object.values(players).some(x=>x.team)&&!(me&&me.team))return;const N=D().crit.length;local.rv=local.rv||{};const mine=((ans[pid]||{}).r||{})[act.cur];
   if(mine&&!(local.rv[act.cur]&&local.rv[act.cur].some(x=>x))){local.rv[act.cur]=String(mine).split(',').map(Number);paint()}
   const m=$('#ms');if(m&&mine&&!m.textContent)m.textContent='Voto enviado. Podes alterar até fechar.'}},
 

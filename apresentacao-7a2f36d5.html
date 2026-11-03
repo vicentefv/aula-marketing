@@ -3139,24 +3139,26 @@ const TR={
   m.set(b,{scaleX:0}).to(b,{scaleX:1.01,duration:.6,ease:'expo.inOut'}).add(swap).to(b,{scaleX:0,duration:.75,ease:'expo.inOut'},'+=.05')},
  zoom(m,T,dir,swap){const s=slidesEl;m.set(s,{transformOrigin:'50% 50%'}).to(s,{scale:dir>0?1.2:.8,opacity:0,duration:.5,ease:'power2.in'}).add(swap).fromTo(s,{scale:dir>0?.82:1.18,opacity:0},{scale:1,opacity:1,duration:.75,ease:'power3.out'})}
 };
-/* metamorfose: os elementos com o mesmo data-morph viajam de um slide para o seguinte */
-function goMorph(n){
+/* deslizar com metamorfose: os dois slides deslizam lado a lado (como arrastar com o dedo)
+   e os elementos com o mesmo data-morph viajam de um para o outro */
+function goMorph(n,dir){
  const R=e=>{const r=e.getBoundingClientRect();return {left:(r.left-OX)/SC,top:(r.top-OY)/SC,width:r.width/SC,height:r.height/SC}};
- const old=SL[cur].el,src={};$$('[data-morph]',old).forEach(e=>src[e.dataset.morph]={r:R(e),el:e});
+ const oi=cur,old=SL[oi].el,src={};$$('[data-morph]',old).forEach(e=>src[e.dataset.morph]={r:R(e),el:e});
  const layer=document.createElement('div');layer.style.cssText='position:absolute;left:0;top:0;width:1920px;height:1080px;z-index:20;pointer-events:none';stage.appendChild(layer);
- const C={};for(const k in src){const c=src[k].el.cloneNode(true);c.removeAttribute('data-morph');const r=src[k].r;Object.assign(c.style,{position:'absolute',left:r.left+'px',top:r.top+'px',width:r.width+'px',height:r.height+'px',right:'auto',bottom:'auto',margin:'0',boxSizing:'border-box',opacity:'1',visibility:'visible',transform:'none',overflow:'hidden'});layer.appendChild(c);C[k]=c}
- $$('[data-morph]',old).forEach(e=>e.style.opacity=0);
- mtl=gsap.timeline();
- mtl.to([...old.children],{autoAlpha:0,x:-160,duration:.45,ease:'power2.in'},0);
- mtl.add(()=>{hide(cur);show(n,{dir:1});while(stepIdx<steps.length)reveal(steps[stepIdx++],true);
-  const root=SL[n].el,T=$$('[data-morph]',root);
-  if(SL[n].morphRun){T.forEach(t=>t.style.opacity=0);SL[n].morphRun({C,root,R,layer,T});tl.play();return}
-  const tm=gsap.timeline({onComplete:()=>{layer.remove();T.forEach(t=>t.style.opacity='')}});
-  T.forEach((t,i)=>{const c=C[t.dataset.morph];if(!c)return;t.style.opacity=0;const r=R(t),cs=getComputedStyle(t);
-   {const m=getComputedStyle(c).backgroundColor.match(/[\d.]+/g),n=cs.backgroundColor.match(/[\d.]+/g);if(m&&n){const a=m[3]!=null?+m[3]:1;if(a<.35)c.style.backgroundColor=`rgba(${n[0]},${n[1]},${n[2]},${a})`}}
-   const st=.1+i*.09;tm.to(c,{backgroundColor:cs.backgroundColor,borderColor:cs.borderColor,boxShadow:cs.boxShadow,duration:.35,ease:'power1.out'},st).to(c.children,{opacity:0,duration:.4,ease:'power1.in'},st+.25).to(c,{left:r.left,top:r.top,width:r.width,height:r.height,color:cs.color,borderRadius:cs.borderRadius,duration:1.15,ease:'power3.inOut'},st)
-     .to(c,{opacity:0,duration:.35},'>-.15').to(t,{opacity:1,duration:.35},'<')});
-  tl.play()},.45);
+ const C={};for(const k in src){const c=src[k].el.cloneNode(true);c.removeAttribute('data-morph');const r=src[k].r;Object.assign(c.style,{position:'absolute',left:r.left+'px',top:r.top+'px',width:r.width+'px',height:r.height+'px',right:'auto',bottom:'auto',margin:'0',boxSizing:'border-box',opacity:'1',visibility:'visible',transform:'none',overflow:'hidden'});layer.appendChild(c);C[k]=c;src[k].el.style.opacity=0}
+ const ostep=stepIdx;
+ show(n,{full:true,dir});steps=[];stepIdx=0;old.style.display='block';
+ const root=SL[n].el,T=$$('[data-morph]',root),D=1.25,E='power2.inOut',W=1920*dir;
+ const tgt={};T.forEach(t=>{tgt[t.dataset.morph]={el:t,r:R(t),cs:getComputedStyle(t)};t.style.opacity=0});
+ mtl=gsap.timeline({onComplete:()=>{gsap.set([root,old],{clearProps:'transform'});hide(oi);layer.remove();T.forEach(t=>t.style.opacity='')}});
+ mtl.fromTo(root,{x:W},{x:0,duration:D,ease:E},0).fromTo(old,{x:0},{x:-W,duration:D,ease:E},0);
+ Object.keys(C).forEach((k,i)=>{const c=C[k],t=tgt[k];if(!t){mtl.to(c,{x:-W,duration:D,ease:E},0);return}
+  const st=i*.04;
+  {const m=getComputedStyle(c).backgroundColor.match(/[\d.]+/g),q2=t.cs.backgroundColor.match(/[\d.]+/g);if(m&&q2){const a=m[3]!=null?+m[3]:1;if(a<.35)c.style.backgroundColor=`rgba(${q2[0]},${q2[1]},${q2[2]},${Math.max(a,.0)})`}}
+  mtl.to(c,{backgroundColor:t.cs.backgroundColor,borderColor:t.cs.borderColor,boxShadow:t.cs.boxShadow,duration:.3,ease:'power1.out'},st)
+   .to(c.children,{opacity:0,duration:.35},st+.35)
+   .to(c,{left:t.r.left,top:t.r.top,width:t.r.width,height:t.r.height,borderRadius:t.cs.borderRadius,duration:D,ease:E},st)
+   .to(t.el,{opacity:1,duration:.3},st+D-.1).to(c,{opacity:0,duration:.3},st+D-.1)});
 }
 function go(n,dir){
  if(mtl&&mtl.isActive())mtl.progress(1);
@@ -3164,7 +3166,8 @@ function go(n,dir){
  dir=dir||(n>cur?1:-1);const full=dir<0;
  if(cur<0||RM){if(cur>=0)hide(cur);show(n,{full:RM||full});if(!RM)tl.play();return}
  if(isCont(cur,n))return goCont(n,dir,full);
- if(dir>0&&SL[n].morphFrom&&SL[cur]&&SL[cur].id===SL[n].morphFrom)return goMorph(n);
+ if(dir>0&&SL[n].morphFrom&&SL[cur]&&SL[cur].id===SL[n].morphFrom)return goMorph(n,1);
+ if(dir<0&&SL[cur]&&SL[cur].morphFrom&&SL[cur].morphFrom===SL[n].id)return goMorph(n,-1);
  const T=TH[SL[n].th],w=$('#wipe'),kind=TRL[n%TRL.length];
  w.style.visibility='visible';
  mtl=gsap.timeline({onComplete:()=>{w.style.visibility='hidden';$$('#wipe>div').forEach(d=>d.style.display='none');gsap.set($$('#wipe i,#wp,#wc'),{clearProps:'all'});gsap.set(slidesEl,{clearProps:'all'})}});

@@ -203,6 +203,27 @@ mark.s::after{content:attr(data-n);display:inline-block;vertical-align:top;font:
 /* logótipos de marcas */
 .lgc{display:inline-flex;align-items:center;justify-content:center;background:#fff;border-radius:16px;padding:10px 18px;box-shadow:0 6px 20px rgba(0,0,0,.12);flex:none}
 .lgc img{display:block;width:auto}
+.sa-win{transform-origin:50% 50%;border-radius:26px;overflow:hidden;background:#0B110E;box-shadow:0 50px 100px -30px rgba(0,0,0,.65),0 0 0 1px rgba(255,255,255,.12);pointer-events:auto}
+.sa-bar{height:46px;display:flex;align-items:center;gap:9px;padding:0 18px;background:#18211C;color:#DDE8E1;font:700 18px 'DM Sans'}
+.sa-bar i{width:13px;height:13px;border-radius:50%;background:#3A4740}.sa-bar i:first-child{background:#FF6A5C}.sa-bar i:nth-child(2){background:#F5C451}.sa-bar i:nth-child(3){background:#2EE08A}
+.sa-bar span{margin-left:12px;opacity:.85}
+.sa-vid{position:relative;width:1040px;height:585px;background:#000}
+.sa-yt,.sa-vid iframe{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;border:0}
+.sa-hit{position:absolute;inset:0;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.sa-play{width:120px;height:120px;border-radius:50%;background:rgba(46,224,138,.92);color:#06120B;display:flex;align-items:center;justify-content:center;box-shadow:0 20px 50px -10px rgba(0,0,0,.6);transition:transform .3s,opacity .3s}
+.sa-hit:hover .sa-play{transform:scale(1.08)}
+.sa-win.playing .sa-play{opacity:0;transform:scale(.6)}
+.sa-msg{position:absolute;bottom:22px;left:0;right:0;text-align:center;color:#fff;font:600 22px 'DM Sans'}
+.sa-strip{position:relative;padding:12px 14px 14px;background:#141C17;cursor:pointer}
+.sa-chips{display:flex;gap:6px}
+.sa-chip{min-width:0;text-align:center;padding:9px 4px;border-radius:10px;background:rgba(255,255,255,.07);color:rgba(230,240,234,.55);font:700 15px/1.1 'DM Sans';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background .4s,color .4s}
+.sa-chip.done{background:rgba(46,224,138,.22);color:#BDF5D6}
+.sa-chip.on{background:#2EE08A;color:#06120B}
+.sa-prog{height:6px;border-radius:3px;background:rgba(255,255,255,.12);margin-top:10px;overflow:hidden}
+.sa-prog i{display:block;height:100%;background:#2EE08A;transform-origin:0 50%;transform:scaleX(0)}
+.sa-cap{padding:30px 30px 34px;z-index:5;pointer-events:auto}
+.sa-l{font:800 44px/1.05 Syne;color:var(--acc);margin-top:16px}
+.sa-t{font:500 27px/1.35 'DM Sans';margin-top:16px}
 /* ===== atividades ao vivo ===== */
 .lv{position:absolute;left:128px;right:128px;top:330px;bottom:118px;display:flex;flex-direction:column;gap:18px}
 .lv-body{flex:1;min-height:0;overflow:auto;scrollbar-width:none;padding:4px 4px 10px}
@@ -4983,6 +5004,73 @@ Object.assign(N4,{
  'ct-fim':'Três perguntas para fazer antes de gravar ou escrever qualquer conteúdo. Se não há herói, conflito ou mudança, o post é um anúncio. Estas perguntas voltam no workshop.'
 });
 
+/* ================= STORY SPINE EM ANÚNCIOS REAIS (vídeos do YouTube) ================= */
+const SAV=[
+ {id:'pcXTnyCmQbg',t:'Nike · «You Can’t Stop Us» (2020)',d:90,seg:[
+  [0,'Era uma vez…','Atletas de todo o mundo, lado a lado em ecrã dividido. «Nunca estamos sozinhos.»'],
+  [6.2,'Todos os dias…','Duvidam deles, travam-nos, não os levam a sério. E eles respondem em campo.'],
+  [38.2,'Até que um dia…','O desporto para: jogos adiados e cancelados em todo o mundo.'],
+  [46.9,'Por causa disso…','«Vamos encontrar uma forma.»'],
+  [50.4,'Por causa disso…','«Quando as coisas não são justas, juntamo-nos pela mudança.»'],
+  [61.7,'Até que finalmente…','«Por pior que fique, voltamos sempre mais fortes.»'],
+  [81.9,'E desde então…','«Juntos.» Nada os pára: You Can’t Stop Us.']]},
+ {id:'Z1yGy9fELtE',t:'Google Gemini · «New Home» (2026)',d:60,seg:[
+  [0,'Era uma vez…','Uma mãe e um filho estão prestes a mudar de casa.'],
+  [9.9,'Até que um dia…','O filho vê o quarto novo, vazio. «Esse é o meu quarto?»'],
+  [14.4,'Por causa disso…','A mãe pede ao Gemini para pôr as coisas dele no quarto novo.'],
+  [19.4,'Por causa disso…','Ele começa a imaginar: paredes azuis e a cama do Charlie, o cão.'],
+  [29.4,'Por causa disso…','Descobrem o jardim. Trampolim? «Continua a ser não.»'],
+  [36.1,'Até que finalmente…','«E o teu jardim, mãe?» «Vamos plantá-lo juntos, como antes.»'],
+  [46,'E desde então…','«Vai ser como a casa antiga?» «Vai ser o que nós quisermos.»'],
+  [54.8,'E a marca?','O herói é a família. O Gemini é só o guia: «Uma nova ajuda da Google.»']]}];
+const SAPOS={front:{x:0,y:0,scale:1,rotationY:0,opacity:1,zIndex:3,filter:'brightness(1)'},right:{x:600,y:30,scale:.72,rotationY:-16,opacity:.75,zIndex:1,filter:'brightness(.62)'},left:{x:-600,y:30,scale:.72,rotationY:16,opacity:.75,zIndex:1,filter:'brightness(.62)'}};
+const ytReady=cb=>{if(window.YT&&YT.Player)return cb();(window.__ytq=window.__ytq||[]).push(cb);if(!window.__ytl){window.__ytl=1;const p=window.onYouTubeIframeAPIReady;window.onYouTubeIframeAPIReady=()=>{p&&p();(window.__ytq||[]).forEach(f=>{try{f()}catch(e){}});window.__ytq=[]};const s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';s.onerror=()=>{(window.__ytq||[]).forEach(f=>{try{f(true)}catch(e){}});window.__ytq=[];window.__ytl=0};document.head.appendChild(s)}};
+S('spine-ads','ink','Histórias','Story Spine em ação',F1+' · Fonte: YouTube · Nike (2020) · Google (2026)',`
+ ${eb('Histórias · Story Spine em anúncios reais')}${ti('Story Spine em ação','font-size:64px')}
+ <div class="sa-stage" style="${abs(0,0,'width:1920px;height:1080px;perspective:2400px;pointer-events:none')}">
+ ${SAV.map((v,k)=>`<div class="sa-win" data-k="${k}" style="${abs(440,236,'width:1040px')}">
+  <div class="sa-bar"><i></i><i></i><i></i><span>${v.t}</span></div>
+  <div class="sa-vid"><div class="sa-yt" id="sa-p${k}"></div><div class="sa-hit" data-int data-k="${k}"><div class="sa-play"><svg viewBox="0 0 40 40" width="46" height="46"><path d="M13 9 L32 20 L13 31Z" fill="currentColor"/></svg></div><div class="sa-msg"></div></div></div>
+  <div class="sa-strip" data-int data-k="${k}"><div class="sa-chips">${v.seg.map((s,i)=>`<span class="sa-chip" data-i="${i}" style="flex:${Math.max(8,((v.seg[i+1]?v.seg[i+1][0]:v.d)-s[0]))}">${s[1].replace('…','')}</span>`).join('')}</div><div class="sa-prog"><i></i></div></div>
+ </div>`).join('')}
+ ${SAV.map((v,k)=>`<div class="card sa-cap" data-k="${k}" style="${abs(k?1500:70,300,'width:360px')}"><div class="k">Story Spine</div><div class="sa-l">Carrega no vídeo</div><div class="sa-t">À medida que o anúncio avança, aparece aqui a parte da história que está a acontecer.</div></div>`).join('')}
+ </div>
+ <div data-step style="display:none"></div>`,
+ {init:(r,tl)=>{
+   const W=qq('.sa-win',r),CP=qq('.sa-cap',r),P=[null,null],cur=[-1,-1];let front=0,iv=0,dead=false;
+   const place=(k,pos,d)=>{const o=Object.assign({},SAPOS[pos]);if(d){o.duration=d;o.ease='power3.inOut';G.to(W[k],o)}else G.set(W[k],o)};
+   place(0,'front');place(1,'right');G.set(CP[1],{autoAlpha:0,x:60});
+   tl.from(W[0],{y:80,opacity:0,duration:1,ease:'power3.out'},.3).from(W[1],{x:900,opacity:0,duration:1.1,ease:'power3.out'},.6).from(CP[0],{x:-60,autoAlpha:0,duration:.8,ease:'power3.out'},.9);
+   const msg=(k,t)=>{const m=q('.sa-msg',W[k]);if(m)m.textContent=t||''};
+   const show=(k,i)=>{if(cur[k]===i)return;cur[k]=i;const s=SAV[k].seg[i],c=CP[k],L=q('.sa-l',c),T=q('.sa-t',c);
+    qq('.sa-chip',W[k]).forEach((ch,j)=>{ch.classList.toggle('on',j===i);ch.classList.toggle('done',j<i)});
+    const ch=qq('.sa-chip',W[k])[i];if(ch)G.fromTo(ch,{scale:1.25},{scale:1,duration:.6,ease:'back.out(3)'});
+    G.timeline().to([L,T],{y:-24,autoAlpha:0,duration:.25,ease:'power2.in',stagger:.05})
+     .add(()=>{L.textContent=s[1];T.textContent=s[2]})
+     .fromTo(L,{y:30,scale:.7,autoAlpha:0,filter:'blur(8px)'},{y:0,scale:1,autoAlpha:1,filter:'blur(0px)',duration:.6,ease:'back.out(2)'})
+     .fromTo(T,{y:20,autoAlpha:0},{y:0,autoAlpha:1,duration:.5,ease:'power3.out'},'-=.3')
+     .fromTo(c,{boxShadow:'0 0 0 0 rgba(46,224,138,.7)'},{boxShadow:'0 0 0 26px rgba(46,224,138,0)',duration:.9,ease:'power2.out'},'<-.4')};
+   const tick=()=>{if(dead)return;[0,1].forEach(k=>{const p=P[k];if(!p||!p.getCurrentTime)return;const t=p.getCurrentTime()||0,d=p.getDuration()||SAV[k].d;
+     const b=q('.sa-prog i',W[k]);if(b)b.style.transform='scaleX('+Math.min(1,t/d)+')';
+     const st=p.getPlayerState&&p.getPlayerState();if(st===1||st===2||t>0){let i=0;SAV[k].seg.forEach((s,j)=>{if(t>=s[0])i=j});show(k,i)}})};
+   ytReady(fail=>{if(dead)return;if(fail||!window.YT){[0,1].forEach(k=>msg(k,'Sem ligação ao YouTube. Abre a apresentação com internet.'));return}
+    [0,1].forEach(k=>{P[k]=new YT.Player('sa-p'+k,{videoId:SAV[k].id,width:'100%',height:'100%',playerVars:{controls:0,rel:0,modestbranding:1,playsinline:1,iv_load_policy:3,cc_load_policy:0,disablekb:1,fs:0},
+     events:{onStateChange:e=>{W[k].classList.toggle('playing',e.data===1);if(e.data===0)W[k].classList.add('ended')},onError:()=>msg(k,'Não foi possível carregar este vídeo.')}})});
+    iv=setInterval(tick,200)});
+   const toggle=k=>{const p=P[k];if(!p||!p.getPlayerState)return;if(k!==front)return;const s=p.getPlayerState();if(s===1)p.pauseVideo();else{W[k].classList.remove('ended');p.playVideo()}};
+   qq('.sa-hit',r).forEach(h=>h.onclick=e=>{e.stopPropagation();toggle(+h.dataset.k)});
+   qq('.sa-strip',r).forEach(s=>s.onclick=e=>{e.stopPropagation();const k=+s.dataset.k,p=P[k];if(k!==front||!p||!p.seekTo)return;const rc=s.getBoundingClientRect();const f=(e.clientX-rc.left)/rc.width;p.seekTo(f*(p.getDuration()||SAV[k].d),true)});
+   const key=e=>{if(e.key==='p'||e.key==='P'||e.key==='k'||e.key==='K'){toggle(front)}};addEventListener('keydown',key);
+   r._swap=(to,instant)=>{if(front===to)return;const from=front;front=to;const p=P[from];if(p&&p.pauseVideo)try{p.pauseVideo()}catch(e){}
+    const d=instant?0:1.1;place(from,to===1?'left':'right',d);place(to,'front',d);
+    if(d){G.to(CP[from],{autoAlpha:0,x:to===1?-60:60,duration:.4});G.fromTo(CP[to],{autoAlpha:0,x:to===1?60:-60},{autoAlpha:1,x:0,duration:.7,delay:.6,ease:'power3.out'})}else{G.set(CP[from],{autoAlpha:0});G.set(CP[to],{autoAlpha:1,x:0})}};
+   r._unmount=()=>{dead=true;clearInterval(iv);removeEventListener('keydown',key);P.forEach(p=>{try{p&&p.destroy&&p.destroy()}catch(e){}})};
+  },
+  onStep:(r,el,i,t,instant)=>{if(i===0&&r._swap)r._swap(1,instant)},
+  onUnstep:(r,el,i)=>{if(i===0&&r._swap)r._swap(0)}});
+
+Object.assign(N4,{'spine-ads':'Dois anúncios reais para ver a Story Spine a funcionar. Carrega no vídeo (ou na tecla P) para dar play e pausa; clicar na barra de baixo salta para essa parte. À medida que o vídeo avança, o cartão ao lado mostra a parte da Story Spine que está a acontecer. Quando acabar o primeiro, avança: o da Nike desliza para trás e o da Google vem para a frente. 1) Nike, «You Can’t Stop Us» (2020, 90 s, Emmy de melhor anúncio em 2021): ecrãs divididos com atletas diferentes; a rutura é o desporto parado em 2020 e a resposta é «voltamos sempre mais fortes». Repara que a Nike quase não mostra produto. 2) Google Gemini, «New Home» (Super Bowl 2026, 60 s): uma mãe e um filho vão mudar de casa; a rutura é o quarto vazio; o Gemini ajuda-os a imaginar a casa nova até à frase «vai ser o que nós quisermos». O herói é a família, o produto é o guia. Pergunta à turma: em que segundo é que começaram a querer saber como acabava?'});
+
 /* ---- Notas novas e atualizadas ---- */
 const N2={
  'cover':'Abertura (0:00–0:10). Dá as boas-vindas e apresenta a promessa da aula: na primeira parte vamos perceber como funciona a comunicação digital de uma marca (público, objetivos, canais, métricas); na segunda, como transformar essa estratégia em histórias. No fim, cada equipa apresenta uma mini-campanha com história. Avisa que há 3 atividades e um workshop.',
@@ -5041,7 +5129,7 @@ const ORDER=[
  ['Marketing',['d1','o-que-e','hist-producao','hist-vendas','hist-marketing','hist-relacao','hist-digital','ben-notoriedade','ben-relacao','ben-crescimento','mr-oque','mr-secundarios','mr-primarios','mr-quanti','live-primsec','stp-segmentar','stp-escolher','stp-posicionar','stp-formula','live-posicionar','persona-def','persona-rita','live-persona','4ps','live-4p','mv-marca','mv-proposta','mv-tom','marcas-conversa','jornada','smart-letras','smart-exemplo','live-smart']],
  ['Digital',['d2','monologo','meio-proprio','meio-pago','meio-ganho','meio-ideal','live-canais','cn-site','cn-redes','cn-email','cn-anuncios','cn-creators','cn-imprensa','cn-fim','pdc-pago','pdc-dados','pdc-comunidade','pdc-fim','calendario','camp-coke','camp-redbull','camp-burger','camp-fim','kpis','kpi-vaidade','live-metricas','live-plano']],
  ['Pausa',['pausa']],
- ['Histórias',['d3','statement','forca-atencao','forca-emocao','forca-memoria','facto-historia','ing-personagem','ing-conflito','ing-transformacao','caso-wrapped','wrapped-3','heroi-papeis','heroi-guia','story-spine','arco','spine-exemplo','live-spine','gancho-1','gancho-2','gancho-3','gancho-4','gancho-5','ganchos-fim','live-gancho']],
+ ['Histórias',['d3','statement','forca-atencao','forca-emocao','forca-memoria','facto-historia','ing-personagem','ing-conflito','ing-transformacao','caso-wrapped','wrapped-3','heroi-papeis','heroi-guia','story-spine','arco','spine-ads','live-spine','gancho-1','gancho-2','gancho-3','gancho-4','gancho-5','ganchos-fim','live-gancho']],
  ['Histórias nos conteúdos',['d4','ct-antes','ct-mostra','ct-formatos','ct-duo','ct-serie','reels','carrossel','ct-legenda','live-post','ct-fim']],
  ['Ética e RGPD',['etica','rg-consent','rg-final','rg-direitos','rg-coimas','pub-etiqueta','ia-assinala','live-rgpd','live-ranking']],
  ['Workshop',['d5','wk-regras','wk-dados','wk-entregaveis','wk-criterios','wk-palco','live-votacao']],

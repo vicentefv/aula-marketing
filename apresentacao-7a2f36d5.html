@@ -409,6 +409,11 @@ mark.s::after{content:attr(data-n);display:inline-block;vertical-align:top;font:
 .lv-done{opacity:.5}
 .lv-b.sug{border-style:dashed;border-color:var(--acc)}
 .lv-evb .lv-b{justify-content:center}
+.reel{background:var(--card);border:2px solid var(--cardb);box-shadow:none;transition:border-color .3s,box-shadow .3s}
+.reel::after{display:none}
+.reel .rw{position:absolute;inset:0;overflow:hidden;-webkit-mask-image:linear-gradient(transparent,#000 22%,#000 78%,transparent);mask-image:linear-gradient(transparent,#000 22%,#000 78%,transparent)}
+.reel .it{font-size:32px;color:var(--fg)}
+.reel.hit{border-color:var(--acc);box-shadow:0 0 0 4px color-mix(in srgb,var(--acc) 25%,transparent)}
 
 html,body{background:#040806}
 body{color:var(--paper)}
@@ -2883,10 +2888,10 @@ window.ACT={
  wsala:{wk:true,type:'lobby',t:'Sala do workshop'},
  entrega:{wk:true,type:'deliver',t:'O trabalho da equipa',steps:[
   {t:'O brief',s:'O que vos saiu nos dados. Toquem numa opção ou escrevam a vossa.',f:[
-   {k:'marca',l:'Marca',ph:'Café perto da faculdade',opts:['Loja de bicicletas','Festival de música','App de entregas de comida','Ténis sustentáveis','Café perto da faculdade','Estúdio de pilates']},
-   {k:'heroi',l:'Herói da história',ph:'Estudante Erasmus',opts:['Caloiro/a na cidade nova','Estudante Erasmus','Estudante-trabalhador','Criador de conteúdo iniciante','Primeiro emprego','Reformada ativa']},
-   {k:'conflito',l:'Conflito',ph:'Solidão',opts:['Falta de tempo','Medo de ficar de fora','Desconfiança','Dinheiro apertado','Solidão','Excesso de opções']},
-   {k:'canal',l:'Canal',ph:'Reel no Instagram',opts:['TikTok','Reel no Instagram','Carrossel','Stories','Podcast / YouTube','Newsletter']}]},
+   {k:'marca',l:'Marca',ph:'Café perto da faculdade',opts:['Loja de bicicletas','Festival de música','App de entregas de comida','Ténis sustentáveis','Café perto da faculdade','Estúdio de pilates','Livraria independente','Roupa em segunda mão','Ginásio low-cost','Loja online de plantas']},
+   {k:'heroi',l:'Herói da história',ph:'Estudante Erasmus',opts:['Caloiro/a na cidade nova','Estudante Erasmus','Estudante-trabalhador','Criador de conteúdo iniciante','Primeiro emprego','Reformada ativa','Pai ou mãe recente','Gamer de fim de semana','Atleta amador','Freelancer em casa']},
+   {k:'conflito',l:'Conflito',ph:'Solidão',opts:['Falta de tempo','Medo de ficar de fora','Desconfiança','Dinheiro apertado','Solidão','Excesso de opções','Vergonha de pedir ajuda','Rotina aborrecida','Prazo a acabar','Falta de motivação']},
+   {k:'canal',l:'Canal',ph:'Reel no Instagram',opts:['TikTok','Reel no Instagram','Carrossel','Stories','Podcast / YouTube','Newsletter','Post no LinkedIn','Parceria com creator','Live no Instagram','Anúncio no YouTube']}]},
   {t:'A persona',s:'A pessoa por trás do herói. Escrevam como se a conhecessem.',f:[
    {k:'pnome',l:'Nome e idade',ph:'Inês, 19 anos'},
    {k:'pdor',l:'Que problema tem no dia a dia?',ph:'Mudou-se para Lisboa e ainda não conhece ninguém no curso.',ta:1},
@@ -3714,19 +3719,20 @@ S('wk-regras','ink','Workshop · 40 min','Como funciona',FW,`
  </div>
  <div data-a="up" class="lead mut" style="${abs(128,860,'right:128px;font-size:34px')}">Em equipas de 3, o estratega e o guionista juntam-se. Sem IA no workshop: é o vosso olhar que estamos a treinar.</div>`);
 
-const DC=[['Marca',['Loja de bicicletas','Festival de música','App de entregas de comida','Ténis sustentáveis','Café perto da faculdade','Estúdio de pilates']],['Persona (herói)',['Caloiro/a na cidade nova','Estudante Erasmus','Estudante-trabalhador','Criador de conteúdo iniciante','Primeiro emprego','Reformada ativa']],['Conflito',['Falta de tempo','Medo de ficar de fora','Desconfiança','Dinheiro apertado','Solidão','Excesso de opções']],['Canal',['TikTok','Reel no Instagram','Carrossel','Stories','Podcast / YouTube','Newsletter']]];
+const DC=[['Marca',['Loja de bicicletas','Festival de música','App de entregas de comida','Ténis sustentáveis','Café perto da faculdade','Estúdio de pilates','Livraria independente','Roupa em segunda mão','Ginásio low-cost','Loja online de plantas']],['Herói',['Caloiro/a na cidade nova','Estudante Erasmus','Estudante-trabalhador','Criador de conteúdo iniciante','Primeiro emprego','Reformada ativa','Pai ou mãe recente','Gamer de fim de semana','Atleta amador','Freelancer em casa']],['Conflito',['Falta de tempo','Medo de ficar de fora','Desconfiança','Dinheiro apertado','Solidão','Excesso de opções','Vergonha de pedir ajuda','Rotina aborrecida','Prazo a acabar','Falta de motivação']],['Canal',['TikTok','Reel no Instagram','Carrossel','Stories','Podcast / YouTube','Newsletter','Post no LinkedIn','Parceria com creator','Live no Instagram','Anúncio no YouTube']]];
 S('wk-dados','ember','Workshop · 40 min','Lança os dados',FW+' · Marcas e personagens fictícias',`
  ${eb('Workshop · Brief')}${ti('Lança os dados')}
  <div class="timer" data-min="3" data-a="pop" style="right:128px;top:84px;--sz:210px"></div>
  <div data-a="kids" style="${abs(128,320,'width:1664px;display:grid;grid-template-columns:repeat(4,1fr);gap:28px')}">
- ${DC.map((c,i)=>`<div><div class="k k2" style="margin-bottom:14px">${c[0]}</div><div class="reel" data-r="${i}"><div class="rl"></div></div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px"><span class="mut" style="font:700 22px 'DM Sans';letter-spacing:.12em;text-transform:uppercase">Dado <b class="dn" style="color:var(--acc);font-size:30px">–</b></span><button class="btn sm" data-int data-pass="${i}">Passar ↻</button></div></div>`).join('')}
+ ${DC.map((c,i)=>`<div><div class="k k2" style="margin-bottom:14px">${c[0]}</div><div class="reel" data-r="${i}"><div class="rw"><div class="rl"></div></div></div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px"><span class="mut" style="font:700 20px 'DM Sans';letter-spacing:.1em;text-transform:uppercase">${c[1].length} opções</span><button class="btn sm" data-int data-pass="${i}">Passar ↻</button></div></div>`).join('')}
  </div>
  <div data-a="pop" style="${abs(128,690,'width:1664px;display:flex;justify-content:center')}"><button class="btn" data-rollall data-int style="font-size:36px;padding:28px 64px">Lançar os dados (D)</button></div>
  <div data-a="up" class="lead mut" style="${abs(128,830,'width:1664px;text-align:center;font-size:32px')}">Cada equipa lança os dados uma vez e só pode passar uma coluna. Quem fez as atividades 01 e 02 pode manter a sua marca.</div>`,
  {init:(r)=>{
-  const H=170,reels=qq('.reel',r).map((el,i)=>{const items=DC[i][1],rl=q('.rl',el);rl.innerHTML=Array.from({length:10},()=>items.map(t=>`<div class="it">${t}</div>`).join('')).join('');const o={idx:Math.floor(Math.random()*6),el,rl,i,spinning:false};G.set(rl,{y:-o.idx*H});return o});
-  const roll=(o,extra=0)=>{if(o.spinning)return;o.spinning=true;const k=Math.floor(Math.random()*6),end=-(k+6*(4+o.i+extra))*H;let last=-1;const dn=q('.dn',o.el.parentElement);
-   G.fromTo(o.rl,{y:-o.idx*H},{y:end,duration:2.2+o.i*.55+extra*.3,ease:'power4.out',onUpdate:function(){const j=Math.floor(-G.getProperty(o.rl,'y')/H);if(j!==last){last=j;TK()}},onComplete:()=>{o.idx=k;o.spinning=false;G.set(o.rl,{y:-k*H});dn.textContent=k+1;G.fromTo(o.el,{scale:1.05},{scale:1,duration:.5,ease:'back.out(3)'});if(reels.every(x=>!x.spinning)){const rc=o.el.getBoundingClientRect();CF(960,560,70);ENG.beep(1)}}})};
+  /* cada coluna nunca repete o resultado anterior (a memória fica guardada mesmo se saíres do slide) */
+  const H=170,MEM=window.__dice||(window.__dice={}),reels=qq('.reel',r).map((el,i)=>{const items=DC[i][1],N=items.length,rl=q('.rl',el);rl.innerHTML=Array.from({length:14},()=>items.map(t=>`<div class="it">${t}</div>`).join('')).join('');const o={idx:MEM[i]!=null?MEM[i]:Math.floor(Math.random()*N),N,el,rl,i,spinning:false};G.set(rl,{y:-o.idx*H});return o});
+  const roll=(o,extra=0)=>{if(o.spinning)return;o.spinning=true;o.el.classList.remove('hit');let k=Math.floor(Math.random()*(o.N-1));if(k>=o.idx)k++;const end=-(k+o.N*(4+o.i+extra))*H;let last=-1;
+   G.fromTo(o.rl,{y:-o.idx*H},{y:end,duration:2.2+o.i*.55+extra*.3,ease:'power4.out',onUpdate:function(){const j=Math.floor(-G.getProperty(o.rl,'y')/H);if(j!==last){last=j;TK()}},onComplete:()=>{o.idx=k;MEM[o.i]=k;o.spinning=false;G.set(o.rl,{y:-k*H});o.el.classList.add('hit');G.fromTo(o.el,{scale:1.05},{scale:1,duration:.5,ease:'back.out(3)'});if(reels.every(x=>!x.spinning)){CF(960,560,70);ENG.beep(1)}}})};
   q('[data-rollall]',r).onclick=()=>reels.forEach(o=>roll(o));
   qq('[data-pass]',r).forEach(b=>b.onclick=()=>roll(reels[+b.dataset.pass]));
  }});

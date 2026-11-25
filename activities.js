@@ -84,10 +84,10 @@ window.ACT={
  wsala:{wk:true,type:'lobby',t:'Sala do workshop'},
  entrega:{wk:true,type:'deliver',t:'O trabalho da equipa',steps:[
   {t:'O brief',s:'O que vos saiu nos dados. Toquem numa opção ou escrevam a vossa.',f:[
-   {k:'marca',l:'Marca',ph:'Café perto da faculdade',opts:['Loja de bicicletas','Festival de música','App de entregas de comida','Ténis sustentáveis','Café perto da faculdade','Estúdio de pilates']},
-   {k:'heroi',l:'Herói da história',ph:'Estudante Erasmus',opts:['Caloiro/a na cidade nova','Estudante Erasmus','Estudante-trabalhador','Criador de conteúdo iniciante','Primeiro emprego','Reformada ativa']},
-   {k:'conflito',l:'Conflito',ph:'Solidão',opts:['Falta de tempo','Medo de ficar de fora','Desconfiança','Dinheiro apertado','Solidão','Excesso de opções']},
-   {k:'canal',l:'Canal',ph:'Reel no Instagram',opts:['TikTok','Reel no Instagram','Carrossel','Stories','Podcast / YouTube','Newsletter']}]},
+   {k:'marca',l:'Marca',ph:'Café perto da faculdade',opts:['Loja de bicicletas','Festival de música','App de entregas de comida','Ténis sustentáveis','Café perto da faculdade','Estúdio de pilates','Livraria independente','Roupa em segunda mão','Ginásio low-cost','Loja online de plantas']},
+   {k:'heroi',l:'Herói da história',ph:'Estudante Erasmus',opts:['Caloiro/a na cidade nova','Estudante Erasmus','Estudante-trabalhador','Criador de conteúdo iniciante','Primeiro emprego','Reformada ativa','Pai ou mãe recente','Gamer de fim de semana','Atleta amador','Freelancer em casa']},
+   {k:'conflito',l:'Conflito',ph:'Solidão',opts:['Falta de tempo','Medo de ficar de fora','Desconfiança','Dinheiro apertado','Solidão','Excesso de opções','Vergonha de pedir ajuda','Rotina aborrecida','Prazo a acabar','Falta de motivação']},
+   {k:'canal',l:'Canal',ph:'Reel no Instagram',opts:['TikTok','Reel no Instagram','Carrossel','Stories','Podcast / YouTube','Newsletter','Post no LinkedIn','Parceria com creator','Live no Instagram','Anúncio no YouTube']}]},
   {t:'A persona',s:'A pessoa por trás do herói. Escrevam como se a conhecessem.',f:[
    {k:'pnome',l:'Nome e idade',ph:'Inês, 19 anos'},
    {k:'pdor',l:'Que problema tem no dia a dia?',ph:'Mudou-se para Lisboa e ainda não conhece ninguém no curso.',ta:1},

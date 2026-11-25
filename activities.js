@@ -82,12 +82,55 @@ window.ACT={
  ranking:{type:'rank',t:'Pódio final'},
  equipas:{type:'team',t:'Equipas do workshop'},
  wsala:{wk:true,type:'lobby',t:'Sala do workshop'},
- entrega:{wk:true,type:'deliver',t:'Entrega do workshop',fields:[{k:'persona',l:'Persona (quem é e que problema tem)',ph:'Diogo, 20 anos, quer experimentar jogos sem gastar muito',ta:true},{k:'obj',l:'Objetivo SMART',ph:'300 estudantes no torneio de sexta até 15 de dezembro',ta:true},{k:'spine',l:'Story Spine (uma frase por linha)',ph:'Era uma vez…\nTodos os dias…\nAté que um dia…',ta:true,big:true},{k:'gancho',l:'Gancho (a primeira frase)',ph:'Encontrámos 40 jogos num sótão.'},{k:'canal',l:'Canal e peça',ph:'Reel de 20 segundos no Instagram'},{k:'kpi',l:'KPI',ph:'inscrições no torneio'}]},
- avaliacao:{wk:true,type:'evalw',t:'Avaliação do trabalho'},
+ entrega:{wk:true,type:'deliver',t:'O trabalho da equipa',steps:[
+  {t:'O brief',s:'O que vos saiu nos dados. Toquem numa opção ou escrevam a vossa.',f:[
+   {k:'marca',l:'Marca',ph:'Café perto da faculdade',opts:['Loja de bicicletas','Festival de música','App de entregas de comida','Ténis sustentáveis','Café perto da faculdade','Estúdio de pilates']},
+   {k:'heroi',l:'Herói da história',ph:'Estudante Erasmus',opts:['Caloiro/a na cidade nova','Estudante Erasmus','Estudante-trabalhador','Criador de conteúdo iniciante','Primeiro emprego','Reformada ativa']},
+   {k:'conflito',l:'Conflito',ph:'Solidão',opts:['Falta de tempo','Medo de ficar de fora','Desconfiança','Dinheiro apertado','Solidão','Excesso de opções']},
+   {k:'canal',l:'Canal',ph:'Reel no Instagram',opts:['TikTok','Reel no Instagram','Carrossel','Stories','Podcast / YouTube','Newsletter']}]},
+  {t:'A persona',s:'A pessoa por trás do herói. Escrevam como se a conhecessem.',f:[
+   {k:'pnome',l:'Nome e idade',ph:'Inês, 19 anos'},
+   {k:'pdor',l:'Que problema tem no dia a dia?',ph:'Mudou-se para Lisboa e ainda não conhece ninguém no curso.',ta:1},
+   {k:'ponde',l:'Onde passa tempo online?',ph:'TikTok à noite e o grupo de WhatsApp da turma.'}]},
+  {t:'O objetivo',s:'O que a campanha tem de conseguir. Com um número e uma data.',f:[
+   {k:'obj',l:'O que querem conseguir?',ph:'Levar 80 caloiros à aula experimental gratuita até 30 de outubro.',ta:1,chk:'smart'},
+   {k:'kpi',l:'Que número vão acompanhar? (KPI)',ph:'Inscrições feitas pelo link na bio.'}]},
+  {t:'A história',s:'A Story Spine da persona: completem cada frase. A marca ajuda, mas o herói é a persona.',spine:1,f:[
+   {k:'s1',l:'Era uma vez…',ph:'quem é a persona e onde está'},
+   {k:'s2',l:'Todos os dias…',ph:'a rotina dela'},
+   {k:'s3',l:'Até que um dia…',ph:'o que muda (o conflito)'},
+   {k:'s4',l:'Por causa disso…',ph:'o que ela faz'},
+   {k:'s5',l:'Por causa disso…',ph:'o que corre mal ou se complica'},
+   {k:'s6',l:'Por causa disso…',ph:'o momento mais difícil'},
+   {k:'s7',l:'Até que finalmente…',ph:'como se resolve (aqui entra a marca)'},
+   {k:'s8',l:'E desde então…',ph:'como ficou a vida dela'}]},
+  {t:'Gancho e peça',s:'Como a história aparece no canal.',f:[
+   {k:'gancho',l:'Gancho: a primeira frase que se ouve ou lê',ph:'«Cheguei a Lisboa com duas malas e zero amigos.»',chk:'hook'},
+   {k:'peca',l:'Como é a peça? (formato, duração, o que se vê)',ph:'Reel de 20 segundos, três cenas, legendas grandes, música calma.',ta:1},
+   {k:'cta',l:'O que pedem às pessoas no fim?',ph:'Inscreve-te na aula grátis: link na bio.'}]}]},
+ avaliacao:{wk:true,type:'evalw',t:'Avaliação do trabalho',
+  crit:[['Persona','Percebe-se quem é e que problema tem.'],['Objetivo e KPI','Tem número, prazo e um KPI que o mede.'],['História','Há conflito e a persona muda no fim.'],['Gancho','Pararia o scroll.'],['Canal e peça','A peça respeita o canal e acaba com um pedido.'],['Originalidade','Foge ao cliché.']],
+  rub:[['Só nome ou idade','Tem um problema','Problema concreto e onde está online'],['Vago','Tem número ou prazo','Número, prazo e KPI que mede o objetivo'],['Lista de factos','Tem conflito','Conflito, viragem e mudança no fim'],['Genérico','Desperta curiosidade','Pararia o scroll'],['Peça vaga ou fora do canal','Peça descrita e adequada','Respeita o formato e pede uma ação ligada ao objetivo'],['Cliché','Tem um pormenor próprio','Só esta marca podia contar isto']]},
  resultado:{wk:true,type:'result',t:'Resultado do workshop'},
 
  votacao:{wk:true,type:'rate',t:'Votação dos pitches',pitch:120,
-  crit:[['Persona','Percebe-se para quem é.'],['Objetivo e KPI','É claro e mensurável.'],['História','Há conflito e mudança.'],['Gancho','Pararia o scroll.'],['Canal','Respeita o formato.'],['Originalidade','Foge ao cliché.']]}
+  crit:[['História','Prendeu-nos do início ao fim.'],['Gancho e peça','Parávamos o scroll para ver.'],['Apresentação','Clara e convincente.']]}
+};
+/* workshop: campos, progresso e sugestões de nota (as sugestões só orientam: a nota é do professor) */
+window.WK={
+ fields:()=>ACT.entrega.steps.flatMap(s=>s.f),
+ filled:f=>{f=f||{};return WK.fields().filter(x=>String(f[x.k]||'').trim()).length},
+ line:(lab,t)=>{t=String(t||'').trim();const a=lab.replace(/…$/,'').toLowerCase();if(t.toLowerCase().startsWith(a))t=t.slice(a.length).replace(/^[\s.…,:]+/,'');return t},
+ words:t=>String(t||'').trim().split(/\s+/).filter(Boolean).length,
+ sugg(f){f=f||{};const has=k=>!!String(f[k]||'').trim(),n=a=>a.filter(Boolean).length;
+  const sm=n((smartCheck(f.obj||'')||[]).map(x=>x[1])),hk=has('gancho')?n((hookCheck(f.gancho||'')||[]).map(x=>x[1])):0,sp=n(['s1','s2','s3','s4','s5','s6','s7','s8'].map(has));
+  return [
+   !has('pnome')&&!has('pdor')?1:has('pdor')&&has('ponde')&&WK.words(f.pdor)>=5?5:has('pdor')?3:1,
+   sm>=4&&has('kpi')?5:sm>=2?3:1,
+   sp>=7&&has('s3')&&has('s8')?5:sp>=4&&has('s3')?3:1,
+   hk>=3?5:hk===2?4:hk===1?2:1,
+   has('peca')&&WK.words(f.peca)>=6&&has('cta')?5:has('peca')?3:1,
+   0]}
 };
 window.ACTS=Object.keys(ACT).map(id=>({id,t:ACT[id].t}));
 

@@ -3716,7 +3716,7 @@ S('wk-regras','ink','Workshop · 40 min','Como funciona',FW,`
 
 const DC=[['Marca',['Loja de bicicletas','Festival de música','App de entregas de comida','Ténis sustentáveis','Café perto da faculdade','Estúdio de pilates']],['Persona (herói)',['Caloiro/a na cidade nova','Estudante Erasmus','Estudante-trabalhador','Criador de conteúdo iniciante','Primeiro emprego','Reformada ativa']],['Conflito',['Falta de tempo','Medo de ficar de fora','Desconfiança','Dinheiro apertado','Solidão','Excesso de opções']],['Canal',['TikTok','Reel no Instagram','Carrossel','Stories','Podcast / YouTube','Newsletter']]];
 S('wk-dados','ember','Workshop · 40 min','Lança os dados',FW+' · Marcas e personagens fictícias',`
- ${eb('Workshop · Brief em 3 minutos')}${ti('Lança os dados')}
+ ${eb('Workshop · Brief')}${ti('Lança os dados')}
  <div class="timer" data-min="3" data-a="pop" style="right:128px;top:84px;--sz:210px"></div>
  <div data-a="kids" style="${abs(128,320,'width:1664px;display:grid;grid-template-columns:repeat(4,1fr);gap:28px')}">
  ${DC.map((c,i)=>`<div><div class="k k2" style="margin-bottom:14px">${c[0]}</div><div class="reel" data-r="${i}"><div class="rl"></div></div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px"><span class="mut" style="font:700 22px 'DM Sans';letter-spacing:.12em;text-transform:uppercase">Dado <b class="dn" style="color:var(--acc);font-size:30px">–</b></span><button class="btn sm" data-int data-pass="${i}">Passar ↻</button></div></div>`).join('')}

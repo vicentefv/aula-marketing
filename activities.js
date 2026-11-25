@@ -83,7 +83,7 @@ window.ACT={
  equipas:{type:'team',t:'Equipas do workshop'},
  wsala:{wk:true,type:'lobby',t:'Sala do workshop'},
  entrega:{wk:true,type:'deliver',t:'O trabalho da equipa',steps:[
-  {t:'O brief',s:'O que vos saiu nos dados. Toquem numa opção ou escrevam a vossa.',f:[
+  {t:'O brief',brief:1,s:'O que vos saiu nos dados. Toquem numa opção ou escrevam a vossa.',f:[
    {k:'marca',l:'Marca',ph:'Café perto da faculdade',opts:['Loja de bicicletas','Festival de música','App de entregas de comida','Ténis sustentáveis','Café perto da faculdade','Estúdio de pilates','Livraria independente','Roupa em segunda mão','Ginásio low-cost','Loja online de plantas']},
    {k:'heroi',l:'Herói da história',ph:'Estudante Erasmus',opts:['Caloiro/a na cidade nova','Estudante Erasmus','Estudante-trabalhador','Criador de conteúdo iniciante','Primeiro emprego','Reformada ativa','Pai ou mãe recente','Gamer de fim de semana','Atleta amador','Freelancer em casa']},
    {k:'conflito',l:'Conflito',ph:'Solidão',opts:['Falta de tempo','Medo de ficar de fora','Desconfiança','Dinheiro apertado','Solidão','Excesso de opções','Vergonha de pedir ajuda','Rotina aborrecida','Prazo a acabar','Falta de motivação']},

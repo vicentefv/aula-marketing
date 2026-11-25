@@ -78,9 +78,9 @@ const VIEWS={
 deliver:{render(){const d=D(),TM=Object.values(players).some(x=>x.team);
   if(TM&&!(me&&me.team)){setMain(head()+'<div class="center rise"><div class="bigdot" style="background:'+(me?me.color:'var(--violet)')+'"></div><h2>O responsável envia</h2><p class="sub">Ajuda a tua equipa a preencher no telemóvel do responsável.</p></div>');return}
   if(!local.dl){local.dl=1;setMain(head()+'<div class="center"><p class="sub">A abrir o vosso trabalho…</p></div>');
-   STORE.get(P+'/entrega/'+pid).then(v=>{local.ent=Object.assign({},(v&&(v.d||v.f))||{});local.sent=!!(v&&v.f);local.view=local.sent?'board':'form';local.st=local.st||0;if(T()==='deliver')VIEWS.deliver.render()}).catch(()=>{local.ent={};local.view='form';local.st=0;VIEWS.deliver.render()});return}
+   Promise.all([STORE.get(P+'/entrega/'+pid),STORE.get(P+'/dados/'+pid).catch(()=>null)]).then(([v,dd])=>{local.dice=!!(dd&&dd.marca);local.ent=Object.assign({},dd||{},(v&&(v.d||v.f))||{});local.sent=!!(v&&v.f);local.view=local.sent?'board':'form';local.st=local.st||0;if(T()==='deliver')VIEWS.deliver.render()}).catch(()=>{local.ent={};local.view='form';local.st=0;VIEWS.deliver.render()});return}
   if(!local.ent)return;
-  const S_=d.steps,i=local.st||0,nm=me&&(me.team||me.name)||'';
+  const S_=d.steps.filter(s=>!(s.brief&&local.dice)),i=local.st||0,nm=me&&(me.team||me.name)||'';
   if(local.view==='board'){
    setMain(head()+'<div class="verdict ok pop"><b>Trabalho enviado</b><div class="sub" style="margin-top:6px">É isto que vão apresentar. Podem corrigir até ao palco.</div></div><h2 style="font-size:clamp(22px,6vw,30px)">'+esc(nm)+'</h2>'+boardP(local.ent)+'<button class="btn ghost" id="ed" style="width:100%">Corrigir o trabalho</button>');
    $('#ed').onclick=()=>{local.view='form';local.st=0;VIEWS.deliver.render();scrollTo(0,0)};return}

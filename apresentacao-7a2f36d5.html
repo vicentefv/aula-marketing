@@ -3817,7 +3817,7 @@ S('wk-palco','coral','Workshop · 40 min','Palco: a vez de cada equipa',FW,`
 /* ================= FECHO ================= */
 const TK5=['Comunicar no digital é conversar, não discursar.','Primeiro o público e o objetivo, depois o canal.','Cada conteúdo é uma pequena história, e o herói é o cliente.','Mostra, não digas: um facto concreto vale mais do que um adjetivo.','Mede o que serve o objetivo e conta sempre com verdade.'];
 S('takeaways','ink','Fecho · 5 min','Cinco ideias para levar',FF,`
- ${eb('Fecho · 5 minutos')}${ti('Cinco ideias para levar')}
+ ${eb('Fecho')}${ti('Cinco ideias para levar')}
  <div style="${abs(128,296,'width:1664px')}">
  ${TK5.map((t,i)=>`<div class="spot" data-step data-a="left" style="display:flex;align-items:center;gap:40px;height:118px;border-top:1px solid var(--line)"><div class="num" style="font-size:86px;min-width:110px;color:${['var(--g1)','var(--g2)','var(--g3)','var(--g4)','var(--g5)'][i]}">${i+1}</div><div style="font:700 42px/1.15 Syne">${t}</div></div>`).join('')}
  </div>`,
@@ -5031,7 +5031,7 @@ V.quiz={
  body(){const id=M.id,QS=QSETS[id]||[];
   if(online()){
    if(act.phase==='end')return `<div class="k" style="margin-bottom:20px">Ranking</div>${ranking(8)}`;
-   const Q=QS[act.idx],rv=act.phase==='rev',k=Q.o.map(()=>0);let n=0;Object.keys(ans).forEach(p=>{if(players[p]&&ans[p].c!=null){k[ans[p].c]++;n++}});
+   const Q=QS[act.idx];if(!Q)return '<p class="lead mut">A preparar as perguntas…</p>';const rv=act.phase==='rev',k=Q.o.map(()=>0);let n=0;Object.keys(ans).forEach(p=>{if(players[p]&&ans[p].c!=null){k[ans[p].c]++;n++}});
    return `<div class="lv-qh"><span class="k">${act.idx+1} de ${QS.length}</span>${cnt('Respostas',n+' / '+plist().length)}</div>${rv?'':'<div class="lv-tbar"><i id="lvtb"></i></div>'}
     <div class="lv-qq">${H(Q.q)}</div><div class="lv-qo n${Q.o.length}">${Q.o.map((o,i)=>`<div class="lv-o c${i}${rv?(i===Q.a?' right':' dim'):''}"><span>${H(o)}</span>${rv?`<b>${k[i]}</b>`:''}</div>`).join('')}</div>${rv?`<div class="lv-why">${H(Q.why)}</div>`:''}`}
   const o=off_(id);o.idx=o.idx||0;const Q=QS[o.idx];
